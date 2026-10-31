@@ -1,0 +1,35 @@
+{
+ "A": {
+  "W": 6000,
+  "H": 6900,
+  "area": 41.4,
+  "seats": 15,
+  "tables": 5,
+  "eye_min": 2780,
+  "eye_max": 5780,
+  "eye_max_x": 7.1,
+  "eye_min_x": 3.4
+ },
+ "B": {
+  "W": 5400,
+  "H": 7500,
+  "area": 40.5,
+  "seats": 15,
+  "tables": 5,
+  "eye_min": 3026.9456552769493,
+  "eye_max": 6380,
+  "eye_max_x": 7.9,
+  "eye_min_x": 3.7
+ },
+ "C": {
+  "W": 6000,
+  "H": 7500,
+  "area": 45.0,
+  "seats": 15,
+  "tables": 5,
+  "eye_min": 4680,
+  "eye_max": 6380,
+  "eye_max_x": 7.9,
+  "eye_min_x": 5.8
+ }
+}
