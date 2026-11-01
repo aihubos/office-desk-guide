@@ -83,10 +83,10 @@ label(C,'출입문 (단변 정중앙)',2250,2.3,0,'k');
  const f=new THREE.Mesh(new THREE.CircleGeometry(.9,40,-Math.PI/2,Math.PI/2),new THREE.MeshBasicMaterial({color:'#FFD43B',transparent:true,opacity:.45,side:THREE.DoubleSide,depthWrite:false})); f.rotation.x=Math.PI/2; f.position.set(.1,.008,L); f.renderOrder=2; swingG.add(f);
  const ring=new THREE.Mesh(new THREE.RingGeometry(.895,.9,48,1,-Math.PI/2,Math.PI/2),new THREE.MeshBasicMaterial({color:'#B8860B',side:THREE.DoubleSide})); ring.rotation.x=Math.PI/2; ring.position.set(.1,.01,L); swingG.add(ring);}
 label(C,'창 쪽 왼쪽 출입문 (가정 0.9m)',550,2.55,9300,'k');
-// 외부 펜트리 (실외, 가정 2.4m×1.3m) — 3D프린터는 우측 끝
-{const ef=new THREE.Mesh(new THREE.PlaneGeometry(2.4,1.3),M('#CFD5DB',{r:.95})); ef.rotation.x=-Math.PI/2; ef.position.set(1.2,.003,L+.65+.04); C.add(ef);
- const wm=M('#B8C0C8',{a:.45,ds:true}); box(C,0,L*1000+40,30,1300,0,1.1,wm,false); box(C,2370,L*1000+40,30,1300,0,1.1,wm,false); box(C,0,L*1000+1310,2400,30,0,1.1,wm,false);}
-label(C,'외부 펜트리 (실외 · 가정)',650,.5,10900,'k');
+// 외부 펜트리 (실외, 가정 4.5m×1.3m, 사무실 폭과 같음) — 3D프린터는 우측 끝
+{const ef=new THREE.Mesh(new THREE.PlaneGeometry(4.5,1.3),M('#CFD5DB',{r:.95})); ef.rotation.x=-Math.PI/2; ef.position.set(2.25,.003,L+.65+.04); C.add(ef);
+ const wm=M('#B8C0C8',{a:.45,ds:true}); box(C,0,L*1000+40,30,1300,0,1.1,wm,false); box(C,4470,L*1000+40,30,1300,0,1.1,wm,false); box(C,0,L*1000+1310,4500,30,0,1.1,wm,false);}
+label(C,'외부 펜트리 (실외 · 폭 4.5m 가정)',1500,.5,10900,'k');
 label(C,'창문 · 바닥~천장 전면 유리 (뒤쪽)',3250,2.95,9800,'k');
 
 // ===== zones (바닥 색) =====
@@ -241,7 +241,7 @@ label(C,'로봇청소기 도크 (보드 뒤·기존)',1700,.5,9425,'s');
 humidifier(C,3300,6000); cyl(C,3.25,6.5,.175,.0,.45,M('#fff',{r:.4})); cyl(C,3.25,6.5,.18,.43,.03,WOOD);
 label(C,'티테이블',3250,.7,6500,'s');
 // 3D 프린터 maker — 외부 펜트리(실외) 우측 끝
-{const dx=1700,dy=900;
+{const dx=3760,dy=900;
 zone(C,50+dx,9200+dy,560,540,'#FFE9CC',.8);
 table(C,60+dx,9210+dy,540,520,WOOD_D,.74);
 box(C,90+dx,9240+dy,480,460,.74,.42,M('#ffffff',{a:.5})); for(const [a,b] of [[100,9250],[520,9250],[100,9640],[520,9640]]) box(C,a+dx,b+dy,40,40,.74,.42,M('#E67E22'));

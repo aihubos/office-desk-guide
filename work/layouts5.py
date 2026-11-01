@@ -58,19 +58,19 @@ def build(mode):
     R(ax,0,0,W,H,"#FBFCFD",z=0)
     # ---------- window (bottom short wall) with 외부 펜트리 출입문 (왼쪽 끝) / door (top short wall)
     R(ax,0,H-40,100,80,"#9AD3FF","#2C7FB8",1,z=6); R(ax,1000,H-40,W-1000,80,"#9AD3FF","#2C7FB8",1,z=6)
-    T(ax,2480,H+230,"창문 (바닥~천장 전면 유리)\n카메라는 창을 향하지 않음 · 블라인드 권장",fs=4.8,c="#2C7FB8",ha="left")
+    T(ax,1900,H+650,"창문 (바닥~천장 전면 유리)\n카메라는 창을 향하지 않음 · 블라인드 권장",fs=4.8,c="#2C7FB8",ha="center")
     R(ax,100,H-35,900,70,"#FFFFFF","#555",1.2,z=7)
     ax.add_patch(Wedge((100,H),900,270,360,fc="#FFF3BF",alpha=.6,ec="none",zorder=2))
     ax.add_patch(Arc((100,H),1800,1800,theta1=270,theta2=360,color="#888",lw=1,ls="--",zorder=7))
     ax.plot([100,100],[H,H-900],color="#555",lw=1.2,zorder=7)
     T(ax,470,H-430,"출입문\n(가정 0.9m)",fs=4.4,c="#555")
     # 외부 펜트리 (벽 밖, 실외) + 3D 프린터 우측 끝
-    EX1,EY1=2400,H+1300
+    EX1,EY1=W,H+1300
     R(ax,0,H+40,EX1,EY1-H-40,"#EEF1F4","#555",1.3,z=2,ls="--")
-    T(ax,40,H+190,"외부 펜트리(실외 · 가정: 폭 2.4m×깊이 1.3m)",fs=4.8,c="#555",ha="left")
-    R(ax,1750,H+330,560,540,"#FFE0B8","#E67E22",1.6,z=5); T(ax,2030,H+600,"3D프린터",fs=4.8,c="#8A4B00",fontweight="bold")
-    T(ax,1000,H+700,"← 펜트리 우측 끝\n   (환기 걱정 없음)",fs=4.4,c="#8A4B00",ha="center")
-    ax.plot([2030],[H-30],alpha=0)
+    T(ax,40,H+190,"외부 펜트리(실외 · 가정: 폭 4.5m=사무실 폭 · 깊이 1.3m 가정)",fs=4.8,c="#555",ha="left")
+    R(ax,3820,H+330,560,540,"#FFE0B8","#E67E22",1.6,z=5); T(ax,4100,H+600,"3D프린터",fs=4.8,c="#8A4B00",fontweight="bold")
+    T(ax,3350,H+620,"펜트리 우측 끝 →\n(환기 걱정 없음)",fs=4.4,c="#8A4B00",ha="center")
+    ax.plot([4100],[H-30],alpha=0)
     # ---------- front door
     DX0,DX1=1800,2700
     R(ax,DX0,-35,DX1-DX0,70,"#FFFFFF","#555",1.2,z=7)
