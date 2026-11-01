@@ -29,17 +29,17 @@ def build(mode):
     R(ax,0,0,W,H,"#FBFCFD",z=0)
     # ---------- window (bottom short wall) / door (top short wall)
     R(ax,0,H-40,W,80,"#9AD3FF","#2C7FB8",1,z=6); T(ax,W/2,H+170,"창문 (바닥~천장 전면 유리) · 카메라는 창을 향하지 않음 · 암막/롤 블라인드 권장",fs=6.2,c="#2C7FB8")
-    DX0,DX1=3100,4000
+    DX0,DX1=1800,2700   # 문: 짧은 벽(앞) 정중앙 (W/2=2250 기준 폭 900)
     R(ax,DX0,-35,DX1-DX0,70,"#FFFFFF","#555",1.2,z=7)
     ax.add_patch(Arc((DX0,0),1800,1800,theta1=0,theta2=90,color="#888",lw=1,ls="--",zorder=7))
     ax.plot([DX0,DX0+900],[0,0],color="#555",lw=1.2,zorder=7)
     ax.add_patch(Wedge((DX0,0),900,0,90,fc="#FFF3BF",alpha=.6,ec="none",zorder=2))
-    T(ax,3560,-130,"출입문(복도) · 문 스윙 0.9m 비움",fs=6.0,c="#555")
+    T(ax,1150,-130,"출입문(복도) · 단변 정중앙\n문 스윙 0.9m 비움",fs=5.8,c="#555")
     # ---------- front wall: TV, screen
-    R(ax,1530,130,1440,70,INK,z=6)
-    R(ax,1950,200,600,400,"#B0B8C1","#8B95A1",1,z=5); T(ax,2250,400,"TV 65\"\n이동식 스탠드",fs=6.0)
-    ax.plot([1143,3357],[18,18],color="#7B61FF",lw=3.2,zorder=8)
-    T(ax,1000,-130,"전동 스크린 100\"(선택)",fs=6.0,c="#5B3FD1")
+    R(ax,2830,130,1440,70,INK,z=6)
+    R(ax,3250,200,600,400,"#B0B8C1","#8B95A1",1,z=5); T(ax,3550,400,"TV 65\"\n이동식 스탠드",fs=6.0)
+    ax.plot([2715,4485],[18,18],color="#7B61FF",lw=3.2,zorder=8)
+    T(ax,3650,-150,"전동 스크린 80\"(선택·문 오른쪽)",fs=5.8,c="#5B3FD1")
     # ---------- service wall (left, front)
     R(ax,50,820,555,640,"#E5E8EB","#8B95A1",1.2,z=5); T(ax,330,1140,"냉장고",fs=6.0)
     R(ax,50,1500,450,900,"#FFFFFF","#8B95A1",1.2,z=5); T(ax,275,1950,"커피머신\n+선반",fs=5.8)
@@ -50,11 +50,11 @@ def build(mode):
     if mode==12:
         R(ax,640,2440,330,380,"#FFFFFF","#2D6A4F",1,z=5,ls="--"); T(ax,805,2630,"프린터\n(나중)",fs=5.0,c="#2D6A4F")
     # whiteboard parked
-    R(ax,700,700,1500,100,"#FFFFFF","#444",1.5,z=5); T(ax,1450,900,"이동식 화이트보드",fs=5.2)
+    R(ax,4350,750,100,1500,"#FFFFFF","#444",1.5,z=5); T(ax,4290,1500,"이동식 화이트보드(주차)",fs=5.0,rotation=90)
     # ---------- projector (ceiling)
-    px,py=2250,3500
+    px,py=2950,3500
     ax.add_patch(Rectangle((px-150,py-90),300,180,fc="#7B61FF",ec="white",zorder=8,alpha=.9)); T(ax,px,py-200,"빔프로젝터(천장, 선택)",fs=5.8,c="#5B3FD1")
-    ax.add_patch(Polygon([[px,py-90],[1143,18],[3357,18]],fc="#7B61FF",alpha=.08,ec="#7B61FF",lw=.6,ls="--",zorder=2))
+    ax.add_patch(Polygon([[px,py-90],[2715,18],[4485,18]],fc="#7B61FF",alpha=.08,ec="#7B61FF",lw=.6,ls="--",zorder=2))
     # ---------- ceiling AC + floor outlet (from photos)
     ax.add_patch(Circle((2250,4950),260,fc="none",ec="#9AA5B1",lw=1,ls="--",zorder=4)); T(ax,2250,4950,"천장형\n에어컨",fs=5.2,c="#9AA5B1")
     FX,FY=900,4950
@@ -147,20 +147,20 @@ def build(mode):
             ax.add_patch(Circle((x+450,8870+0),0,fc="none"))
         for x in (950,1900): chair(ax,x,8960,"#4DB6BD",r=170)
         R(ax,50,7300,560,540,"#FFE0B8","#E67E22",1.6,z=5); T(ax,330,7570,"3D프린터\n(창에서 멀어\n환기 곤란)",fs=4.8,c="#8A4B00")
-        bean(ax,4150,1300); bean(ax,4150,1900)
-        T(ax,3900,2270,"빈백(입구 옆)",fs=5.2,c="#8A5A1F")
+        bean(ax,3750,1500); bean(ax,3750,2100)
+        T(ax,3750,2480,"빈백(TV 앞 옆)",fs=5.2,c="#8A5A1F")
         ax.plot([325,325,40,40],[650,780,780,7300],color=BLUE,lw=1.1,ls="--",zorder=7)
         T(ax,450,8420,"※ 15석: 스튜디오·소파·티테이블 제외",fs=5.4,c="#B1202C",ha="left")
         dim(ax,3100,8200,3100,9100,"뒤 통로 0.9m",dx=-380)
     # ---------- scale, title
     R(ax,300,H+420,1000,70,INK,z=8); R(ax,1300,H+420,1000,70,"white",INK,1,z=8)
     T(ax,300,H+620,"0",fs=6.0); T(ax,1300,H+620,"1m",fs=6.0); T(ax,2300,H+620,"2m",fs=6.0)
-    T(ax,2500,H+470,"축척 막대 · 치수 mm · 방 치수·문 위치는 가정",fs=5.8,c=GRAY,ha="left")
+    T(ax,2500,H+470,"축척 막대 · 치수 mm · 방 치수·문 위치는 가정(문=단변 중앙)",fs=5.8,c=GRAY,ha="left")
     ax.add_patch(Rectangle((0,0),W,H,fc="none",ec=INK,lw=3,zorder=10))
     ax.set_xlim(-250,W+250); ax.set_ylim(H+900,-350); ax.set_aspect("equal"); ax.axis("off")
     ax.set_title(f"ㄷ자(U형) 토론 배치 · {seats}석 · 가정한 방 4.5m × 9.8m = 44.1 m² (전용 44.205 m²)",fontsize=9,color=INK,loc="left",fontweight="bold")
     fig.savefig(OUT+f"layout-{mode}.png",bbox_inches="tight",facecolor="white"); plt.close(fig)
-    d=[math.hypot(c[0]-2250,c[1]-400) for c in ch]
+    d=[math.hypot(c[0]-3550,c[1]-400) for c in ch]
     stats[mode]=dict(seats=seats,tables=len(LT+RT+BT),eye_min=round(min(d)),eye_max=round(max(d)))
 stats={}
 build(12); build(15)

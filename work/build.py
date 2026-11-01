@@ -136,7 +136,7 @@ html_out=f'''<!doctype html>
  <div class="eyebrow">한눈에</div>
  <h2>이 공간에 넣을 것들</h2>
  <p class="lead">전용 44.205㎡(약 13.4평) 지식산업센터 사무실에 교육 책상 12석 + 65형 TV, 대표석(모션데스크는 집에 있는 것), 책장 배경 촬영 코너, 포커스룸, 라운지, 탕비·복합기, NAS·공유기, 이동식 화이트보드, 3D 프린터 코너를 넣는 계획이에요.</p>
- <div class="callout warn reveal"><b>가정한 것</b> · 보내주신 방 사진 3장으로 <b>폭 약 4.5m × 길이 약 9.8m = 44.1㎡의 길쭉한 직사각형</b>을 추정했어요(전용 44.205㎡ 기준, 실측 아님). 한쪽 짧은 벽은 <b>바닥~천장 전면 유리창</b>, 반대쪽 짧은 벽에 <b>출입문</b>(중앙에서 살짝 한쪽, 폭 약 0.9m·안쪽 여닫이 가정)이 있고, 바닥 콘센트는 방 중간쯤 한쪽 벽 가까이 1개를 대략 표시했어요. 천장형 에어컨은 중앙. <b>실측치가 오면 배치도를 다시 그릴게요.</b></div>
+ <div class="callout warn reveal"><b>가정한 것</b> · 보내주신 방 사진 3장으로 <b>폭 약 4.5m × 길이 약 9.8m = 44.1㎡의 길쭉한 직사각형</b>을 추정했어요(전용 44.205㎡ 기준, 실측 아님). 한쪽 짧은 벽은 <b>바닥~천장 전면 유리창</b>, 반대쪽 짧은 벽에 <b>출입문</b>(단변 정중앙, 폭 약 0.9m·안쪽 여닫이 가정)이 있고, 바닥 콘센트는 방 중간쯤 한쪽 벽 가까이 1개를 대략 표시했어요. 천장형 에어컨은 중앙. <b>실측치가 오면 배치도를 다시 그릴게요.</b></div>
  <div class="callout reveal" style="margin-top:12px"><b>스타일 가정</b> · 애플 사용자(Mac Studio·MacBook), 깔끔한 미니멀·모던, 유튜브 촬영(유하님과 함께), 화이트/오크/그레이 톤, USB-C·맥 호환 장비를 우선했어요.</div>
  <div class="grid g3p reveal" style="margin-top:20px">
   <div class="card"><h3>배치</h3><p>ㄷ자 12석이 추천. 15석도 그려봤지만 포커스룸·라운지를 거의 포기해야 해요.</p></div>
@@ -151,7 +151,7 @@ html_out=f'''<!doctype html>
  <div class="todo reveal">
   <div class="it hot"><div class="bx"></div><div><b>용달 부르기 — 11/5(목)~11/7(토) 예약 권장 <span class="tg p">TODO</span></b><p>집→사무실로 옮길 짐: <b>NAS</b>, <b>책장</b>, <b>모션데스크</b>(집에 있는 것), 그 밖의 짐(집 책장을 옮기면 구매표의 책장 수량은 줄일 수 있어요). 입주일(2026-11-10, 화) 기준으로 3~5일 전에 예약하는 걸 권장해요. 구매 항목이 아니며 업체·요금은 조사하지 않았어요.</p></div></div>
   <div class="it"><div class="bx"></div><div><b>관리단 업종 확인</b><p>지식산업센터는 입주 가능 업종·시설 사용 규정이 있을 수 있어요. 교육장 운영, 촬영 스튜디오, 3D 프린터(소음·냄새), 이삿짐 엘리베이터 사용 시간을 관리단/관리사무소에 확인하세요.</p></div></div>
-  <div class="it"><div class="bx"></div><div><b>인터넷 개통</b><p>입주 전에 설치 일정을 잡고 공유기·NAS 위치(출입문 쪽 앞 왼쪽 모서리)를 정해두면 첫날부터 쓸 수 있어요.</p></div></div>
+  <div class="it"><div class="bx"></div><div><b>인터넷 개통</b><p>입주 전에 설치 일정을 잡고 공유기·NAS 위치(앞 왼쪽 모서리, 출입문 왼쪽)를 정해두면 첫날부터 쓸 수 있어요.</p></div></div>
   <div class="it"><div class="bx"></div><div><b>전입/사업자 주소</b><p>사업자 주소지·우편물 주소 이전 절차를 확인하세요(필요 서류는 세무서·관리사무소에서 확인).</p></div></div>
   <div class="it"><div class="bx"></div><div><b>NAS 백업 후 이동</b><p>운반 전 중요한 데이터는 별도로 백업해 두세요. NAS는 이삿짐으로 옮기고 사무실에서 공유기 옆에 놓아요.</p></div></div>
   <div class="it"><div class="bx"></div><div><b>실측</b><p>방 가로·세로, 문·창문, 콘센트 위치를 재서 알려주시면 배치도를 확정해요.</p></div></div>
@@ -161,7 +161,7 @@ html_out=f'''<!doctype html>
 <section class="sec" id="layout"><div class="wrap">
  <div class="eyebrow">배치도 · 메인</div>
  <h2>ㄷ자(U형) 토론 12석<br>44.2㎡ 배치도</h2>
- <p class="lead">방이 폭 4.5m로 좁고 길어서, U의 두 다리를 긴 벽에 붙이고 <b>TV는 출입문 쪽 짧은 벽(앞)</b>, U의 바닥(뒤)은 창 쪽으로 잡았어요. 앞 왼쪽이 탕비·복합기·NAS·공유기, 뒤쪽이 대표석+스튜디오·포커스룸·라운지·3D 프린터 코너예요.</p>
+ <p class="lead">방이 폭 4.5m로 좁고 길어서, U의 두 다리를 긴 벽에 붙이고 <b>출입문은 그 짧은 벽(앞) 정중앙, TV는 문 오른쪽</b>, U의 바닥(뒤)은 창 쪽으로 잡았어요. 앞 왼쪽이 탕비·복합기·NAS·공유기, 뒤쪽이 대표석+스튜디오·포커스룸·라운지·3D 프린터 코너예요.</p>
  <div class="lay1 reveal"><figure><a href="assets/img/layout-12.png" target="_blank" rel="noopener"><img src="assets/img/layout-12.png" alt="ㄷ자 12석 배치도" loading="lazy"></a></figure></div>
  <div class="legend reveal"><span><i style="background:#3182F6;border-radius:50%"></i>학습자 의자</span><span><i style="background:#EBD3AB;border:2px solid #9A7B4F"></i>교육 책상</span><span><i style="background:#FFD9DE;border:2px solid #F04452"></i>대표석·스튜디오</span><span><i style="background:#D3F1F2"></i>포커스룸</span><span><i style="background:#FF9F1C"></i>멀티탭(주황 점선=케이블)</span><span><i style="background:#3182F6;opacity:.5"></i>파란 점선=유선 LAN</span><span><i style="background:#7B61FF"></i>빔프로젝터·스크린(선택)</span></div>
  <ul class="checks reveal" style="margin-top:20px">
@@ -169,11 +169,11 @@ html_out=f'''<!doctype html>
   <li class="ok"><b>+</b><span>TV~학습자 거리: 가장 가까운 자리 {S12["eye_min"]/1000:.1f}m, 가장 먼 자리 {S12["eye_max"]/1000:.1f}m(65형 화면 높이 809mm 기준 약 {S12["eye_min"]/809:.1f}×~{S12["eye_max"]/809:.1f}×) — 권장 4~8× 안. 창이 학습자 뒤라서 TV에 빛이 반사되지 않아요.</span></li>
   <li class="wn"><b>!</b><span>양쪽 다리(6석)는 의자가 U 안쪽을 향해서 TV를 보려면 몸을 많이 돌려야 해요(약 65~75°). 회전의자·의자 각도 조정이 필요하고, 뒤쪽 6석이 TV를 정면으로 봐요. 좁은 방의 구조적 한계예요.</span></li>
   <li class="wn"><b>!</b><span>통로 점검: 책상 뒤 통로 0.9m, 오른쪽 다리 끝~뒤쪽 책상 사이 0.9m + 오른쪽 벽 통로 0.9m, 출입문 스윙 반경 0.9m는 가구 없이 비움(배치도 노란 부채꼴). 뒤쪽 공간으로 가려면 U 안쪽을 지나 오른쪽 벽 통로로 가야 해서, <b>수업 중 이동은 불편</b>해요(수업 시작 전 입장 권장).</span></li>
-  <li class="wn"><b>!</b><span>TV를 앞(출입문 쪽)에 둔 대신 문이 TV 옆 오른쪽에 있어요. 늦게 오는 사람은 앞쪽 오른쪽 모서리로 들어와 U 안쪽을 지나요. TV는 문 반대쪽(문 열림 반경 밖)에 붙였어요.</span></li>
+  <li class="wn"><b>!</b><span>문이 앞 벽 정중앙이라 늦게 오는 사람은 U 안쪽 한가운데로 바로 들어와요. TV(와 선택 스크린 80형)는 문 열림 반경 밖인 문 오른쪽 벽에 붙였고, 이동식 화이트보드는 오른쪽 벽(세로)에 세워 두었어요. TV가 정면이 아니라 오른쪽으로 치우쳐서, 왼쪽 다리 학습자는 화면을 약간 비스듬히 봐요(TV 스탠드를 살짝 돌려 두면 돼요).</span></li>
   <li><b>·</b><span>빔프로젝터는 천장 설치(선택) → 앞 벽 천장에서 내려오는 100형 전동 스크린. TV와 번갈아 쓰는 구성이라 둘 다 쓰는 날에는 TV를 옆으로 옮겨요.</span></li>
   <li><b>·</b><span>프린터(나중)는 복합기 옆, 3D 프린터는 창 쪽 오른쪽 모서리(환기), 모션데스크는 보유품이고 Mac Studio·키보드·마우스를 올려둔 모습으로 그렸어요. 바닥 콘센트 연결선은 오렌지 점선이에요.</span></li>
  </ul>
- <div class="callout reveal" style="margin-top:14px"><b>TV 위치, 이렇게 골랐어요</b> · ① 창 쪽 짧은 벽: 역광·반사로 탈락(요청대로 제외). ② 긴 벽: 폭이 4.5m라 U가 안 나오고 앞줄이 TV에 1.8m까지 붙어 탈락. ③ <b>출입문 쪽 짧은 벽(채택)</b>: 창이 학습자 뒤라 반사가 없고 TV 거리 3.0~5.3m가 나와요. 대신 문이 TV 옆이라 늦게 오는 사람이 앞을 지나요.</div>
+ <div class="callout reveal" style="margin-top:14px"><b>TV 위치, 이렇게 골랐어요</b> · ① 창 쪽 짧은 벽: 역광·반사로 탈락(요청대로 제외). ② 긴 벽: 폭이 4.5m라 U가 안 나오고 앞줄이 TV에 1.8m까지 붙어 탈락. ③ <b>출입문 쪽 짧은 벽(채택)</b>: 창이 학습자 뒤라 반사가 없어요. 문이 정중앙이라 TV는 문 오른쪽으로 비켜 앉혔고(거리 2.8~5.9m), 대신 TV가 정면에서 약간 치우쳐요.</div>
  <p class="small" style="margin-top:10px">스탠드얼론 이미지: <a href="assets/img/layout-12.png" target="_blank" rel="noopener">layout-12.png ↗</a></p>
 
  <h3 class="sub3" style="margin-top:40px">15석 변형 (참고)</h3>
@@ -288,7 +288,7 @@ html_out=f'''<!doctype html>
  <div class="eyebrow">출처와 미확인</div>
  <h2>확인하지 못한 것</h2>
  <ul class="checks reveal">
-  <li class="wn"><b>!</b><span>방 치수·문·창·콘센트: 사진으로 추정한 값(약 4.5×9.8m). 문 위치(출입문 쪽 오른쪽)·여닫이 방향·바닥 콘센트 위치는 정확하지 않아요. 배치도의 의자·책상 간격은 그 가정 기준이에요.</span></li>
+  <li class="wn"><b>!</b><span>방 치수·문·창·콘센트: 사진으로 추정한 값(약 4.5×9.8m). 문 위치(출입문 쪽 단변 중앙)·여닫이 방향·바닥 콘센트 위치는 정확하지 않아요. 배치도의 의자·책상 간격은 그 가정 기준이에요.</span></li>
   <li class="wn"><b>!</b><span>소파 치수: 일룸 코모·이안가구 론디 모두 정확한 치수를 확인하지 못함 → 도면 크기는 추정(1400×850).</span></li>
   <li class="wn"><b>!</b><span>한샘 플롯 책장세트 크기가 1세트 기준인지 미확인. 이케아 BILLY의 다나와 가격은 오래된 판매처 표기일 수 있어 공식가 재확인 필요.</span></li>
   <li class="wn"><b>!</b><span>화이트보드 두 제품 모두 캐스터 여부를 상세 확인하지 못함. 룸앤오피스 책상 높이·캐스터 미확인.</span></li>
