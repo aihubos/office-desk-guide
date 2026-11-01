@@ -174,6 +174,7 @@ html_out=f'''<!doctype html>
   <li><b>·</b><span>프린터(나중)는 복합기 옆, 3D 프린터는 창 쪽 오른쪽 모서리(환기), 모션데스크는 보유품이고 Mac Studio·키보드·마우스를 올려둔 모습으로 그렸어요. 바닥 콘센트 연결선은 오렌지 점선이에요.</span></li>
  </ul>
  <div class="callout reveal" style="margin-top:14px"><b>TV 위치, 이렇게 골랐어요</b> · ① 창 쪽 짧은 벽: 역광·반사로 탈락(요청대로 제외). ② 긴 벽: 폭이 4.5m라 U가 안 나오고 앞줄이 TV에 1.8m까지 붙어 탈락. ③ <b>출입문 쪽 짧은 벽(채택)</b>: 창이 학습자 뒤라 반사가 없어요. 문이 정중앙이라 TV는 문 오른쪽으로 비켜 앉혔고(거리 2.8~5.9m), 대신 TV가 정면에서 약간 치우쳐요.</div>
+ <p style="margin-top:12px"><a href="3d/" style="font-weight:700">🧊 3D 모델로 보기 (돌려보고 확대 · 12/15석 전환) →</a></p>
  <p class="small" style="margin-top:10px">스탠드얼론 이미지: <a href="assets/img/layout-12.png" target="_blank" rel="noopener">layout-12.png ↗</a></p>
 
  <h3 class="sub3" style="margin-top:40px">15석 변형 (참고)</h3>

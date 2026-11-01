@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>동탄 사무실 3D 배치 · ㄷ자 12석 | AI Builders Lab</title>
+<meta name="description" content="동탄 엘리스빌 사무실 ㄷ자(U형) 토론 배치를 3D로 돌려보는 페이지 (방 4.5×9.8m, 천장 2.6m 가정)">
+<link rel="stylesheet" href="style.css">
+<script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
+</head><body>
+<div id="stage"></div>
+<header id="top">
+  <a class="back" href="../">← 가이드</a>
+  <div class="ttl"><b>사무실 3D 배치</b><span id="sub">ㄷ자(U형) · 12석</span></div>
+</header>
+<div id="bar">
+  <div class="grp">
+    <button data-view="entrance">입구 시점</button>
+    <button data-view="iso" class="on">조감(뒤쪽)</button>
+    <button data-view="iso2">조감(입구쪽)</button>
+    <button data-view="top">위에서</button>
+  </div>
+  <div class="grp">
+    <button data-seats="12" class="on">12석</button>
+    <button data-seats="15">15석</button>
+  </div>
+  <div class="grp">
+    <button id="tgLabel" class="on">라벨</button>
+    <button id="tgDetail">상세 라벨</button>
+    <button id="tgSwing" class="on">문 열림 반경</button>
+  </div>
+</div>
+<div id="note">가정: 방 4.5 × 9.8m (44.1㎡) · 천장 2.6m · 문 폭 0.9m 단변 정중앙 · 가구 크기 대략 · 실측 전 도면이에요. 드래그 회전 · 휠/핀치 확대 · 두 손가락(우클릭) 이동</div>
+<div id="err" hidden>3D(WebGL)를 불러오지 못했어요. 브라우저를 최신으로 바꾸거나 평면도(<a href="../assets/img/layout-12.png">layout-12.png</a>)를 봐 주세요.</div>
+<script type="module" src="app.js"></script>
+</body></html>
