@@ -173,3 +173,30 @@ select.field{font-size:15px;padding:14px 14px;appearance:none;-webkit-appearance
  .vd{grid-template-columns:1fr 1fr}
 }
 @media (min-width:1000px){.g3p.p4{grid-template-columns:repeat(3,1fr)}}
+
+/* ---- Task3 additions ---- */
+.th{width:46px;height:46px;object-fit:contain;border-radius:8px;background:#fff;border:1px solid #E5E8EB;flex:none}
+.pc{display:flex;gap:10px;align-items:center}.pc a{font-weight:600;color:#191F28;text-decoration:none;border-bottom:1px solid #C9D6EA}
+.pc a:hover{color:#3182F6}
+.tbl table.big{min-width:900px}
+.tbl td.num,.tbl th.num{text-align:right;white-space:nowrap}
+.tbl tr.grpr td{background:#F2F4F6;font-weight:800;color:#333D4B}
+.tbl tr.recrow td{background:#F3F8FF}
+.wtxt{display:block;color:#B54708;font-size:12px;margin-top:3px}
+.tg{display:inline-block;font-size:11.5px;font-weight:700;border-radius:999px;padding:3px 9px;white-space:nowrap}
+.tg.p{background:#E8F1FF;color:#1B64DA}.tg.v{background:#E6F7EF;color:#087F5B}.tg.o{background:#F2F4F6;color:#4E5968}
+.todo{display:grid;gap:12px;margin-top:22px}
+.todo .it{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid #E5E8EB;border-radius:18px;padding:18px}
+.todo .it.hot{border-color:#3182F6;background:#F3F8FF}
+.todo .bx{width:24px;height:24px;border-radius:7px;border:2px solid #B0B8C1;flex:none;margin-top:2px}
+.todo b{display:block;font-size:16px}.todo p{margin:4px 0 0;color:#4E5968;font-size:14px;line-height:1.55}
+.stot{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:22px 0}
+.stot .card{padding:18px}.stot .n{font-size:24px;font-weight:800;letter-spacing:-.02em;margin:4px 0}.stot .l{color:#6B7684;font-size:13px}
+.lay1 figure{margin:0;background:#fff;border:1px solid #E5E8EB;border-radius:20px;padding:10px}.lay1 img{width:100%;height:auto;display:block;border-radius:12px}
+.cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+@media(max-width:640px){.pc .th{width:38px;height:38px}}
+.tbl table.big{table-layout:fixed;min-width:940px;font-size:13.5px}
+.tbl table.big td:first-child{white-space:normal}
+.tbl table.big th:nth-child(1){width:13%}.tbl table.big th:nth-child(2){width:8%}.tbl table.big th:nth-child(3){width:28%}
+.tbl table.big th:nth-child(4){width:12%}.tbl table.big th:nth-child(5){width:5%}.tbl table.big th:nth-child(6){width:11%}.tbl table.big th:nth-child(7){width:23%}
+.tbl table.big td{padding:12px 12px;word-break:keep-all;overflow-wrap:anywhere}
