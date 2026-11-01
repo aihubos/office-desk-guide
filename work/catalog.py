@@ -7,9 +7,12 @@ def add(id,grp,name,pri,P,V,rec,note=""):
     I.append(dict(id=id,grp=grp,name=name,pri=pri,P=P,V=V,rec=rec,note=note))
 def t(n,u,img,p,q,why,src,w=""): return dict(n=n,u=u,img=img,p=p,q=q,why=why,src=src,w=w)
 # ---------------- 교육존
-add("table","교육존","교육 책상 (3석/개)","입주 전 필수",
- t("데스커 멀티테이블 1800×800","https://www.desker.co.kr/product/detail/694","p-desker-multitable.jpg",261000,(4,5),"깊이 800이라 노트북+노트 여유","데스커 공식몰"),
- t("룸앤오피스 YWD6029","https://price.enuri.com/catalog/106739798","p-roomnoffice.jpg",62690,(4,5),"4개에 25만원대로 가장 저렴","에누리","높이·캐스터 사양은 판매 페이지에서 미확인"),"P")
+add("table","교육존","교육 책상 1800×600 (3석/개) · ㄷ자 다리용","입주 전 필수",
+ t("오프셋퍼니처 TFS/가이아 1800×600","https://www.1gagu.com/goods/goods_view.php?goodsNo=186800931","p-offset-gaia.jpg",269500,(4,4),"일자 연결식 · 구매 예정 모델(제레미 선택). 기본 238,700 + W1800 옵션 30,800 계산값","퍼스트사무용가구","1800 옵션가는 계산값 · 배송비 별도"),
+ t("룸앤오피스 YWD6029","https://price.enuri.com/catalog/106739798","p-roomnoffice.jpg",62690,(4,4),"4개에 25만원대로 가장 저렴","에누리","크기·높이·캐스터 사양은 판매 페이지에서 미확인(1800×600 아닐 수 있음)"),"P")
+add("table_s","교육존","교육 책상 1200×600 (2석/개) · ㄷ자 바닥용 (추가 구매)","입주 전 필수",
+ t("오프셋퍼니처 TFS/가이아 1200×600","https://www.1gagu.com/goods/goods_view.php?goodsNo=186800931","p-offset-gaia.jpg",238700,(1,1),"ㄷ자 바닥(뒤쪽) 연결용. 1800짜리를 놓으면 안쪽이 1.2m→1.8m로 늘어 방이 안 나옴","퍼스트사무용가구","238,700원은 기본가(1200 옵션 추정) · 주문 시 옵션가 확인 필요"),
+ t("오프셋퍼니처 TFS/가이아 1200×600","https://www.1gagu.com/goods/goods_view.php?goodsNo=186800931","p-offset-gaia.jpg",238700,(1,1),"같은 제품(가성비 대안 미조사)","퍼스트사무용가구","238,700원은 기본가(1200 옵션 추정) · 주문 시 옵션가 확인 필요"),"P")
 add("chair_l","교육존","학습자 의자","입주 전 필수",
  t("시디즈 T20 2세대","https://kr.sidiz.com/products/t20","p3-ch-t20.jpg",239000,(12,15),"틸팅 강도 4단 조절, 3시간 이상 수업에 안전","시디즈 공식몰"),
  t("시디즈 IBLE (‘서울대 의자’)","https://kr.sidiz.com/products/ible","p3-ch-ible.jpg",189000,(12,15),"메시 등판·틸팅 없음(공식). 189,000원은 글라이드형(바퀴형 199,000원). 12개에 약 60만원 절감","시디즈 공식몰","틸팅 없음 → 4시간 이상 수업엔 불편 가능"),"V")
@@ -44,11 +47,11 @@ add("shelf","라운지·탕비","책장 (촬영 배경 겸용)","1개월 내",
  t("한샘 플롯 오픈 5단 책장세트 1200 (책장 2개)","https://prod.danawa.com/info/?pcode=65366576","p3-shelf-hs.jpg",617100,(1,1),"오픈 5단, 2개가 한 세트","다나와 최저가","세트 크기 124.5×44.6×187.7cm가 1세트 기준인지 개별 기준인지 미확인"),
  t("이케아 BILLY 6단 800×28×202","https://prod.danawa.com/info/?pcode=1503803","p3-shelf-billy.jpg",126900,(2,2),"2개에 25만원, 얇은 28cm 깊이","다나와 표시","다나와 목록이 오래된 판매처 가격일 수 있음 · 이케아 공식가 재확인"),"V")
 add("bean","라운지·탕비","빈백","나중에",
- t("폴리몰리 607P","https://prod.danawa.com/info/?pcode=92232467","p3-bean-poly.jpg",214000,(2,2),"고급 소재, 오래 씀","다나와 최저가"),
- t("생활특권 쫀득 빈백","https://prod.danawa.com/info/?pcode=19548053","p3-bean-life.jpg",54980,(2,2),"2개에 11만원","다나와 최저가"),"V")
-add("sofa","라운지·탕비","소파 2인","1개월 내",
- t("일룸 코모 2인 소파","https://www.iloom.com/product/detail.do?productCd=ISB0009A","p3-sofa-como.jpg",750000,(1,0),"클린터치 패브릭, 미니멀 톤","일룸 공식몰","치수가 판매 페이지에 ‘상세페이지 참조’로만 있어 도면 크기는 추정"),
- t("이안가구 론디 2인","https://prod.danawa.com/info/?pcode=76509122","p3-sofa-ian.jpg",79900,(1,0),"7만원대 가성비","다나와 최저가","치수 미확인(도면은 추정 크기)"),"P")
+ t("폴리몰리 607P","https://prod.danawa.com/info/?pcode=92232467","p3-bean-poly.jpg",214000,(1,2),"고급 소재, 오래 씀","다나와 최저가"),
+ t("생활특권 쫀득 빈백","https://prod.danawa.com/info/?pcode=19548053","p3-bean-life.jpg",54980,(1,2),"2개에 11만원","다나와 최저가"),"V")
+add("sofa","라운지·탕비","소파 (12석 도면=3인형, 15석=2인형)","1개월 내",
+ t("일룸 코모 2인 소파","https://www.iloom.com/product/detail.do?productCd=ISB0009A","p3-sofa-como.jpg",750000,(1,1),"클린터치 패브릭, 미니멀 톤","일룸 공식몰","치수가 판매 페이지에 ‘상세페이지 참조’로만 있어 도면 크기는 추정"),
+ t("이안가구 론디 2인","https://prod.danawa.com/info/?pcode=76509122","p3-sofa-ian.jpg",79900,(1,1),"7만원대 가성비","다나와 최저가","치수 미확인(도면은 추정 크기)"),"P")
 add("tea","라운지·탕비","티테이블","1개월 내",
  t("일룸 람다 소파테이블 120×59×33","https://prod.danawa.com/info/?pcode=31344101","p3-tt-lambda.jpg",185000,(1,0),"샌드오크/화이트","다나와 최저가"),
  t("플라팜 라운드 37×37×58","https://prod.danawa.com/info/?pcode=76402349","p3-tt-plapam.jpg",37900,(1,0),"작은 원형, 좁은 라운지에 부담 없음","다나와 최저가"),"V")
@@ -66,8 +69,8 @@ add("router","네트워크·전원","공유기 (Wi-Fi 6/6E, 20+명)","입주 전
  t("TP-Link Deco XE75 Pro 2팩 (Wi-Fi 6E 메시)","https://prod.danawa.com/info/?pcode=17831153","p3-rt-deco.jpg",274230,(1,1),"2대 메시로 포커스룸까지 커버, 6E","다나와 최저가","동시접속 20+명 실측 성능은 미검증"),
  t("ipTIME BE7200M (Wi-Fi 7)","https://prod.danawa.com/info/?pcode=124481304","p3-rt-be.jpg",165400,(1,1),"1대로 저렴, Wi-Fi 7","다나와 최저가","1대라 구석 음영 가능 · 20+명 성능 미검증"),"P")
 add("strip","네트워크·전원","멀티탭 6구 16A 개별스위치 3m","입주 전 필수",
- t("대현써지오 모노케어","https://prod.danawa.com/info/?pcode=12551873","p3-ps-dh.jpg",16700,(8,9),"개별 스위치, 노트북 충전용","다나와 최저가"),
- t("현대일렉트릭 6구 3m","https://prod.danawa.com/info/?pcode=5199359","p3-ps-hd.jpg",12700,(8,9),"4천원 싸게","다나와 최저가","개별스위치·16A 세부는 판매 페이지 재확인"),"V")
+ t("대현써지오 모노케어","https://prod.danawa.com/info/?pcode=12551873","p3-ps-dh.jpg",16700,(9,9),"개별 스위치, 노트북 충전용","다나와 최저가"),
+ t("현대일렉트릭 6구 3m","https://prod.danawa.com/info/?pcode=5199359","p3-ps-hd.jpg",12700,(9,9),"4천원 싸게","다나와 최저가","개별스위치·16A 세부는 판매 페이지 재확인"),"V")
 add("nas","네트워크·전원","NAS (집에서 이전)","입주 전 필수",
  t("보유 NAS","","",0,(1,1),"구매 아님 — 이삿짐으로 운반","보유"),
  t("보유 NAS","","",0,(1,1),"구매 아님 — 이삿짐으로 운반","보유"),"P","own")
