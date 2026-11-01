@@ -63,10 +63,17 @@ def build(mode):
     T(ax,3650,-150,"전동 스크린 80\"(선택·문 오른쪽)",fs=5.8,c="#5B3FD1")
     # ---------- service wall (left, front)
     R(ax,50,820,555,640,"#E5E8EB","#8B95A1",1.2,z=5); T(ax,330,1140,"냉장고",fs=6.0)
-    R(ax,50,1500,450,900,"#FFFFFF","#8B95A1",1.2,z=5); T(ax,275,1950,"커피머신\n+선반",fs=5.8)
-    R(ax,50,2440,460,380 ,"#FFFFFF","#2D6A4F",1.6,z=5); T(ax,280,2630,"복합기",fs=5.8)
-    Z(ax,0,780,640,2100,"#CDEFD9","")
-    T(ax,610,1650,"탕비·복합기",fs=5.6,c="#1B5E3A",fontweight="bold",rotation=90)
+    R(ax,50,1500,450,800,"#FFFFFF","#8B95A1",1.2,z=5); T(ax,275,2010,"커피머신\n+선반",fs=5.8)
+    R(ax,620,50,380,460,"#FFFFFF","#2D6A4F",1.6,z=5); T(ax,810,280,"복합기",fs=5.8)
+    R(ax,520,820,1100,1480,"#FFF3BF","none",0,z=1,alpha=.35)  # 탕비 이용·대기 공간
+    T(ax,1080,1950,"탕비 한 줄 동선\n이용·대기 공간 (문 쪽 약 1.1m)",fs=4.6,c="#8A6D00")
+    Z(ax,0,780,640,1540,"#CDEFD9","")
+    # 정수기 (탕비 선반 위, 냉장고 옆)  LG WD520AWB 168x398x400 (D=400 벽쪽, W=168)
+    R(ax,70,1540,400,168,"#BFEFF2","#0E7C86",1.4,z=7); T(ax,640,1625,"← 정수기 (선반 위)",fs=4.8,c="#0E6B73",ha="left",fontweight="bold")
+    # 공기청정기 (앞 벽 쪽 왼쪽 빈 곳) LG AS186HWWL 315x315, 주변 30cm 비움
+    R(ax,1143,190,615,615,"none","#0E7C86",.8,z=6,ls="--")
+    ax.add_patch(Circle((1450,497),157,fc="#E6F7F8",ec="#0E7C86",lw=1.4,zorder=7)); ax.add_patch(Circle((1450,497),75,fc="none",ec="#0E7C86",lw=.8,zorder=8))
+    T(ax,1450,950,"공기청정기\n(LG 퓨리케어 360°)",fs=4.8,c="#0E6B73",fontweight="bold")
     R(ax,50,50,550,600,"#C9B5F2","#6F42C1",1.5,z=5); T(ax,325,350,"NAS\n공유기",fs=5.8,c="#3D1E8F")
     # whiteboard parked
     R(ax,4350,750,100,1500,"#FFFFFF","#444",1.5,z=5); T(ax,4290,1500,"이동식 화이트보드(주차)",fs=5.0,rotation=90)
@@ -138,6 +145,9 @@ def build(mode):
         # lounge
         sofa(ax,1300,8950,1800,850,"down","소파 3인")
         ax.add_patch(Circle((1900,8650),175,fc="#FFFFFF",ec="#9A7B4F",lw=1.3,zorder=5)); T(ax,1900,8650,"티\n테이블",fs=4.6)
+        R(ax,1180,8330,540,540,"none","#2C7FB8",.8,z=6,ls="--")
+        ax.add_patch(Circle((1450,8600),135,fc="#D6ECFA",ec="#2C7FB8",lw=1.4,zorder=7)); ax.add_patch(Circle((1450,8600),60,fc="none",ec="#2C7FB8",lw=.8,zorder=8))
+        T(ax,1450,8250,"가습기\n(LG 퓨리케어)",fs=4.8,c="#1F5E8F",fontweight="bold")
         bean(ax,3500,9380)
         T(ax,3500,9040,"라운지",fs=6.0,c="#8A5A1F",fontweight="bold")
         # maker
@@ -167,7 +177,10 @@ def build(mode):
         R(ax,50,7300,560,540,"#FFE0B8","#E67E22",1.6,z=5); T(ax,330,7570,"3D프린터\n(창에서 멀어\n환기 곤란)",fs=4.8,c="#8A4B00")
         bean(ax,3750,1300); bean(ax,3750,1880)
         sofa(ax,3650,7300,850,1400,"right","소파 2인")
-        T(ax,3480,8000,"소파 850×1400(추정)\n오른쪽 벽 등받이",fs=4.6,c="#8A5A1F",ha="right")
+        T(ax,3480,8250,"소파 850×1400(추정)\n오른쪽 벽 등받이",fs=4.6,c="#8A5A1F",ha="right")
+        R(ax,3130,7580,540,540,"none","#2C7FB8",.8,z=6,ls="--")
+        ax.add_patch(Circle((3400,7850),135,fc="#D6ECFA",ec="#2C7FB8",lw=1.4,zorder=7)); ax.add_patch(Circle((3400,7850),60,fc="none",ec="#2C7FB8",lw=.8,zorder=8))
+        T(ax,3400,7480,"가습기\n(LG 퓨리케어)",fs=4.8,c="#1F5E8F",fontweight="bold")
         ax.plot([325,325,40,40],[650,780,780,7300],color=BLUE,lw=1.1,ls="--",zorder=7)
         T(ax,450,8420,"※ 15석: 스튜디오·티테이블 제외 (소파는 오른쪽 벽)",fs=5.2,c="#B1202C",ha="left")
         dim(ax,2250,6330,2250,7300,"뒤 통로 약 1.0m",dx=-300)
