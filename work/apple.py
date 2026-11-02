@@ -68,11 +68,11 @@ def chair_item(c):
 chair_block=('<p class="note-s" style="margin-top:0">‘서울대 의자’는 공식 이름이 아니라 별칭이에요. 후기들은 시디즈 T501FE(지금 이름은 아이블)를 가리켜요. 퍼시스 CH2811은 ‘연세대 의자’로 불려요. 대학 납품 여부는 공식 확인을 못 했어요.</p>'
  '<div class="chlist">'+"".join(chair_item(c) for c in CHAIR_CANDS)+'</div>'
  f'<p class="note-s">고른 이유: 서울대 의자 그 자체이고, 후보 중 가장 싸며(10개 {won_(CHAIR_L*10)}원), 후기도 3,000개 넘게 4.8점이에요. 이전 선택이던 데스커 올라운드 HF(252,000원)보다 10개에 {won_(2520000-CHAIR_L*10)}원 줄어요. 대표 의자는 헤드레스트와 틸팅이 있는 시디즈 T50 2세대 419,000원 그대로예요(후기 ★4.88 · 715개, 네이버 가격비교 2026-11-01). 가격은 쿠폰·배송비를 뺀 표시값이고 후기 수는 쇼핑몰마다 달라요.</p>')
-cfg_cards=(cfgcard("A · 협업형","멀티데스크 ×5","시디즈 아이블 의자 ×10","2인씩 나란히 앉아요","도면 재조정 필요","warn",CFG_A,["desker-688.webp","chairs/ible.webp"],True)
+cfg_cards=(cfgcard("A · 협업형","멀티데스크 ×5","시디즈 아이블 의자 ×10","2인씩 나란히 앉아요","도면 반영 완료","ok",CFG_A,["desker-688.webp","chairs/ible.webp"],True)
  +cfgcard("B · 개인형","컴퓨터데스크 2.0 ×10","시디즈 아이블 의자 ×10","한 사람에 책상 하나","10대는 자리 부족","no",CFG_B,["desker-616.webp","chairs/ible.webp"])
  +cfgcard("C · 모션 믹스","컴퓨터데스크 ×7 + 모션데스크 ×3","시디즈 아이블 의자 ×10","3명은 서서도 일해요","10대는 자리 부족","no",CFG_C,["desker-239.webp","chairs/ible.webp"]))
 cfg_detail=f"""<table class="tbl"><thead><tr><th>구성</th><th>책상</th><th>의자</th><th>합계</th><th>자리</th></tr></thead><tbody>
-<tr><td><b>A ⭐</b></td><td>멀티데스크 1800×800 × 5 = {won_(294000*5)}원</td><td>시디즈 아이블 × 10 = {won_(CHAIR_L*10)}원</td><td><b>{won_(CFG_A)}원</b></td><td>ㄷ자 양팔 8석은 가능. 책상 깊이가 800이라 통로가 0.9m보다 좁아져요. 안쪽 폭을 1.0m로 줄이면 0.9m가 돼요. 5번째 책상(1.8m)은 안쪽 1.2m에 안 들어가서 자리를 따로 잡아야 해요.</td></tr>
+<tr><td><b>A ⭐</b></td><td>멀티데스크 1800×800 × 5 = {won_(294000*5)}원</td><td>시디즈 아이블 × 10 = {won_(CHAIR_L*10)}원</td><td><b>{won_(CFG_A)}원</b></td><td>도면 반영 완료. 양팔 2개씩 + 입구 쪽 상석 1개(두 팔 끝을 잇는 다리)예요. 안쪽 통로 0.9m, 오른쪽 통로 0.93m예요.</td></tr>
 <tr><td><b>B</b></td><td>컴퓨터데스크 2.0 1400×700 × 10 = {won_(207000*10)}원</td><td>시디즈 아이블 × 10 = {won_(CHAIR_L*10)}원</td><td><b>{won_(CFG_B)}원</b></td><td>책상+의자가 차지하는 면적 약 20㎡. 학습존은 약 14.6㎡라 10대는 안 들어가요. ㄷ자 팔에는 2대씩, 4~5석 정도예요.</td></tr>
 <tr><td><b>C</b></td><td>컴퓨터데스크 × 7 = {won_(207000*7)}원 + 모션데스크 플러스 1400×700 × 3 = {won_(670000*3)}원</td><td>시디즈 아이블 × 10 = {won_(CHAIR_L*10)}원</td><td><b>{won_(CFG_C)}원</b></td><td>B와 같은 크기라 자리 문제도 같아요.</td></tr>
 </tbody></table>
@@ -123,9 +123,8 @@ html_out=f'''<!doctype html>
 
 <section class="asec gray" id="layout"><div class="awrap">
  <h2>도면</h2>
- <p class="sub">ㄷ자 10석, 한 장으로.</p>
+ <p class="sub">ㄷ자 10석 · 데스커 멀티데스크 1800×800 ×5.</p>
  <figure class="plan"><a href="assets/img/layout-10.png" target="_blank" rel="noopener"><img src="assets/img/layout-10.png" alt="ㄷ자 10석 배치도 (상석이 입구 쪽, ㄷ자 끝에 전자칠판, 책장 가벽 뒤 소파·대표실)" loading="lazy"></a></figure>
- <p class="note-s">도면은 이전 책상(깊이 600) 기준이에요. 데스커 책상은 배치를 다시 잡아야 해요.</p>
  <p class="acts"><a href="3d/">3D로 보기 ›</a><a href="assets/img/layout-10.png" target="_blank" rel="noopener">큰 이미지 ›</a></p>
  {det("배치 · 거리 · 통로 · 12석 · 15석",lay_i)}
  {det("가정한 것 · 요약",inner("summary"))}

@@ -60,8 +60,6 @@ def bean(ax,x,y):
 def build(mode):
     seats={10:10,12:12,15:15}[mode]
     from shapely.geometry import Polygon as SP
-    import sys; sys.path.insert(0,"/workspace")
-    from geom import UP as UPG
     fig,ax=plt.subplots(figsize=(4.8,4.8*(H+2850)/(W+700)),dpi=260)
     R(ax,0,0,W,H,"#FBFCFD",z=0)
     # ---------- window (bottom short wall) with 외부 펜트리 출입문 (오른쪽 끝) / door (top short wall)
@@ -89,15 +87,15 @@ def build(mode):
     # ---------- 전자칠판 75": ㄷ자 열린 쪽 끝에 붙여 정면(입구 방향)을 향함, 바로 뒤가 책장 가벽 — 제노스미디어 CO750LT4K 패널 1707x1034
     BPHI=-90
     bn=(math.cos(math.radians(BPHI)),math.sin(math.radians(BPHI))); bt=(-bn[1],bn[0])
-    BC=(1900,6650)
+    BC=(1850,6700)
     BP=lambda u,v:(BC[0]+u*bt[0]+v*bn[0],BC[1]+u*bt[1]+v*bn[1])
     ax.add_patch(Polygon([BP(-733,-110),BP(733,-110),BP(733,-520),BP(-733,-520)],closed=True,fc="#EEF1F6",ec="#8B95A1",lw=.9,ls="--",zorder=4,alpha=.7))
     ax.add_patch(Polygon([BP(-853,0),BP(853,0),BP(853,-110),BP(-853,-110)],closed=True,fc=INK,ec=INK,zorder=6))
     sc=BP(0,-330); T(ax,sc[0],sc[1],"전자칠판 75\"\n제노스미디어 CO750LT4K\n(스탠드 크기·바퀴 가정)",fs=4.0,c=INK)
     ax.annotate("",xy=BP(0,420),xytext=BP(0,40),arrowprops=dict(arrowstyle="-|>",color="#7B61FF",lw=1.3),zorder=8)
-    T(ax,1900,6030,"화면 방향 (ㄷ자 쪽)",fs=4.4,c="#5B3FD1",fontweight="bold",bbox=dict(fc="white",ec="none",pad=.6,alpha=.85))
-    from shapely.geometry import Polygon as SP2
-    ugap=SP2([BP(-853,0),BP(853,0),BP(853,-110),BP(-853,-110)]).union(SP2([BP(-733,-110),BP(733,-110),BP(733,-520),BP(-733,-520)])).distance(UPG)
+    T(ax,1850,6250,"화면 방향 (ㄷ자 쪽)",fs=4.4,c="#5B3FD1",fontweight="bold",bbox=dict(fc="white",ec="none",pad=.6,alpha=.85))
+    from shapely.geometry import Polygon as SP2, box as SBOX
+    BOARD=SP2([BP(-853,0),BP(853,0),BP(853,-110),BP(-853,-110)]).union(SP2([BP(-733,-110),BP(733,-110),BP(733,-520),BP(-733,-520)]))
     # ---------- 탕비: 입구(문) 왼쪽 앞 벽에 한 줄
     R(ax,50,50,555,637,"#E5E8EB","#8B95A1",1.2,z=5); T(ax,330,370,"냉장고\nRT20FARL3S9",fs=4.2)
     R(ax,620,50,880,600,"#FFFFFF","#8B95A1",1.2,z=5); T(ax,1060,590,"카운터 + 선반",fs=4.4)
@@ -114,7 +112,7 @@ def build(mode):
     ax.add_patch(Circle((PX,PY),157,fc="#E6F7F8",ec="#0E7C86",lw=1.4,zorder=7)); ax.add_patch(Circle((PX,PY),75,fc="none",ec="#0E7C86",lw=.8,zorder=8))
     T(ax,PX-60,PY-470,"공기청정기\n(LG 퓨리케어 360°)",fs=4.4,c="#0E6B73",fontweight="bold")
     T(ax,3350,520,"비워 둔 앞 벽 오른쪽\n(외투·택배 후보)",fs=4.6,c=GRAY)
-    T(ax,2250,1420,"▼ 문을 열면 ㄷ자 상석이 바로 보여요",fs=5.0,c="#1F5FBF",fontweight="bold")
+    T(ax,2250,650,"▼ 문을 열면 상석 책상이 바로 보여요",fs=5.0,c="#1F5FBF",fontweight="bold")
     # CCTV
     def cam(x,y,c,fov,rad,n):
         ax.add_patch(Wedge((x,y),rad,c-fov/2,c+fov/2,fc="#FF6B6B",alpha=.10,ec="#E03131",lw=.7,ls="--",zorder=2))
@@ -123,40 +121,43 @@ def build(mode):
     cam(4430,4000,180,70,3800,"2"); T(ax,4150,3840,"CCTV 2 책상·U",fs=4.8,c="#C92A2A",fontweight="bold",ha="right")
     # ---------- ceiling AC + floor outlet
     ax.add_patch(Circle((2250,4950),260,fc="none",ec="#9AA5B1",lw=1,ls="--",zorder=4)); T(ax,2250,4950,"천장형\n에어컨",fs=5.2,c="#9AA5B1")
-    FX,FY=900,4950
+    FX,FY=900,5450
     ax.plot([FX],[FY],marker="o",ms=7,color="#FF9F1C",mec="#B86E00",zorder=9)
-    T(ax,1000,5200,"바닥 콘센트\n(대략)",fs=4.0,c="#B86E00",z=9)
-    # ---------- learners: ㄷ자를 뒤집음 — 막힌 쪽(1200x600 상석)이 입구 쪽, 열린 쪽이 뒤(전자칠판)
-    UP=[(700,2100),(3100,2100),(3100,5700),(2500,5700),(2500,2700),(1300,2700),(1300,5700),(700,5700)]
-    if mode==10:
-        ch=[(440,2460+960*i,1,0) for i in range(4)]+[(3360,2460+960*i,-1,0) for i in range(4)]+[(1500,1840,0,1),(2300,1840,0,1)]
-    elif mode==12:
-        ch=[(440,2460+720*i,1,0) for i in range(5)]+[(3360,2460+720*i,-1,0) for i in range(5)]+[(1500,1840,0,1),(2300,1840,0,1)]
-    else:
-        ch=[(440,2460+600*i,1,0) for i in range(6)]+[(3360,2460+600*i,-1,0) for i in range(6)]+[(1100,1840,0,1),(1900,1840,0,1),(2700,1840,0,1)]
-    Z(ax,235,1635,3330,4250,"#DCEBFF","")
-    ax.add_patch(Polygon(UP,closed=True,fc=WOOD,ec=EC,lw=2.2,zorder=4,joinstyle="round"))
-    for (x1,y1,x2,y2) in [(700,3900,1300,3900),(2500,3900,3100,3900),(1300,2100,1300,2700),(2500,2100,2500,2700)]:
-        ax.plot([x1,x2],[y1,y2],color=EC,lw=.9,zorder=5)
-    for (tx,ty) in [(1000,3000),(1000,4800),(2800,3000),(2800,4800)]: T(ax,tx,ty,"1800×600",fs=5.0,c="#6B5530",rotation=90)
-    T(ax,1900,2400,"1200×600 (상석 · 추가)",fs=4.8,c="#6B5530")
+    T(ax,1000,5650,"바닥 콘센트\n(대략)",fs=4.0,c="#B86E00",z=9)
+    # ---------- learners: 데스커 멀티데스크 1800x800 x5 (진짜 크기). ㄷ자를 뒤집음 — 막힌 쪽(책상 1개, 상석)이 입구 쪽, 열린 쪽이 뒤(전자칠판)
+    DW,DL=800,1800                      # 책상 깊이·길이
+    AY0=2200                            # 양팔 시작 y (상석 책상 뒤)
+    LX,RX=600,2300                      # 왼팔·오른팔 x 시작 (안쪽 통로 = 1400~2300 = 0.9m)
+    BX0,BY0=1300,1400                   # 상석 책상(1800x800) x 1300~3100, y 1400~2200
+    DESKS=[(LX,AY0,DW,DL),(LX,AY0+DL,DW,DL),(RX,AY0,DW,DL),(RX,AY0+DL,DW,DL),(BX0,BY0,DL,DW)]
+    na=seats and {10:4,12:5,15:6}[mode]
+    ch=[(LX-260,AY0+3600*(i+.5)/na,1,0) for i in range(na)]+[(RX+DW+260,AY0+3600*(i+.5)/na,-1,0) for i in range(na)]
+    bxs={10:[1750,2650],12:[1750,2650],15:[1600,2200,2800]}[mode]
+    ch+=[(x,BY0-310,0,1) for x in bxs]
+    UPG=SBOX(*DESKS[0][:2],DESKS[0][0]+DW,DESKS[0][1]+DL)
+    for (x,y,w,h) in DESKS: UPG=UPG.union(SBOX(x,y,x+w,y+h))
+    ugap=BOARD.distance(UPG)
+    R(ax,1500,935,1600,1265,"#DCEBFF",z=1,alpha=.55); R(ax,135,AY0,3430,3685,"#DCEBFF",z=1,alpha=.55)
+    for (x,y,w,h) in DESKS: R(ax,x,y,w,h,WOOD,EC,2.0,z=4)
+    for (x,y,w,h) in DESKS[:4]: T(ax,x+w/2,y+h/2,"멀티데스크 1800×800",fs=5.0,c="#6B5530",rotation=90)
+    T(ax,BX0+DL/2,BY0+DW/2,"멀티데스크 1800×800 (입구 쪽 상석)",fs=5.0,c="#6B5530")
     for (cx,cy,fx,fy) in ch: chair2(ax,cx,cy,fx,fy)
-    T(ax,1900,4300,f"U 안쪽 발표·토론 공간\n(폭 1.2m · 열린 쪽 끝에 전자칠판)\n교육존 {seats}석",fs=5.8,c="#1F5FBF",fontweight="bold")
-    ax.annotate("",xy=(1900,5450),xytext=(1900,3550),arrowprops=dict(arrowstyle="-|>",color="#1F5FBF",lw=1.4),zorder=8)
-    for (x,y,o) in [(1230,2800,"v"),(1230,4750,"v"),(2500,2800,"v"),(2500,4750,"v"),(1600,2630,"h")]:
+    T(ax,1640,4000,f"U 안쪽 발표·토론 통로 · 교육존 {seats}석",fs=5.4,c="#1F5FBF",fontweight="bold",rotation=90)
+    ax.annotate("",xy=(2060,5700),xytext=(2060,3100),arrowprops=dict(arrowstyle="-|>",color="#1F5FBF",lw=1.4),zorder=8)
+    for (x,y,o) in [(LX+DW-70,2800,"v"),(LX+DW-70,4750,"v"),(RX,2800,"v"),(RX,4750,"v"),(1850,BY0+DW-70,"h")]:
         if o=="v": R(ax,x,y,70,300,"#FF9F1C","#B86E00",.8,z=7)
         else: R(ax,x,y,300,70,"#FF9F1C","#B86E00",.8,z=7)
     OR="#FF9F1C"
-    ax.plot([FX,1265,1265],[FY,FY,2800],color=OR,lw=.9,ls=":",zorder=7)
-    ax.plot([1265,1265,1600],[2800,2665,2665],color=OR,lw=.9,ls=":",zorder=7)
-    ax.plot([1900,2535,2535,2535],[2665,2665,2800,4900],color=OR,lw=.9,ls=":",zorder=7)
+    ax.plot([FX,LX+DW-35,LX+DW-35],[FY,FY,2800],color=OR,lw=.9,ls=":",zorder=7)
+    ax.plot([LX+DW-35,LX+DW-35,RX+35,RX+35],[2800,2150,2150,2800],color=OR,lw=.9,ls=":",zorder=7)
+    ax.plot([RX+35,RX+35],[2800,4900],color=OR,lw=.9,ls=":",zorder=7)
     for (ox,oy) in [(W-40,3500),(W-40,5300),(40,7000),(W-40,7600),(W-40,2300)]: outlet(ax,ox,oy)
     # ---------- 낮은 책장 가벽 (칠판 바로 뒤, 왼쪽 벽에 붙이고 오른쪽 2.1m는 통로로 트임): 이케아 BILLY 80x28x106 x4 (벽 고정 필요)
     PY0,PY1=7320,7600
     for k,x0 in enumerate((0,800,1600)):
         R(ax,x0,PY0,800,PY1-PY0,"#E9DCC3","#8A6A3A",1.3,z=6)
     T(ax,1600,(PY0+PY1)/2,"낮은 책장 가벽 · 빌리 80×28×106 ×3 (벽 고정)",fs=4.2,c="#5A3E1B",fontweight="bold",z=9,bbox=dict(fc="#E9DCC3",ec="none",pad=.6))
-    T(ax,1900,7245,"배선 틈 0.15m",fs=3.6,c="#6B7684",z=9)
+    T(ax,1850,7270,"배선 틈 0.10m",fs=3.6,c="#6B7684",z=9)
     # 마샬 스피커(액톤 III 260x170) — 책장 가벽 위 왼쪽 끝 (높이 1.06m), 왼쪽 벽 콘센트(40,7000)에서 약 0.4m
     R(ax,200,7375,260,170,"#2B2B2B","#000",1.0,z=9); T(ax,330,7460,"마샬",fs=3.8,c="#F2C94C",z=10,fontweight="bold")
     T(ax,330,7245,"마샬 스피커\n(가벽 위)",fs=3.6,c="#2B2B2B",z=9,fontweight="bold")
@@ -188,13 +189,12 @@ def build(mode):
     ax.plot([40,40,3300,3300],[9500,9770,9770,9190],color=BLUE,lw=1.1,ls="--",zorder=7)
     # aisles
     dim(ax,3565,3300,4500,3300,"통로 0.93m",dy=-110)
-    dim(ax,0,3540,235,3540,""); T(ax,10,3440,"0.24m",fs=4.6,c=GRN,ha="left")
-    dim(ax,1250,3900,2550,3900,"",c=GRN)
+    dim(ax,0,3000,135,3000,""); T(ax,150,3000,"0.14m",fs=4.4,c=GRN,ha="left",bbox=dict(fc="white",ec="none",pad=.4,alpha=.9),z=10)
+    dim(ax,1400,2520,2300,2520,"안쪽 0.9m",dy=-110)
     dim(ax,2400,7460,4500,7460,"",c=GRN); T(ax,3450,7380,"가벽 트임 2.1m",fs=4.6,c=GRN,bbox=dict(fc="white",ec="none",pad=.5,alpha=.92))
-    dim(ax,0,6700,1047,6700,"왼쪽 통로 1.05m",dy=-110)
-    dim(ax,3000,5700,3000,6650,"",c=GRN)
-    T(ax,3600,6180,f"U 끝↔칠판 약 {ugap/1000:.2f}m",fs=4.6,c=GRN,bbox=dict(fc="white",ec="none",pad=.6,alpha=.92))
-    dim(ax,1300,2950,2500,2950,"안쪽 1.2m",dy=-120)
+    dim(ax,0,6700,997,6700,"왼쪽 통로 1.0m",dy=-110)
+    dim(ax,2400,5800,2400,6700,"",c=GRN)
+    T(ax,3300,6250,f"U 끝↔칠판 약 {ugap/1000:.2f}m",fs=4.6,c=GRN,bbox=dict(fc="white",ec="none",pad=.6,alpha=.92))
     # ---------- scale, title
     SY=H+1750
     R(ax,300,SY,1000,70,INK,z=8); R(ax,1300,SY,1000,70,"white",INK,1,z=8)
@@ -202,7 +202,7 @@ def build(mode):
     T(ax,2500,SY+50,"축척 막대 · 치수 mm · 방 치수·문·펜트리는 가정",fs=5.6,c=GRAY,ha="left")
     ax.add_patch(Rectangle((0,0),W,H,fc="none",ec=INK,lw=3,zorder=10))
     ax.set_xlim(-250,W+250); ax.set_ylim(SY+450,-350); ax.set_aspect("equal"); ax.axis("off")
-    ax.set_title(f"ㄷ자(U형) 토론 + 전자칠판·책장 가벽 · {seats}석 · 가정한 방 4.5m × 9.8m = 44.1 m²",fontsize=8.6,color=INK,loc="left",fontweight="bold")
+    ax.set_title(f"ㄷ자(U형) · 데스커 멀티데스크 1800×800 ×5 · {seats}석 · 가정한 방 4.5m × 9.8m = 44.1 m²",fontsize=8.6,color=INK,loc="left",fontweight="bold")
     fig.savefig(OUT+f"layout-{mode}.png",bbox_inches="tight",facecolor="white"); plt.close(fig)
     bc=BC
     d=[math.hypot(c[0]-bc[0],c[1]-bc[1]) for c in ch]
