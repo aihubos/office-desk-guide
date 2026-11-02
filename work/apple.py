@@ -19,13 +19,14 @@ SHORT=dict(board="전자칠판 75형",slipper="슬리퍼 ×10",wb="이동식 화
  humid="가습기",purifier="공기청정기",fridge="냉장고",coffee="커피머신",mfp="복합기",light="조명 (키 라이트)",mic="데스크 마이크",lav="무선 마이크",
  cam="카메라",tripod="삼각대",shelfled="책장 LED",foam="흡음재 ×6",stu_desk="촬영 책상",proj="빔프로젝터",screen="프로젝터 스크린",printer="별도 프린터",p3d="3D 프린터",
  doorsign="도어사인",nameplate="대표 책상 명패",router="공유기",switch="스위칭 허브",strip="멀티탭",cctv_cam="CCTV 카메라 ×2",cctv_rec="CCTV 녹화·저장")
-CNOTE=dict(bean="집에 있어요",proj="집에 미니 빔이 있어요",screen="빔 쓸 때만",cam="iPhone으로 해요",light="촬영할 때만",mic="촬영할 때만",lav="촬영할 때만")
+SHORT["desk_ceo2"]="모션데스크 #2 (대표 옆)"
+CNOTE=dict(desk_ceo2="가격 확인 필요",bean="집에 있어요",proj="집에 미니 빔이 있어요",screen="빔 쓸 때만",cam="iPhone으로 해요",light="촬영할 때만",mic="촬영할 때만",lav="촬영할 때만")
 NSHORT=dict(strip="전기 안전",doorsign="로고 인쇄물",nameplate="이름·로고 제작",router="이미 고른 모델",switch="네트워크 장비",cctv_cam="보안 장비",cctv_rec="저장장치")
 GRPS={}
 for i in DEF_USED: GRPS.setdefault(i["grp"],[]).append(i)
 used_html='<div class="tiles">'+"".join(tile(SHORT[i["id"]],px(sub(dtier(i),10)),CNOTE.get(i["id"],"")) for i in DEF_USED)+'</div>'
 new_html='<div class="tiles">'+"".join(tile(SHORT[i["id"]],px(sub(dtier(i),10)),NSHORT[i["id"]]) for i in DEF_NEW)+'</div>'
-own_chips=["모션데스크 (대표)","NAS","공유기 (집에 있는 것)","iPhone","로봇청소기","서진이 책상","접이식 책상","빈백","미니 빔프로젝터","캠핑용품 (품목 확인 예정)","이케아 전등","34형 모니터"]
+own_chips=["모션데스크 (대표 · 1대)","NAS","공유기 (집에 있는 것)","iPhone","로봇청소기","서진이 책상","접이식 책상","빈백","미니 빔프로젝터","캠핑용품 (품목 확인 예정)","이케아 전등","34형 모니터"]
 own_html='<div class="chips">'+"".join(f'<span class="chip">{E(x)}</span>' for x in own_chips)+'</div>'
 
 def mcard(i,qn):
@@ -72,7 +73,7 @@ cfg_cards=(cfgcard("A · 협업형","멀티데스크 ×5","시디즈 아이블 �
  +cfgcard("B · 개인형","컴퓨터데스크 2.0 ×10","시디즈 아이블 의자 ×10","한 사람에 책상 하나","10대는 자리 부족","no",CFG_B,["desker-616.webp","chairs/ible.webp"])
  +cfgcard("C · 모션 믹스","컴퓨터데스크 ×7 + 모션데스크 ×3","시디즈 아이블 의자 ×10","3명은 서서도 일해요","10대는 자리 부족","no",CFG_C,["desker-239.webp","chairs/ible.webp"]))
 cfg_detail=f"""<table class="tbl"><thead><tr><th>구성</th><th>책상</th><th>의자</th><th>합계</th><th>자리</th></tr></thead><tbody>
-<tr><td><b>A ⭐</b></td><td>멀티데스크 1800×800 × 5 = {won_(294000*5)}원</td><td>시디즈 아이블 × 10 = {won_(CHAIR_L*10)}원</td><td><b>{won_(CFG_A)}원</b></td><td>도면 반영 완료. 양팔 2개씩 + 입구 쪽 상석 1개(두 팔 끝을 잇는 다리)예요. 안쪽 통로 0.9m, 오른쪽 통로 0.93m예요.</td></tr>
+<tr><td><b>A ⭐</b></td><td>멀티데스크 1800×800 × 5 = {won_(294000*5)}원</td><td>시디즈 아이블 × 10 = {won_(CHAIR_L*10)}원</td><td><b>{won_(CFG_A)}원</b></td><td>도면 반영 완료. 양팔 2개씩 + 입구 쪽 상석 1개(두 팔 가운데에 대칭)예요. 안쪽 통로 0.7m, 오른쪽 통로 약 1.03m예요. 대표 옆 모션데스크 1대는 가격 확인 필요라 합계에 안 들어 있어요.</td></tr>
 <tr><td><b>B</b></td><td>컴퓨터데스크 2.0 1400×700 × 10 = {won_(207000*10)}원</td><td>시디즈 아이블 × 10 = {won_(CHAIR_L*10)}원</td><td><b>{won_(CFG_B)}원</b></td><td>책상+의자가 차지하는 면적 약 20㎡. 학습존은 약 14.6㎡라 10대는 안 들어가요. ㄷ자 팔에는 2대씩, 4~5석 정도예요.</td></tr>
 <tr><td><b>C</b></td><td>컴퓨터데스크 × 7 = {won_(207000*7)}원 + 모션데스크 플러스 1400×700 × 3 = {won_(670000*3)}원</td><td>시디즈 아이블 × 10 = {won_(CHAIR_L*10)}원</td><td><b>{won_(CFG_C)}원</b></td><td>B와 같은 크기라 자리 문제도 같아요.</td></tr>
 </tbody></table>
@@ -123,8 +124,8 @@ html_out=f'''<!doctype html>
 
 <section class="asec gray" id="layout"><div class="awrap">
  <h2>도면</h2>
- <p class="sub">ㄷ자 10석 · 데스커 멀티데스크 1800×800 ×5.</p>
- <figure class="plan"><a href="assets/img/layout-10.png" target="_blank" rel="noopener"><img src="assets/img/layout-10.png" alt="ㄷ자 10석 배치도 (상석이 입구 쪽, ㄷ자 끝에 전자칠판, 책장 가벽 뒤 소파·대표실)" loading="lazy"></a></figure>
+ <p class="sub">ㄷ자 10석 · 데스커 멀티데스크 1800×800 ×5 · 대표실 모션데스크 ×2.</p>
+ <figure class="plan"><a href="assets/img/layout-10.png" target="_blank" rel="noopener"><img src="assets/img/layout-10.png" alt="ㄷ자 10석 배치도 (상석이 양팔 가운데, ㄷ자 끝에 전자칠판, 오른쪽 벽 소파, 창 쪽 대표실에 모션데스크 2개와 복합기)" loading="lazy"></a></figure>
  <p class="acts"><a href="3d/">3D로 보기 ›</a><a href="assets/img/layout-10.png" target="_blank" rel="noopener">큰 이미지 ›</a></p>
  {det("배치 · 거리 · 통로 · 12석 · 15석",lay_i)}
  {det("가정한 것 · 요약",inner("summary"))}

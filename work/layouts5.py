@@ -101,9 +101,8 @@ def build(mode):
     R(ax,620,50,880,600,"#FFFFFF","#8B95A1",1.2,z=5); T(ax,1060,590,"카운터 + 선반",fs=4.4)
     R(ax,660,100,168,400,"#BFEFF2","#0E7C86",1.4,z=7); T(ax,744,300,"정수기",fs=4.8,c="#0E6B73",rotation=90,fontweight="bold")
     R(ax,900,110,420,300,"#D9DDE2","#555",1,z=6); T(ax,1110,260,"커피머신",fs=5.0)
-    R(ax,50,690,1450,800,"#FFF3BF","none",0,z=1,alpha=.35)
-    T(ax,1000,950,"탕비 이용·대기 공간\n(문 열림과 안 겹침)",fs=4.6,c="#8A6D00")
-    R(ax,50,1750,380,460,"#FFFFFF","#2D6A4F",1.6,z=5); T(ax,240,1980,"복합기",fs=4.6); T(ax,450,1990,"위 선반\nNAS + ASUS\nRT-BE92U",fs=4.0,c="#5B3FD6",ha="left")
+    R(ax,50,690,1130,800,"#FFF3BF","none",0,z=1,alpha=.35)
+    T(ax,620,950,"탕비 이용·대기 공간\n(문 열림과 안 겹침)",fs=4.6,c="#8A6D00")
     R(ax,50,1050,620,600,"none","#7A5BD8",1.3,z=6,ls="--"); T(ax,360,1350,"스타일러\n(선택·후보)\n600×620\n열면 1.19m",fs=4.2,c="#5B3FD1")
     R(ax,3500,0,900,300,"#F6EBD7","#9A7B4F",1.3,z=6,ls="--"); T(ax,3950,150,"슬리퍼 랙(후보) 900×300",fs=4.0,c="#5A3E1B")
     # 공기청정기 (문 오른쪽 앞 모서리) LG AS186HWWL
@@ -127,24 +126,25 @@ def build(mode):
     # ---------- learners: 데스커 멀티데스크 1800x800 x5 (진짜 크기). ㄷ자를 뒤집음 — 막힌 쪽(책상 1개, 상석)이 입구 쪽, 열린 쪽이 뒤(전자칠판)
     DW,DL=800,1800                      # 책상 깊이·길이
     AY0=2200                            # 양팔 시작 y (상석 책상 뒤)
-    LX,RX=600,2300                      # 왼팔·오른팔 x 시작 (안쪽 통로 = 1400~2300 = 0.9m)
-    BX0,BY0=1300,1400                   # 상석 책상(1800x800) x 1300~3100, y 1400~2200
+    LX,RX=700,2200                      # 왼팔·오른팔 x 시작 (안쪽 통로 = 1500~2200 = 0.7m, 중심선 M=1850)
+    M=1850
+    BX0,BY0=M-900,1400                  # 상석 책상(1800x800): 양팔 중심선(M)에 좌우 대칭, x 950~2750, y 1400~2200
     DESKS=[(LX,AY0,DW,DL),(LX,AY0+DL,DW,DL),(RX,AY0,DW,DL),(RX,AY0+DL,DW,DL),(BX0,BY0,DL,DW)]
     na=seats and {10:4,12:5,15:6}[mode]
     ch=[(LX-260,AY0+3600*(i+.5)/na,1,0) for i in range(na)]+[(RX+DW+260,AY0+3600*(i+.5)/na,-1,0) for i in range(na)]
-    bxs={10:[1750,2650],12:[1750,2650],15:[1600,2200,2800]}[mode]
-    ch+=[(x,BY0-310,0,1) for x in bxs]
+    bxs={10:[M-450,M+450],12:[M-450,M+450],15:[M-600,M,M+600]}[mode]
+    ch+=[(x,BY0-260,0,1) for x in bxs]
     UPG=SBOX(*DESKS[0][:2],DESKS[0][0]+DW,DESKS[0][1]+DL)
     for (x,y,w,h) in DESKS: UPG=UPG.union(SBOX(x,y,x+w,y+h))
     ugap=BOARD.distance(UPG)
-    R(ax,1500,935,1600,1265,"#DCEBFF",z=1,alpha=.55); R(ax,135,AY0,3430,3685,"#DCEBFF",z=1,alpha=.55)
+    R(ax,1100,930,1500,1270,"#DCEBFF",z=1,alpha=.55); R(ax,100,AY0,3460,3685,"#DCEBFF",z=1,alpha=.55)
     for (x,y,w,h) in DESKS: R(ax,x,y,w,h,WOOD,EC,2.0,z=4)
     for (x,y,w,h) in DESKS[:4]: T(ax,x+w/2,y+h/2,"멀티데스크 1800×800",fs=5.0,c="#6B5530",rotation=90)
-    T(ax,BX0+DL/2,BY0+DW/2,"멀티데스크 1800×800 (입구 쪽 상석)",fs=5.0,c="#6B5530")
+    T(ax,BX0+DL/2,BY0+DW/2,"멀티데스크 1800×800 (입구 쪽 상석 · 양팔 가운데)",fs=5.0,c="#6B5530")
     for (cx,cy,fx,fy) in ch: chair2(ax,cx,cy,fx,fy)
-    T(ax,1640,4000,f"U 안쪽 발표·토론 통로 · 교육존 {seats}석",fs=5.4,c="#1F5FBF",fontweight="bold",rotation=90)
-    ax.annotate("",xy=(2060,5700),xytext=(2060,3100),arrowprops=dict(arrowstyle="-|>",color="#1F5FBF",lw=1.4),zorder=8)
-    for (x,y,o) in [(LX+DW-70,2800,"v"),(LX+DW-70,4750,"v"),(RX,2800,"v"),(RX,4750,"v"),(1850,BY0+DW-70,"h")]:
+    T(ax,1690,4000,f"U 안쪽 발표·토론 통로 · 교육존 {seats}석",fs=5.4,c="#1F5FBF",fontweight="bold",rotation=90)
+    ax.annotate("",xy=(2080,5700),xytext=(2080,3100),arrowprops=dict(arrowstyle="-|>",color="#1F5FBF",lw=1.4),zorder=8)
+    for (x,y,o) in [(LX+DW-70,2800,"v"),(LX+DW-70,4750,"v"),(RX,2800,"v"),(RX,4750,"v"),(M-150,BY0+DW-70,"h")]:
         if o=="v": R(ax,x,y,70,300,"#FF9F1C","#B86E00",.8,z=7)
         else: R(ax,x,y,300,70,"#FF9F1C","#B86E00",.8,z=7)
     OR="#FF9F1C"
@@ -161,38 +161,47 @@ def build(mode):
     # 마샬 스피커(액톤 III 260x170) — 책장 가벽 위 왼쪽 끝 (높이 1.06m), 왼쪽 벽 콘센트(40,7000)에서 약 0.4m
     R(ax,200,7375,260,170,"#2B2B2B","#000",1.0,z=9); T(ax,330,7460,"마샬",fs=3.8,c="#F2C94C",z=10,fontweight="bold")
     T(ax,330,7245,"마샬 스피커\n(가벽 위)",fs=3.6,c="#2B2B2B",z=9,fontweight="bold")
-    T(ax,3600,7010,"빈 공간\n(보관·이동식 촬영 후보)",fs=4.4,c=GRAY)
-    # ---------- 가벽 뒤: 라운지(소파) + 대표실
+    # ---------- 가벽 뒤: 대표실(창 쪽 한 줄: 모션데스크 2 + 복합기 + 대표) + 서진이. 소파는 칠판 오른쪽 벽으로 이동
     Z(ax,0,PY1,W,H-PY1,"#FFE8EC","")
-    T(ax,1000,7700,"가벽 뒤: 라운지(소파) + 대표실",fs=4.8,ha="left",c="#B1202C",fontweight="bold")
-    sofa(ax,0,7610,850,1200,"left","소파 2인(소형)")
-    ax.add_patch(Circle((1300,8100),150,fc="#FFFFFF",ec="#9A7B4F",lw=1.3,zorder=5)); T(ax,1300,8100,"티",fs=4.2)
-    ax.add_patch(Circle((1900,9520),135,fc="#D6ECFA",ec="#2C7FB8",lw=1.4,zorder=7)); ax.add_patch(Circle((1900,9520),60,fc="none",ec="#2C7FB8",lw=.8,zorder=8))
-    T(ax,1900,9340,"가습기",fs=4.0,c="#1F5E8F",fontweight="bold",bbox=dict(fc="#FFE8EC",ec="none",pad=.4,alpha=.9))
-    # 대표 모션데스크: 출입문(앞 벽 정중앙)을 정면으로 봄 -> 대표 의자가 창 쪽, 책상은 북쪽(입구 쪽). 34" 화면은 대표를 향함(입구에선 모니터 뒷면)
-    R(ax,1900,8500,1500,700,"#FFFFFF","#F04452",2,z=5); T(ax,2330,9010,"대표 데스크(보유)\n1500×700",fs=4.0,c="#B1202C")
-    R(ax,2250,8570,800,60,"#2B2F36","#111",1,z=7); T(ax,2480,8730,"34\" 모니터\n(뒷면=입구 쪽)",fs=3.6,c="#333")
-    R(ax,3100,8710,200,200,"#C9CED6","#555",1,z=6); T(ax,3200,8810,"Mac\nStudio",fs=3.8)
-    chair2(ax,2650,9400,0,-1,col=RED,r=200); T(ax,2650,9400,"대표",fs=4.8,c="white")
-    ax.annotate("",xy=(2650,8870),xytext=(2650,9230),arrowprops=dict(arrowstyle="-|>",color=RED,lw=1.2),zorder=8)
-    ax.annotate("",xy=(2900,8770),xytext=(2900,8650),arrowprops=dict(arrowstyle="-|>",color="#7B61FF",lw=1.1),zorder=8)
-    ax.plot([2650,2250],[8490,120],color=RED,lw=.9,ls=":",alpha=.55,zorder=3)
+    T(ax,1000,7700,"가벽 뒤: 대표실 · 서진이",fs=4.8,ha="left",c="#B1202C",fontweight="bold")
+    sofa(ax,3650,6100,850,1200,"right","소파 2인(소형)")
+    T(ax,3300,6560,"소파 (칠판 오른쪽 · 이전: 가벽 뒤)",fs=3.6,c="#5A3E1B",ha="center",bbox=dict(fc="white",ec="none",pad=.3,alpha=.9),z=9)
+    DY=8650                                   # 창 쪽 한 줄 책상 y 8650~9350 (의자는 창 쪽)
+    # 모션데스크 #2(신규, 대표와 동일 1500x700) | 복합기(가운데, 두 자리 공용) | 대표 모션데스크(보유)
+    R(ax,50,DY,1500,700,"#FFFFFF","#F04452",2,z=5); T(ax,800,DY+520,"모션데스크 #2 (신규)\n1500×700 (대표와 동일)",fs=3.9,c="#B1202C")
+    R(ax,50+250,DY+70,800,60,"#2B2F36","#111",1,z=7)
+    chair2(ax,800,DY+900,0,-1,col="#6B7684",r=200); T(ax,800,DY+900,"자리2",fs=4.2,c="white")
+    ax.annotate("",xy=(800,DY+370),xytext=(800,DY+700),arrowprops=dict(arrowstyle="-|>",color="#6B7684",lw=1.1),zorder=8)
+    R(ax,1550,DY,380,460,"#FFFFFF","#2D6A4F",1.6,z=5); T(ax,1740,DY+170,"복합기",fs=4.4)
+    T(ax,1740,DY+620,"위 선반\nNAS+ASUS",fs=3.4,c="#5B3FD6")
+    DX=1930
+    R(ax,DX,DY,1500,700,"#FFFFFF","#F04452",2,z=5); T(ax,DX+430,DY+520,"대표 모션데스크(보유)\n1500×700",fs=3.9,c="#B1202C")
+    R(ax,DX+350,DY+70,800,60,"#2B2F36","#111",1,z=7); T(ax,DX+580,DY+230,"34\" 모니터\n(뒷면=입구 쪽)",fs=3.4,c="#333")
+    R(ax,DX+1200,DY+210,200,200,"#C9CED6","#555",1,z=6); T(ax,DX+1300,DY+310,"Mac\nStudio",fs=3.4)
+    chair2(ax,DX+750,DY+900,0,-1,col=RED,r=200); T(ax,DX+750,DY+900,"대표",fs=4.8,c="white")
+    ax.annotate("",xy=(DX+750,DY+370),xytext=(DX+750,DY+700),arrowprops=dict(arrowstyle="-|>",color=RED,lw=1.2),zorder=8)
+    ax.annotate("",xy=(DX+1000,DY+270),xytext=(DX+1000,DY+150),arrowprops=dict(arrowstyle="-|>",color="#7B61FF",lw=1.1),zorder=8)
+    ax.plot([DX+750,2250],[DY-10,120],color=RED,lw=.9,ls=":",alpha=.55,zorder=3)
     T(ax,3000,7860,"대표 시선: 출입문 정면\n(전자칠판이 중간에서 가려요)",fs=3.9,c="#B1202C",ha="center",bbox=dict(fc="#FFE8EC",ec="none",pad=.3,alpha=.9))
-    # 서진이 책상 (필수): 왼쪽 창 쪽 모서리 (소파 아래)
-    R(ax,150,9200,1000,600,"#FFFFFF","#2F9E44",1.8,z=5); T(ax,650,9560,"서진이 책상\n1000×600",fs=4.2,c="#1F7A33")
-    R(ax,500,9250,300,60,"#2B2F36","#111",1,z=7)
-    chair2(ax,650,9005,0,1,col="#4DB6BD",r=190); T(ax,650,9005,"서진",fs=4.2,c="white")
-    # 로봇청소기 도크 (창 쪽, 서진이 책상과 대표 책상 사이)
-    R(ax,1300,9400,400,350,"#EDEFF2","#555",1.2,z=5); T(ax,1500,9575,"로봇청소기\n도크(기존)",fs=4.0)
-    # LAN: 복합기 옆 NAS/공유기 -> 왼쪽 벽 -> 가벽 따라 -> 오른쪽 벽 -> 대표석·서진이 (벽·천장 경로 가정)
-    ax.plot([240,40,40,150],[1980,1980,9500,9500],color=BLUE,lw=1.1,ls="--",zorder=7)
-    ax.plot([40,40,3300,3300],[9500,9770,9770,9190],color=BLUE,lw=1.1,ls="--",zorder=7)
+    # 서진이 책상: 왼쪽 벽, 가벽 바로 뒤(세로로 세움 600x1000), 의자는 동쪽에서 서쪽(벽)을 봄
+    R(ax,50,7650,600,1000,"#FFFFFF","#2F9E44",1.8,z=5); T(ax,350,8150,"서진이 책상\n1000×600",fs=4.0,c="#1F7A33",rotation=90)
+    R(ax,110,7900,60,300,"#2B2F36","#111",1,z=7)
+    chair2(ax,900,8150,-1,0,col="#4DB6BD",r=190); T(ax,900,8150,"서진",fs=4.2,c="white")
+    # 로봇청소기 도크 + 가습기 (창 쪽, 두 의자 사이)
+    R(ax,1250,9420,400,350,"#EDEFF2","#555",1.2,z=5); T(ax,1450,9595,"로봇청소기\n도크(기존)",fs=3.8)
+    ax.add_patch(Circle((1950,9580),135,fc="#D6ECFA",ec="#2C7FB8",lw=1.4,zorder=7)); ax.add_patch(Circle((1950,9580),60,fc="none",ec="#2C7FB8",lw=.8,zorder=8))
+    T(ax,1950,9420,"가습기",fs=3.8,c="#1F5E8F",fontweight="bold",bbox=dict(fc="#FFE8EC",ec="none",pad=.4,alpha=.9))
+    # LAN: 복합기 위 NAS/공유기 -> 양옆 책상 (짧게) / 서진이는 바닥 따라
+    ax.plot([1550,1400],[DY+300,DY+300],color=BLUE,lw=1.1,ls="--",zorder=7); ax.plot([1930,2080],[DY+300,DY+300],color=BLUE,lw=1.1,ls="--",zorder=7)
+    ax.plot([1740,1740,660],[DY,DY-120,DY-120],color=BLUE,lw=1.1,ls="--",zorder=7)
     # aisles
-    dim(ax,3565,3300,4500,3300,"통로 0.93m",dy=-110)
-    dim(ax,0,3000,135,3000,""); T(ax,150,3000,"0.14m",fs=4.4,c=GRN,ha="left",bbox=dict(fc="white",ec="none",pad=.4,alpha=.9),z=10)
-    dim(ax,1400,2520,2300,2520,"안쪽 0.9m",dy=-110)
+    dim(ax,3465,3300,4500,3300,"통로 1.03m",dy=-110)
+    dim(ax,0,3000,235,3000,""); T(ax,250,3000,"0.24m",fs=4.4,c=GRN,ha="left",bbox=dict(fc="white",ec="none",pad=.4,alpha=.9),z=10)
+    dim(ax,1500,2520,2200,2520,"안쪽 0.7m",dy=-110)
     dim(ax,2400,7460,4500,7460,"",c=GRN); T(ax,3450,7380,"가벽 트임 2.1m",fs=4.6,c=GRN,bbox=dict(fc="white",ec="none",pad=.5,alpha=.92))
     dim(ax,0,6700,997,6700,"왼쪽 통로 1.0m",dy=-110)
+    dim(ax,2703,6900,3650,6900,"약 0.95m",dy=-110)
+    dim(ax,3430,8800,4500,8800,"통로 1.07m",dy=-110)
     dim(ax,2400,5800,2400,6700,"",c=GRN)
     T(ax,3300,6250,f"U 끝↔칠판 약 {ugap/1000:.2f}m",fs=4.6,c=GRN,bbox=dict(fc="white",ec="none",pad=.6,alpha=.92))
     # ---------- scale, title
@@ -202,7 +211,7 @@ def build(mode):
     T(ax,2500,SY+50,"축척 막대 · 치수 mm · 방 치수·문·펜트리는 가정",fs=5.6,c=GRAY,ha="left")
     ax.add_patch(Rectangle((0,0),W,H,fc="none",ec=INK,lw=3,zorder=10))
     ax.set_xlim(-250,W+250); ax.set_ylim(SY+450,-350); ax.set_aspect("equal"); ax.axis("off")
-    ax.set_title(f"ㄷ자(U형) · 데스커 멀티데스크 1800×800 ×5 · {seats}석 · 가정한 방 4.5m × 9.8m = 44.1 m²",fontsize=8.6,color=INK,loc="left",fontweight="bold")
+    ax.set_title(f"ㄷ자(U형) · 데스커 멀티데스크 ×5 · 모션데스크 ×2 · {seats}석 · 가정한 방 4.5m × 9.8m = 44.1 m²",fontsize=8.6,color=INK,loc="left",fontweight="bold")
     fig.savefig(OUT+f"layout-{mode}.png",bbox_inches="tight",facecolor="white"); plt.close(fig)
     bc=BC
     d=[math.hypot(c[0]-bc[0],c[1]-bc[1]) for c in ch]
