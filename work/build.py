@@ -193,7 +193,7 @@ data=dict(items=[dict(id=i["id"],grp=i["grp"],name=i["name"],pri=i["pri"],rec=i[
 def won_card(l,n,sm=""): return f'<div class="card reveal"><div class="l">{l}</div><div class="n">{won_(n)}원</div><div class="l">{sm}</div></div>'
 S10,S12,S15=st["10"],st["12"],st["15"]
 
-html_out=f'''<!doctype html>
+old_html=f'''<!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -488,5 +488,5 @@ html_out=f'''<!doctype html>
 <script>window.DATA={json.dumps(data,ensure_ascii=False)};</script>
 <script src="assets/main.js"></script>
 </body></html>'''
-open("../index.html","w",encoding="utf8").write(html_out)
+exec(open("apple.py",encoding="utf8").read())
 print("MAIN",M10,M12,M15,MP10,MV10,"DEF",DEF10,DU10,DN10);print("10:",R10,R10n,L10,cg10,P10,V10); print("12:",R12,R12n,L12,cg12,P12,V12); print("15:",R15,P15,V15)
