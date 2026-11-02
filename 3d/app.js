@@ -128,16 +128,16 @@ function waterPurifier(g,x,y){ // 168(폭,x방향) x 400(깊이,y방향) x 398(�
 box(C,3500,0,900,300,0,.55,M('#F6EBD7',{r:.8})); label(C,'슬리퍼 랙(후보)',3950,.75,150,'s'); airPurifier(C,4190,1200); waterPurifier(C,660,100);
 
 // ===== 전자칠판 75" (제노스미디어 CO750LT4K, 당근 중고) — ㄷ자 열린 쪽 끝에 붙여 화면이 입구 쪽(ㄷ자 상석)을 정면으로 보고, 바로 뒤가 책장 가벽 =====
-{const gb=new THREE.Group(); gb.position.set(1.85,0,6.7); gb.rotation.y=Math.PI; // 로컬 +z = 화면 앞 → 월드 -z(입구 쪽)
+{const gb=new THREE.Group(); gb.position.set(1.85,0,6.2); gb.rotation.y=Math.PI; // 로컬 +z = 화면 앞 → 월드 -z(입구 쪽)
  const bx=(x,z,w,d,y0,h,mat)=>{const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat); b.position.set(x,y0+h/2,z); b.castShadow=true; b.receiveShadow=true; gb.add(b); return b;};
  bx(0,-.055,1.707,.11,.80,1.034,BLACK);                                  // 패널 1707x1034
  bx(0,.003,1.627,.004,.84,.95,M('#1c2733',{r:.2,m:.4}));                // 화면면
  bx(0,-.16,.12,.08,.1,.7,BLACK);                                         // 기둥
  bx(0,-.16,1.1,.07,0,.1,BLACK); bx(-.5,-.31,.06,.42,0,.05,BLACK); bx(.5,-.31,.06,.42,0,.05,BLACK); // 발(크기 가정)
  C.add(gb);}
-label(C,'전자칠판 75" (ㄷ자 열린 쪽 끝 · 뒤는 책장 가벽)',1850,2.05,6700,'k');
-{const pts=[new THREE.Vector3(1.85,1.0,6.65),new THREE.Vector3(1.85,1.0,5.8)]; const ln=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineDashedMaterial({color:'#7B61FF',dashSize:.12,gapSize:.08})); ln.computeLineDistances(); C.add(ln);
- label(C,'U 끝↔칠판 약 0.90m',2900,1.2,6250,'s');}
+label(C,'전자칠판 75" (ㄷ자 끝에 0.4m · 뒤는 책장 가벽)',1850,2.05,6200,'k');
+{const pts=[new THREE.Vector3(1.85,1.0,6.15),new THREE.Vector3(1.85,1.0,5.8)]; const ln=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineDashedMaterial({color:'#7B61FF',dashSize:.12,gapSize:.08})); ln.computeLineDistances(); C.add(ln);
+ label(C,'U 끝↔칠판 약 0.40m',2900,1.2,6000,'s');}
 
 // 에어컨 (천장) — 프로젝터·전동 스크린·이동식 화이트보드는 칠판이 뒤쪽으로 가서 도면에서 뺌
 {const ac=new THREE.Mesh(new THREE.CylinderGeometry(.26,.26,.12,32),M('#e8ebee')); ac.position.set(2.25,CEIL-.06,4.95); C.add(ac); label(C,'천장형 에어컨',2250,2.45,4950,'s');}
@@ -205,8 +205,8 @@ label(A,'멀티데스크 1800×800 ×5 (상석 쪽이 입구)',1850,.95,1800,'k'
 label(A,'의자 · 교육 12석 (바깥에서 안쪽을 봄)',440,1.05,4000,'k');
 label(A,'U 안쪽 발표·토론 공간 (폭 0.7m)',1850,.3,4300,'s');
 // ===== 뒤쪽 공통 (12·15석): 칠판 바로 뒤 낮은 책장 가벽 + 그 뒤 라운지(소파) + 대표실(대표 · 서진이) =====
-zone(C,0,7600,4500,2200,'#FFE8EC',.5);
-// 낮은 책장 가벽: 이케아 BILLY 80x28x106 x3 (x 0~2400, y 7320~7600, 왼쪽 벽에 붙이고 오른쪽 2.1m 트임). 뒷판이 칠판 쪽(-y), 열린 앞면이 소파·대표실(+y)
+zone(C,0,7100,4500,2700,'#FFE8EC',.5);
+// 낮은 책장 가벽: 이케아 BILLY 80x28x106 x3 (x 0~2400, y 6820~7100, 왼쪽 벽에 붙이고 오른쪽 2.1m 트임). 뒷판이 칠판 쪽(-y), 열린 앞면이 소파·대표실(+y)
 function billy(g,x,y){ const w=800,d=280,h=1.06, wd=M('#F2F0EA',{r:.6});
   box(g,x,y,w,12,0,h,wd);                                     // 뒷판 (칠판 쪽)
   box(g,x,y,22,d,0,h,wd); box(g,x+w-22,y,22,d,0,h,wd);        // 옆판
@@ -214,12 +214,12 @@ function billy(g,x,y){ const w=800,d=280,h=1.06, wd=M('#F2F0EA',{r:.6});
   const cols=['#c0563b','#3b6fc0','#e0b84a','#4a8f6b','#eee','#7a5aa8']; let k=0;
   for(const yy of [.03,.37]) for(let z=x+40;z<x+w-80;z+=64+((k*37)%30)){ box(g,z,y+60,34+(k%3)*8,d-110,yy,.2+((k*53)%12)/100,M(cols[k%6],{r:.8}),false); k++; }
 }
-for(const x0 of [0,800,1600]) billy(C,x0,7320);
+for(const x0 of [0,800,1600]) billy(C,x0,6820);
 // 마샬 스피커(액톤 III 260x170x150) — 가벽 위 왼쪽 끝
-box(C,200,7375,260,170,1.06,.15,M('#1d1d1d',{r:.6})); box(C,215,7372,230,4,1.09,.07,M('#c9a24a',{r:.4}),false);
-label(C,'마샬 스피커',330,1.3,7460,'s');
-label(C,'낮은 책장 가벽 (빌리 ×3 · 오른쪽 2.1m 트임)',1200,1.3,7460,'k');
-label(C,'가벽 뒤: 대표실 · 서진이',1900,.4,7800,'s');
+box(C,200,6875,260,170,1.06,.15,M('#1d1d1d',{r:.6})); box(C,215,6872,230,4,1.09,.07,M('#c9a24a',{r:.4}),false);
+label(C,'마샬 스피커',330,1.3,6960,'s');
+label(C,'낮은 책장 가벽 (빌리 ×3 · 칠판 바로 뒤)',1200,1.3,6960,'k');
+label(C,'가벽 뒤: 대표실 · 서진이',1900,.4,7500,'s');
 // 창 쪽 한 줄 (y 8650~9350): 모션데스크 #2(신규·대표와 동일) | 복합기+NAS 선반 | 대표 모션데스크(보유). 대표 시선은 출입문 정면
 const MD=M('#F1E6D3');
 function motion(x,y){ box(C,x,y,1500,700,.7,.04,MD); for(const [lx,ly] of [[x+30,y+30],[x+1420,y+30],[x+30,y+620],[x+1420,y+620]]) box(C,lx,ly,50,50,0,.7,BLACK); }
@@ -246,7 +246,7 @@ box(C,1250,9420,400,350,0,.12,M('#EDEFF2')); cyl(C,1.45,9.595,.17,.0,.03,DGRAY,2
 label(C,'로봇청소기 도크 (기존)',1450,.5,9595,'s');
 humidifier(C,1950,9580);
 // 소파 2인: 칠판 오른쪽 · 오른쪽 벽 (가벽 뒤에서 이전)
-sofa(C,4075,6700,1200,850,'right',2); label(C,'소파 2인 (칠판 오른쪽 · 오른쪽 벽)',4075,1.1,6700,'k');
+sofa(C,4075,7170,1200,850,'right',2); label(C,'소파 2인 (오른쪽 벽 · 펜트리 문 쪽)',4075,1.1,7170,'k');
 
 // 3D 프린터 maker — 외부 펜트리(실외) 우측 끝
 {const dx=100,dy=900;

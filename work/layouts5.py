@@ -87,13 +87,12 @@ def build(mode):
     # ---------- 전자칠판 75": ㄷ자 열린 쪽 끝에 붙여 정면(입구 방향)을 향함, 바로 뒤가 책장 가벽 — 제노스미디어 CO750LT4K 패널 1707x1034
     BPHI=-90
     bn=(math.cos(math.radians(BPHI)),math.sin(math.radians(BPHI))); bt=(-bn[1],bn[0])
-    BC=(1850,6700)
+    BC=(1850,6200)
     BP=lambda u,v:(BC[0]+u*bt[0]+v*bn[0],BC[1]+u*bt[1]+v*bn[1])
     ax.add_patch(Polygon([BP(-733,-110),BP(733,-110),BP(733,-520),BP(-733,-520)],closed=True,fc="#EEF1F6",ec="#8B95A1",lw=.9,ls="--",zorder=4,alpha=.7))
     ax.add_patch(Polygon([BP(-853,0),BP(853,0),BP(853,-110),BP(-853,-110)],closed=True,fc=INK,ec=INK,zorder=6))
     sc=BP(0,-330); T(ax,sc[0],sc[1],"전자칠판 75\"\n제노스미디어 CO750LT4K\n(스탠드 크기·바퀴 가정)",fs=4.0,c=INK)
-    ax.annotate("",xy=BP(0,420),xytext=BP(0,40),arrowprops=dict(arrowstyle="-|>",color="#7B61FF",lw=1.3),zorder=8)
-    T(ax,1850,6250,"화면 방향 (ㄷ자 쪽)",fs=4.4,c="#5B3FD1",fontweight="bold",bbox=dict(fc="white",ec="none",pad=.6,alpha=.85))
+    ax.annotate("",xy=BP(0,300),xytext=BP(0,40),arrowprops=dict(arrowstyle="-|>",color="#7B61FF",lw=1.3),zorder=8)
     from shapely.geometry import Polygon as SP2, box as SBOX
     BOARD=SP2([BP(-853,0),BP(853,0),BP(853,-110),BP(-853,-110)]).union(SP2([BP(-733,-110),BP(733,-110),BP(733,-520),BP(-733,-520)]))
     # ---------- 탕비: 입구(문) 왼쪽 앞 벽에 한 줄
@@ -153,19 +152,19 @@ def build(mode):
     ax.plot([RX+35,RX+35],[2800,4900],color=OR,lw=.9,ls=":",zorder=7)
     for (ox,oy) in [(W-40,3500),(W-40,5300),(40,7000),(W-40,7600),(W-40,2300)]: outlet(ax,ox,oy)
     # ---------- 낮은 책장 가벽 (칠판 바로 뒤, 왼쪽 벽에 붙이고 오른쪽 2.1m는 통로로 트임): 이케아 BILLY 80x28x106 x4 (벽 고정 필요)
-    PY0,PY1=7320,7600
+    PY0,PY1=6820,7100
     for k,x0 in enumerate((0,800,1600)):
         R(ax,x0,PY0,800,PY1-PY0,"#E9DCC3","#8A6A3A",1.3,z=6)
     T(ax,1600,(PY0+PY1)/2,"낮은 책장 가벽 · 빌리 80×28×106 ×3 (벽 고정)",fs=4.2,c="#5A3E1B",fontweight="bold",z=9,bbox=dict(fc="#E9DCC3",ec="none",pad=.6))
-    T(ax,1850,7270,"배선 틈 0.10m",fs=3.6,c="#6B7684",z=9)
+    T(ax,1850,6770,"배선 틈 0.10m",fs=3.6,c="#6B7684",z=9)
     # 마샬 스피커(액톤 III 260x170) — 책장 가벽 위 왼쪽 끝 (높이 1.06m), 왼쪽 벽 콘센트(40,7000)에서 약 0.4m
-    R(ax,200,7375,260,170,"#2B2B2B","#000",1.0,z=9); T(ax,330,7460,"마샬",fs=3.8,c="#F2C94C",z=10,fontweight="bold")
-    T(ax,330,7245,"마샬 스피커\n(가벽 위)",fs=3.6,c="#2B2B2B",z=9,fontweight="bold")
+    R(ax,200,6875,260,170,"#2B2B2B","#000",1.0,z=9); T(ax,330,6960,"마샬",fs=3.8,c="#F2C94C",z=10,fontweight="bold")
+    T(ax,330,6745,"마샬 스피커\n(가벽 위)",fs=3.6,c="#2B2B2B",z=9,fontweight="bold")
     # ---------- 가벽 뒤: 대표실(창 쪽 한 줄: 모션데스크 2 + 복합기 + 대표) + 서진이. 소파는 칠판 오른쪽 벽으로 이동
     Z(ax,0,PY1,W,H-PY1,"#FFE8EC","")
-    T(ax,1000,7700,"가벽 뒤: 대표실 · 서진이",fs=4.8,ha="left",c="#B1202C",fontweight="bold")
-    sofa(ax,3650,6100,850,1200,"right","소파 2인(소형)")
-    T(ax,3300,6560,"소파 (칠판 오른쪽 · 이전: 가벽 뒤)",fs=3.6,c="#5A3E1B",ha="center",bbox=dict(fc="white",ec="none",pad=.3,alpha=.9),z=9)
+    T(ax,1000,7400,"가벽 뒤: 대표실 · 서진이",fs=4.8,ha="left",c="#B1202C",fontweight="bold")
+    sofa(ax,3650,6570,850,1200,"right","소파 2인(소형)")
+    T(ax,3250,7250,"소파 (오른쪽 벽 · 펜트리 문 쪽)",fs=3.6,c="#5A3E1B",ha="center",bbox=dict(fc="white",ec="none",pad=.3,alpha=.9),z=9)
     DY=8650                                   # 창 쪽 한 줄 책상 y 8650~9350 (의자는 창 쪽)
     # 모션데스크 #2(신규, 대표와 동일 1500x700) | 복합기(가운데, 두 자리 공용) | 대표 모션데스크(보유)
     R(ax,50,DY,1500,700,"#FFFFFF","#F04452",2,z=5); T(ax,800,DY+520,"모션데스크 #2 (신규)\n1500×700 (대표와 동일)",fs=3.9,c="#B1202C")
@@ -198,12 +197,12 @@ def build(mode):
     dim(ax,3465,3300,4500,3300,"통로 1.03m",dy=-110)
     dim(ax,0,3000,235,3000,""); T(ax,250,3000,"0.24m",fs=4.4,c=GRN,ha="left",bbox=dict(fc="white",ec="none",pad=.4,alpha=.9),z=10)
     dim(ax,1500,2520,2200,2520,"안쪽 0.7m",dy=-110)
-    dim(ax,2400,7460,4500,7460,"",c=GRN); T(ax,3450,7380,"가벽 트임 2.1m",fs=4.6,c=GRN,bbox=dict(fc="white",ec="none",pad=.5,alpha=.92))
-    dim(ax,0,6700,997,6700,"왼쪽 통로 1.0m",dy=-110)
-    dim(ax,2703,6900,3650,6900,"약 0.95m",dy=-110)
+    dim(ax,2400,7000,3650,7000,"",c=GRN); T(ax,3030,6930,"트임 1.25m",fs=4.6,c=GRN,bbox=dict(fc="white",ec="none",pad=.5,alpha=.92))
+    dim(ax,0,6450,997,6450,"왼쪽 통로 1.0m",dy=-110)
+    dim(ax,2703,6450,3650,6450,"약 0.95m",dy=-110)
     dim(ax,3430,8800,4500,8800,"통로 1.07m",dy=-110)
-    dim(ax,2400,5800,2400,6700,"",c=GRN)
-    T(ax,3300,6250,f"U 끝↔칠판 약 {ugap/1000:.2f}m",fs=4.6,c=GRN,bbox=dict(fc="white",ec="none",pad=.6,alpha=.92))
+    dim(ax,2400,5800,2400,6200,"",c=GRN)
+    T(ax,3250,6000,f"U 끝↔칠판 약 {ugap/1000:.2f}m",fs=4.6,c=GRN,bbox=dict(fc="white",ec="none",pad=.6,alpha=.92))
     # ---------- scale, title
     SY=H+1750
     R(ax,300,SY,1000,70,INK,z=8); R(ax,1300,SY,1000,70,"white",INK,1,z=8)
