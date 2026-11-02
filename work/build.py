@@ -99,6 +99,61 @@ def chair_card(c):
     return f'<article class="card prod reveal">{ph}<div class="bd"><div class="model">{E(c["who"])}</div><h3>{E(c["n"])}</h3><div class="price">{E(c["p"])}</div><div class="pnote">{E(c["why"])}</div><p class="small" style="margin:8px 0">{E(c["spec"])}</p>{w}{lk}</div></article>'
 chair_cards="".join(chair_card(c) for c in CHAIRS)
 
+# ---- 프리미엄 책상·의자 후보 (데스커·일룸, 10석 기준) ----
+DK="https://www.desker.co.kr/product/detail/"; IL="https://www.iloom.com/product/detail.do?productCd="
+DESKS=[
+ dict(brand="데스커",n="컴퓨터데스크 2.0",u=DK+"616",img="desker-616.webp",size="W1200~1800 × D590/700/800 (28mm 상판)",pick="1400×700",unit=207000,qty=10,qn="개인 책상 10대",color="화이트 · 메이플 · 모던아카시아 · 빈티지블랙",pro="최저가 · 배선트레이 · 모니터암 홀 · 28mm 상판",con="D600 규격 없음 · 모션(높이조절) 아님",rec=2,alt="1800×800은 259,000원"),
+ dict(brand="데스커",n="모션데스크 플러스",u=DK+"239",img="desker-239.webp",size="W1400/1600 × D700",pick="1400×700",unit=670000,qty=10,qn="개인 책상 10대",color="화이트 · 메이플 · 모던아카시아 · 블랙",pro="LINAK 모터 5년 · 높이 메모리 저장",con="하중 50kg · 컴퓨터데스크의 약 3배 가격",rec=0,alt="1600×700은 685,000원"),
+ dict(brand="데스커",n="모션데스크 프리미엄",u=DK+"295",img="desker-295.webp",size="W1400/1600/1800 × D700/800",pick="1800×800",unit=961000,qty=10,qn="개인 책상 10대",color="상세 페이지에서 확인",pro="듀얼모터 · 높이 630~1280mm · 하중 100kg",con="10석 총액 약 1천만원 · 차지하는 면적이 큼",rec=0,alt=""),
+ dict(brand="데스커",n="멀티데스크",u=DK+"688",img="",size="1800×800 (22mm 상판)",pick="1800×800",unit=294000,qty=5,qn="2인 공유 5대",color="화이트 · 오크 · 쿨그레이",pro="협업용 · 배선 커버",con="상판 22mm · 높이조절 불가",rec=0,alt=""),
+ dict(brand="데스커",n="멀티테이블",u=DK+"694",img="",size="1800×800",pick="1800×800",unit=253000,qty=5,qn="2인 공유 5대",color="화이트 · 오크 · 쿨그레이",pro="저렴 · 스터디용",con="배선트레이 없음",rec=0,alt=""),
+ dict(brand="일룸",n="뉴트 홈오피스 모션데스크 1400",u=IL+"IDM0012A",img="iloom-IDM0012A.jpg",size="1424×789 · H809~1349",pick="1400",unit=1059000,qty=10,qn="개인 책상 10대",color="내추럴오크 · 화이트",pro="LINAK 듀얼모터 · 멀티탭 · 파티션",con="최고가 · 10석 약 1,400만원(의자 별도)",rec=0,alt=""),
+ dict(brand="일룸",n="뉴트 홈오피스 책상 1400",u=IL+"IDL0007A",img="iloom-IDL0007A.jpg",size="1400 (상세 사이즈는 판매 페이지 확인)",pick="1400",unit=789000,qty=10,qn="개인 책상 10대",color="오크 · 화이트",pro="파티션 · 모니터암 2개 포함",con="높이조절 불가 · 가격 대비 비쌈",rec=0,alt=""),
+ dict(brand="일룸",n="엘바 2인용 책상 1800",u=IL+"HSUD018",img="iloom-HSUD018.jpg",size="1800×600 · H725 (22T)",pick="1800×600",unit=349000,qty=5,qn="2인용 5대(=10석)",color="NCC · 애쉬원목 다리",pro="도면 책상 사이즈(1800×600)와 같음 · 저렴",con="배선트레이 없음 · 상판 22T",rec=1,alt=""),
+ dict(brand="일룸",n="엘바패밀리 1800 (페닉스)",u=IL+"HSUD018F",img="iloom-HSUD018F.jpg",size="1800×800",pick="1800×800",unit=799000,qty=3,qn="3대(12석 기준)",color="노르딕그레이",pro="페닉스 상판(내오염)",con="개인 업무용으로는 부적합",rec=0,alt=""),
+ dict(brand="일룸",n="케플러클래식 1500",u=IL+"HSVD015",img="iloom-HSVD015.jpg",size="1500×750",pick="1500×750",unit=599000,qty=10,qn="개인 책상 10대",color="WP",pro="서랍 · 고급스러움",con="가정 서재형 디자인",rec=0,alt=""),
+]
+CH2=[
+ dict(brand="데스커",n="올라운드 HF",u="https://www.desker.co.kr/product/detail/305",img="desker-305.webp",unit=252000,color="화이트쉘 · 블랙쉘",rec=2,note="추천 2와 짝"),
+ dict(brand="일룸",n="알렉스",u=IL+"HVCH3900H",img="iloom-HVCH3900H.jpg",unit=219000,color="색상은 판매 페이지에서 확인",rec=1,note="추천 1과 짝"),
+ dict(brand="일룸",n="아이핏",u=IL+"HVCH3501HLN",img="iloom-HVCH3501HLN.jpg",unit=379000,color="색상은 판매 페이지에서 확인",rec=0,note=""),
+ dict(brand="시디즈",n="T50 2세대",u="https://kr.sidiz.com/products/t50-2",img="sidiz-t50.jpg",unit=439000,color="색상은 판매 페이지에서 확인",rec=0,note="구매표(대표석)에는 419,000원으로 적혀 있어요"),
+ dict(brand="일룸",n="올리버 메쉬",u=IL+"HCH290S",img="iloom-HCH290S.jpg",unit=294000,color="색상은 판매 페이지에서 확인",rec=0,note=""),
+]
+def cand_card(c,kind):
+    qty=c.get("qty",10); tot=c["unit"]*qty
+    ph=f'<div class="ph"><img src="assets/desks/{c["img"]}" alt="{E(c["brand"]+" "+c["n"])} 공식 상품 이미지" loading="lazy"></div>' if c["img"] else f'<div class="ph none">상품 이미지를 가져오지 못했어요<br><small>판매 페이지에서 확인</small></div>'
+    rec=f'<span class="tag blue">⭐ 추천 {c["rec"]}</span>' if c["rec"] else ''
+    if kind=="desk":
+        info=f'<div class="spec"><span>폭/사이즈</span><b>{E(c["size"])}</b><span>비교 기준</span><b>{E(c["pick"])}</b></div>'
+        pn=f'단가 · 10석 기준 {E(c["qn"])} × {won_(c["unit"])}원'+(f' · {E(c["alt"])}' if c["alt"] else '')
+        pc=f'<div class="pc2"><div class="ok2"><b>장점</b> {E(c["pro"])}</div><div class="no2"><b>단점</b> {E(c["con"])}</div></div>'
+    else:
+        info=''
+        pn=f'단가 · 10개 × {won_(c["unit"])}원'+(f' · {E(c["note"])}' if c["note"] else '')
+        pc=''
+    return f'<article class="card prod reveal{" hl" if c["rec"] else ""}">{ph}<div class="bd"><div class="model">{E(c["brand"])} {rec}</div><h3><a href="{c["u"]}" target="_blank" rel="noopener">{E(c["n"])} ↗</a></h3><div class="price">{won_(c["unit"])}<small>원</small></div><div class="pnote">{pn}</div><div class="tot2">10석 합계 <b>{won_(tot)}원</b></div>{info}<p class="small" style="margin:6px 0"><b>색상</b> · {E(c["color"])}</p>{pc}</div></article>'
+cand_desks="".join(cand_card(c,"desk") for c in DESKS)
+cand_chairs="".join(cand_card(c,"chair") for c in CH2)
+REC1=349000*5+219000*10; REC2=207000*10+252000*10
+assert REC1==3935000 and REC2==4590000
+cand_sec=f"""<section class="sec" id="premium"><div class="wrap">
+ <div class="eyebrow">프리미엄 후보 · 책상+의자</div>
+ <h2>프리미엄 책상·의자 후보<br>(데스커·일룸, 10석 기준)</h2>
+ <p class="lead">데스커와 일룸의 정가 기준 후보예요. 책상 모델은 아직 고르지 않아서 위 구매표·합계는 바꾸지 않았어요. 아래 추천 2가지는 책상 + 의자 10개를 묶은 금액이에요.</p>
+ <div class="grid g2 reveal">
+  <div class="card hl"><span class="tag blue">⭐ 추천 1 · 도면 그대로</span><h3>일룸 엘바 2인용 1800×600 × 5 + 알렉스 × 10</h3><p>349,000원 × 5 + 219,000원 × 10 = <b>{won_(REC1)}원</b>. 지금 ㄷ자 도면의 1800×600 책상 사이즈와 같아서 배치를 거의 안 바꿔도 돼요. 다만 도면의 1200짜리 1개는 1800으로 바뀌어 길어지니 배치 확인이 필요해요.</p></div>
+  <div class="card hl"><span class="tag blue">⭐ 추천 2 · 가성비·개인 책상</span><h3>데스커 컴퓨터데스크 2.0 W1400×D700 × 10 + 올라운드 HF × 10</h3><p>207,000원 × 10 + 252,000원 × 10 = <b>{won_(REC2)}원</b>. 배선트레이·모니터암 홀이 있는 개인 책상이에요. 개인 책상 10대라 ㄷ자 연결 배치와는 달라서 배치를 새로 짜야 해요.</p></div>
+ </div>
+ <h3 class="sub3">책상 후보</h3>
+ <div class="grid g3p reveal">{cand_desks}</div>
+ <h3 class="sub3">의자 후보 (10개)</h3>
+ <div class="grid g3p reveal">{cand_chairs}</div>
+ <div class="callout reveal" style="margin-top:18px"><b>가격 출처</b> · 2026-11-02(KST) 기준 데스커·일룸·시디즈 공식몰 표시 정가(일부 대리점가 포함)이고 쿠폰·카드 할인, 배송·설치비는 빠져 있어요. 이미지는 각 공식몰 상품 이미지를 저장해 쓴 것이고, 이미지를 못 가져온 상품은 빈 카드로 두었어요. 색상·세부 사양은 구매 전 판매 페이지에서 한 번 더 확인해 주세요.</div>
+</div></section>
+
+"""
+
 data=dict(items=[dict(id=i["id"],grp=i["grp"],name=i["name"],pri=i["pri"],rec=i["rec"],own=i["note"]=="own",chair=i["id"] in CH,
   P=dict(p=i["P"]["p"],q={str(m):q(i["P"],m) for m in (10,12,15)},n=i["P"]["n"]),V=dict(p=i["V"]["p"],q={str(m):q(i["V"],m) for m in (10,12,15)},n=i["V"]["n"])) for i in I])
 
@@ -135,7 +190,7 @@ html_out=f'''<!doctype html>
  <a class="cta" href="#todo">입주 준비 할 일 보기</a>
 </div></header>
 <nav class="nav" aria-label="목차"><div class="navin">
- <a href="#summary">요약</a><a href="#todo">입주 할 일</a><a href="#layout">배치도</a><a href="#buy">구매표</a><a href="#chairs">의자</a><a href="#zone">라운지·대표실·CCTV</a><a href="#studio">촬영 코너(선택)</a><a href="#network">네트워크·전원</a><a href="#monthly">월 고정비·인터넷·정수기</a><a href="#print">복합기·3D</a><a href="#checklist">체크리스트</a><a href="#cost">비용</a><a href="#ref">책상·전자칠판·시청거리</a><a href="#sources">출처·미확인</a>
+ <a href="#summary">요약</a><a href="#todo">입주 할 일</a><a href="#layout">배치도</a><a href="#buy">구매표</a><a href="#premium">프리미엄 후보</a><a href="#chairs">의자</a><a href="#zone">라운지·대표실·CCTV</a><a href="#studio">촬영 코너(선택)</a><a href="#network">네트워크·전원</a><a href="#monthly">월 고정비·인터넷·정수기</a><a href="#print">복합기·3D</a><a href="#checklist">체크리스트</a><a href="#cost">비용</a><a href="#ref">책상·전자칠판·시청거리</a><a href="#sources">출처·미확인</a>
 </div></nav>
 <main>
 
@@ -243,6 +298,7 @@ html_out=f'''<!doctype html>
  <p class="small">전부 프리미엄·전부 가성비 합계에는 프로젝터·스크린·화이트보드·3D 프린터·별도 프린터·카메라·흡음재·포커스석·티테이블 등 ‘나중에/선택’ 품목이 모두 들어 있어요. Mac Studio는 참고용이라 제외했어요.</p>
 </div></section>
 
+{cand_sec}
 <section class="sec" id="chairs"><div class="wrap">
  <div class="eyebrow">의자</div>
  <h2>‘서울대 의자’는 어떤 의자?</h2>
