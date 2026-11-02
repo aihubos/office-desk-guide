@@ -164,3 +164,5 @@ footer{background:var(--bg);color:var(--ink3);font-size:13px;padding:36px 0 52px
 .ctag{display:inline-block;font-size:12px;font-weight:600;color:var(--ink2);background:#f0f0f2;border-radius:999px;padding:2px 9px}
 .ctag.on{color:#fff;background:var(--blue)}
 @media(max-width:560px){.chi{grid-template-columns:72px 1fr;gap:12px;padding:12px}}
+/* 체크 리스트 안의 굵은 글씨(<span> 안 <b>)가 동그란 배지로 보이던 문제 수정 */
+.checks li>span b,.mbody .checks li>span b,.checks li.ok>span b,.checks li.wn>span b,.checks li.no>span b{flex:none;width:auto;height:auto;border-radius:0;display:inline;font-size:inherit;color:var(--ink);background:none;place-items:initial}
