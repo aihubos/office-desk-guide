@@ -70,24 +70,24 @@ const hdl=new THREE.Mesh(new THREE.BoxGeometry(.03,.03,.14),BLACK); hdl.position
 {const f=new THREE.Mesh(new THREE.CircleGeometry(.9,40,0,Math.PI/2),new THREE.MeshBasicMaterial({color:'#FFD43B',transparent:true,opacity:.45,side:THREE.DoubleSide,depthWrite:false})); f.rotation.x=Math.PI/2; f.position.set(D0,.008,0); f.renderOrder=2; swingG.add(f);
  const ring=new THREE.Mesh(new THREE.RingGeometry(.895,.9,48,1,0,Math.PI/2),new THREE.MeshBasicMaterial({color:'#B8860B',side:THREE.DoubleSide})); ring.rotation.x=Math.PI/2; ring.position.set(D0,.01,0); swingG.add(ring);}
 label(C,'출입문 (단변 정중앙)',2250,2.3,0,'k');
-// 창문(전면 유리벽) y=9800 — 왼쪽 끝(x 0.1~1.0)은 외부 펜트리로 나가는 여닫이문(폭 0.9m·스윙 안쪽, 가정)
+// 창문(전면 유리벽) y=9800 — 오른쪽 끝(x 3.5~4.4)은 외부 펜트리로 나가는 여닫이문(폭 0.9m·스윙 안쪽, 가정)
 {const gm=new THREE.MeshStandardMaterial({color:'#9AD3FF',transparent:true,opacity:.22,roughness:.05,side:THREE.DoubleSide,depthWrite:false});
- for(const [x0,x1] of [[0,.1],[1.0,W]]){const gl=new THREE.Mesh(new THREE.PlaneGeometry(x1-x0,CEIL),gm); gl.position.set((x0+x1)/2,CEIL/2,L-.01); C.add(gl);}
+ for(const [x0,x1] of [[0,3.5],[4.4,W]]){const gl=new THREE.Mesh(new THREE.PlaneGeometry(x1-x0,CEIL),gm); gl.position.set((x0+x1)/2,CEIL/2,L-.01); C.add(gl);}
  for(const x of [0,1.5,3.0,4.5]){const v=new THREE.Mesh(new THREE.BoxGeometry(.05,CEIL,.06),BLACK); v.position.set(x,CEIL/2,L-.01); C.add(v);}
- for(const [x0,x1] of [[0,.1],[1.0,W]]){const r1=new THREE.Mesh(new THREE.BoxGeometry(x1-x0,.05,.06),BLACK); r1.position.set((x0+x1)/2,.025,L-.01); C.add(r1); const r2=r1.clone(); r2.position.y=CEIL-.025; C.add(r2);}
- // 문틀 + 열린 문짝(경첩 x=0.1, 안쪽 -z 방향으로 90° 열림)
- box(C,70,L*1000-30,40,60,0,DH,BLACK); box(C,1000,L*1000-30,40,60,0,DH,BLACK); box(C,70,L*1000-30,970,60,DH,.05,BLACK);
- const lf=new THREE.Mesh(new THREE.BoxGeometry(.045,DH-.03,.9),M('#CDB48A',{r:.6})); lf.position.set(.1+.03,(DH-.03)/2,L-.45); lf.castShadow=true; C.add(lf);
- const hd=new THREE.Mesh(new THREE.BoxGeometry(.03,.03,.14),BLACK); hd.position.set(.1+.07,1.0,L-.85); C.add(hd);
+ for(const [x0,x1] of [[0,3.5],[4.4,W]]){const r1=new THREE.Mesh(new THREE.BoxGeometry(x1-x0,.05,.06),BLACK); r1.position.set((x0+x1)/2,.025,L-.01); C.add(r1); const r2=r1.clone(); r2.position.y=CEIL-.025; C.add(r2);}
+ // 문틀 + 열린 문짝(경첩 x=4.4, 안쪽 -z 방향으로 90° 열림)
+ box(C,3460,L*1000-30,40,60,0,DH,BLACK); box(C,4400,L*1000-30,40,60,0,DH,BLACK); box(C,3460,L*1000-30,980,60,DH,.05,BLACK);
+ const lf=new THREE.Mesh(new THREE.BoxGeometry(.045,DH-.03,.9),M('#CDB48A',{r:.6})); lf.position.set(4.4-.03,(DH-.03)/2,L-.45); lf.castShadow=true; C.add(lf);
+ const hd=new THREE.Mesh(new THREE.BoxGeometry(.03,.03,.14),BLACK); hd.position.set(4.4-.07,1.0,L-.85); C.add(hd);
  // 스윙 반경 0.9m 비움 (경첩 기준 안쪽 부채꼴)
- const f=new THREE.Mesh(new THREE.CircleGeometry(.9,40,-Math.PI/2,Math.PI/2),new THREE.MeshBasicMaterial({color:'#FFD43B',transparent:true,opacity:.45,side:THREE.DoubleSide,depthWrite:false})); f.rotation.x=Math.PI/2; f.position.set(.1,.008,L); f.renderOrder=2; swingG.add(f);
- const ring=new THREE.Mesh(new THREE.RingGeometry(.895,.9,48,1,-Math.PI/2,Math.PI/2),new THREE.MeshBasicMaterial({color:'#B8860B',side:THREE.DoubleSide})); ring.rotation.x=Math.PI/2; ring.position.set(.1,.01,L); swingG.add(ring);}
-label(C,'창 쪽 왼쪽 출입문 (가정 0.9m)',550,2.55,9300,'k');
-// 외부 펜트리 (실외, 가정 4.5m×1.3m, 사무실 폭과 같음) — 3D프린터는 우측 끝
+ const f=new THREE.Mesh(new THREE.CircleGeometry(.9,40,-Math.PI,Math.PI/2),new THREE.MeshBasicMaterial({color:'#FFD43B',transparent:true,opacity:.45,side:THREE.DoubleSide,depthWrite:false})); f.rotation.x=Math.PI/2; f.position.set(4.4,.008,L); f.renderOrder=2; swingG.add(f);
+ const ring=new THREE.Mesh(new THREE.RingGeometry(.895,.9,48,1,-Math.PI,Math.PI/2),new THREE.MeshBasicMaterial({color:'#B8860B',side:THREE.DoubleSide})); ring.rotation.x=Math.PI/2; ring.position.set(4.4,.01,L); swingG.add(ring);}
+label(C,'창 쪽 오른쪽 출입문 (가정 0.9m)',3950,2.55,9300,'k');
+// 외부 펜트리 (실외, 가정 4.5m×1.3m, 사무실 폭과 같음) — 3D프린터는 문 반대편 왼쪽 끝
 {const ef=new THREE.Mesh(new THREE.PlaneGeometry(4.5,1.3),M('#CFD5DB',{r:.95})); ef.rotation.x=-Math.PI/2; ef.position.set(2.25,.003,L+.65+.04); C.add(ef);
  const wm=M('#B8C0C8',{a:.45,ds:true}); box(C,0,L*1000+40,30,1300,0,1.1,wm,false); box(C,4470,L*1000+40,30,1300,0,1.1,wm,false); box(C,0,L*1000+1310,4500,30,0,1.1,wm,false);}
-label(C,'외부 펜트리 (실외 · 폭 4.5m 가정)',1500,.5,10900,'k');
-label(C,'창문 · 바닥~천장 전면 유리 (뒤쪽)',3250,2.95,9800,'k');
+label(C,'외부 펜트리 (실외 · 폭 4.5m 가정)',2800,.5,10900,'k');
+label(C,'창문 · 바닥~천장 전면 유리 (뒤쪽)',1700,2.95,9800,'k');
 
 // ===== zones (바닥 색) =====
 zone(C,235,1635,3330,4250,'#DCEBFF',.6);
@@ -212,32 +212,31 @@ function billy(g,x,y){ const w=800,d=280,h=1.06, wd=M('#F2F0EA',{r:.6});
 for(const x0 of [0,800,1600]) billy(C,x0,7320);
 label(C,'낮은 책장 가벽 (빌리 ×3 · 오른쪽 2.1m 트임)',1200,1.3,7460,'k');
 label(C,'가벽 뒤: 라운지 + 대표실',1900,.4,8700,'s');
-// 대표 모션데스크: 오른쪽 벽에 붙임. 제레미는 서쪽에서 동쪽(벽)을 보고 앉고 화면은 서쪽을 향함 → 입구에선 옆면
-box(C,3800,7700,700,1500,.7,.04,M('#F1E6D3')); for(const [x,y] of [[3830,7730],[4420,7730],[3830,9120],[4420,9120]]) box(C,x,y,50,50,0,.7,BLACK);
-box(C,4250,7790,200,200,.74,.095,M('#c9ced6',{m:.7,r:.3}));                      // Mac Studio
-box(C,3950,8050,60,800,.95,.35,M('#2B2F36')); box(C,3940,8052,10,796,.96,.33,M('#1c2733',{r:.2,m:.4}),false); box(C,3965,8380,30,110,.74,.21,BLACK); // 34" 울트라와이드 (화면 서쪽)
-chair(C,3450,8250,1,0,'#F04452',1);
-label(C,'대표석 (화면은 서쪽)',4000,1.3,8500,'k');
-// 서진이 책상 (필수): 창 쪽 벽, 대표 책상 바로 옆(L자)
-table(C,3300,9200,1000,600,M('#F1E6D3'),.72);
-box(C,3650,9260,300,25,.75,.30,M('#2B2F36'));
-chair(C,3560,8990,0,1,'#4DB6BD',.9);
-label(C,'서진이 책상 1000×600',3800,1.15,9500,'k');
-// 로봇청소기 도크 (창 쪽 왼쪽, 문 여닫이 반경 밖, 기존)
-box(C,1900,9400,400,350,0,.12,M('#EDEFF2')); cyl(C,2.1,9.575,.17,.0,.03,DGRAY,28);
-label(C,'로봇청소기 도크 (기존)',2100,.5,9575,'s');
-label(C,'촬영 코너(선택·이동 설치)',2750,1.0,8950,'s');
+// 대표 모션데스크: 출입문(앞 벽 정중앙)을 정면으로 봄. 대표 의자는 창 쪽(남), 책상은 입구 쪽(북). 34" 화면은 대표 쪽(남)을 향함 → 입구에선 모니터 뒷면
+box(C,1900,8500,1500,700,.7,.04,M('#F1E6D3')); for(const [x,y] of [[1930,8530],[3320,8530],[1930,9120],[3320,9120]]) box(C,x,y,50,50,0,.7,BLACK);
+box(C,3100,8710,200,200,.74,.095,M('#c9ced6',{m:.7,r:.3}));                      // Mac Studio
+box(C,2250,8570,800,60,.95,.35,M('#2B2F36')); box(C,2252,8622,796,10,.96,.33,M('#1c2733',{r:.2,m:.4}),false); box(C,2600,8600,110,30,.74,.21,BLACK); // 34" 울트라와이드 (화면 남쪽=대표 쪽)
+chair(C,2650,9400,0,-1,'#F04452',1);
+label(C,'대표석 (출입문 정면 · 화면 뒷면이 입구 쪽)',2650,1.3,8850,'k');
+// 서진이 책상 (필수): 왼쪽 창 쪽 모서리 (소파 아래)
+table(C,150,9200,1000,600,M('#F1E6D3'),.72);
+box(C,500,9250,300,25,.75,.30,M('#2B2F36'));
+chair(C,650,9005,0,1,'#4DB6BD',.9);
+label(C,'서진이 책상 1000×600',650,1.15,9500,'k');
+// 로봇청소기 도크 (창 쪽, 서진이 책상과 대표 책상 사이, 기존)
+box(C,1300,9400,400,350,0,.12,M('#EDEFF2')); cyl(C,1.5,9.575,.17,.0,.03,DGRAY,28);
+label(C,'로봇청소기 도크 (기존)',1500,.5,9575,'s');
 // 라운지: 가습기 + 작은 티테이블
-humidifier(C,1900,8000); cyl(C,1.3,8.25,.15,.0,.45,M('#fff',{r:.4})); cyl(C,1.3,8.25,.155,.43,.03,WOOD);
+humidifier(C,1900,9520); cyl(C,1.3,8.1,.15,.0,.45,M('#fff',{r:.4})); cyl(C,1.3,8.1,.155,.43,.03,WOOD);
 label(C,'빈 공간 (보관·이동식 촬영 후보)',3600,.5,7000,'s');
 
 // 3D 프린터 maker — 외부 펜트리(실외) 우측 끝
-{const dx=3760,dy=900;
+{const dx=100,dy=900;
 zone(C,50+dx,9200+dy,560,540,'#FFE9CC',.8);
 table(C,60+dx,9210+dy,540,520,WOOD_D,.74);
 box(C,90+dx,9240+dy,480,460,.74,.42,M('#ffffff',{a:.5})); for(const [a,b] of [[100,9250],[520,9250],[100,9640],[520,9640]]) box(C,a+dx,b+dy,40,40,.74,.42,M('#E67E22'));
 box(C,200+dx,9330+dy,260,260,.78,.3,M('#2c3138'));
-label(C,'3D프린터 (외부 펜트리 우측 끝)',330+dx,1.1,9470+dy,'k');}
+label(C,'3D프린터 (외부 펜트리 왼쪽 끝 · 문 반대편)',330+dx,1.1,9470+dy,'k');}
 // ===== CCTV 2대 (실내) =====
 function cctv(x,y,ang,fov,rad,txt){ // ang/fov: 도, 평면 각도(+x→+y)
   const cam=new THREE.Group(); cam.position.set(m(x),2.25,m(y)); const body=new THREE.Mesh(new THREE.BoxGeometry(.12,.09,.1),M('#1d1f23')); cam.add(body);
