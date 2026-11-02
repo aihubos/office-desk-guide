@@ -148,7 +148,7 @@ DESKS=[
  dict(brand="일룸",n="케플러클래식 1500",u=IL+"HSVD015",img="iloom-HSVD015.jpg",size="1500×750",pick="1500×750",unit=599000,qty=10,qn="개인 책상 10대",color="WP",pro="서랍 · 고급스러움",con="가정 서재형 디자인",rec=0,alt=""),
 ]
 CH2=[
- dict(brand="데스커",n="올라운드 HF",u="https://www.desker.co.kr/product/detail/305",img="desker-305.webp",unit=252000,color="화이트쉘 · 블랙쉘",rec=2,note="추천 2와 짝"),
+ dict(brand="데스커",n="올라운드 HF",u="https://www.desker.co.kr/product/detail/305",img="desker-305.webp",unit=252000,color="화이트쉘 · 블랙쉘",rec=0,note="이전 선택. 시디즈 아이블(189,000원)로 바꿨어요"),
  dict(brand="일룸",n="알렉스",u=IL+"HVCH3900H",img="iloom-HVCH3900H.jpg",unit=219000,color="색상은 판매 페이지에서 확인",rec=1,note="추천 1과 짝"),
  dict(brand="일룸",n="아이핏",u=IL+"HVCH3501HLN",img="iloom-HVCH3501HLN.jpg",unit=379000,color="색상은 판매 페이지에서 확인",rec=0,note=""),
  dict(brand="시디즈",n="T50 2세대",u="https://kr.sidiz.com/products/t50-2",img="sidiz-t50.jpg",unit=439000,color="색상은 판매 페이지에서 확인",rec=0,note="구매표(대표석)에는 419,000원으로 적혀 있어요"),
@@ -169,11 +169,11 @@ def cand_card(c,kind):
     return f'<article class="card prod reveal{" hl" if c["rec"] else ""}">{ph}<div class="bd"><div class="model">{E(c["brand"])} {rec}</div><h3><a href="{c["u"]}" target="_blank" rel="noopener">{E(c["n"])} ↗</a></h3><div class="price">{won_(c["unit"])}<small>원</small></div><div class="pnote">{pn}</div><div class="tot2">10석 합계 <b>{won_(tot)}원</b></div>{info}<p class="small" style="margin:6px 0"><b>색상</b> · {E(c["color"])}</p>{pc}</div></article>'
 cand_desks="".join(cand_card(c,"desk") for c in DESKS)
 cand_chairs="".join(cand_card(c,"chair") for c in CH2)
-REC1=349000*5+219000*10; REC2=207000*10+252000*10
-assert REC1==3935000 and REC2==4590000
+REC1=349000*5+219000*10; REC2=207000*10+189000*10
+assert REC1==3935000 and REC2==3960000
 # ---- 데스커 구성 3안 (2026-11-02 확인 가격)
-CFG_A=294000*5+252000*10; CFG_B=207000*10+252000*10; CFG_C=207000*7+670000*3+252000*10
-assert (CFG_A,CFG_B,CFG_C)==(3990000,4590000,5979000)
+CHAIR_L=189000; CFG_A=294000*5+CHAIR_L*10; CFG_B=207000*10+CHAIR_L*10; CFG_C=207000*7+670000*3+CHAIR_L*10
+assert (CFG_A,CFG_B,CFG_C)==(3360000,3960000,5349000)
 assert M10==CFG_A+419000, (M10,CFG_A)
 cand_sec=f"""<section class="sec" id="premium"><div class="wrap">
  <div class="eyebrow">프리미엄 후보 · 책상+의자</div>
@@ -181,7 +181,7 @@ cand_sec=f"""<section class="sec" id="premium"><div class="wrap">
  <p class="lead">데스커와 일룸의 정가 기준 후보예요. 책상은 데스커 구성으로 정했어요(위 구매표·합계 기준). 아래는 다른 브랜드·모델 후보예요. 추천 2가지는 책상 + 의자 10개를 묶은 금액이에요.</p>
  <div class="grid g2 reveal">
   <div class="card hl"><span class="tag blue">⭐ 추천 1 · 도면 그대로</span><h3>일룸 엘바 2인용 1800×600 × 5 + 알렉스 × 10</h3><p>349,000원 × 5 + 219,000원 × 10 = <b>{won_(REC1)}원</b>. 지금 ㄷ자 도면의 1800×600 책상 사이즈와 같아서 배치를 거의 안 바꿔도 돼요. 다만 도면의 1200짜리 1개는 1800으로 바뀌어 길어지니 배치 확인이 필요해요.</p></div>
-  <div class="card hl"><span class="tag blue">⭐ 추천 2 · 가성비·개인 책상</span><h3>데스커 컴퓨터데스크 2.0 W1400×D700 × 10 + 올라운드 HF × 10</h3><p>207,000원 × 10 + 252,000원 × 10 = <b>{won_(REC2)}원</b>. 배선트레이·모니터암 홀이 있는 개인 책상이에요. 개인 책상 10대라 ㄷ자 연결 배치와는 달라서 배치를 새로 짜야 해요.</p></div>
+  <div class="card hl"><span class="tag blue">⭐ 추천 2 · 가성비·개인 책상</span><h3>데스커 컴퓨터데스크 2.0 W1400×D700 × 10 + 시디즈 아이블 × 10</h3><p>207,000원 × 10 + 189,000원 × 10 = <b>{won_(REC2)}원</b>. 배선트레이·모니터암 홀이 있는 개인 책상이에요. 개인 책상 10대라 ㄷ자 연결 배치와는 달라서 배치를 새로 짜야 해요.</p></div>
  </div>
  <h3 class="sub3">책상 후보</h3>
  <div class="grid g3p reveal">{cand_desks}</div>
@@ -331,7 +331,7 @@ old_html=f'''<!doctype html>
  <div class="eyebrow">프리미엄 vs 가성비</div>
  <h2>구매표 — 새로 사는 건 책상·의자만 (10석 기준)</h2>
  <p class="lead">예산 다이어트로 <b>새로 사는 건 교육 책상·학습자 의자 10개·대표석 의자</b>뿐이에요. 나머지는 최대한 당근·중고가구점에서 구할 거라 아래 별도 표로 옮겼고 <b>메인 합계에 넣지 않았어요</b>. 가격은 {D}(KST) 판매 페이지 표시값(단가)이고 ⭐가 추천 조합이에요. 책상 모델을 아직 고르지 않아서 아래 프리미엄 후보 추천 2가지의 합계를 대안으로 같이 보여줘요.</p>
- <div class="stot">{won_card("데스커 구성 A ⭐ · 책상+의자 10석",CFG_A,"멀티데스크×5 + 올라운드×10")}{won_card("데스커 구성 B",CFG_B,"컴퓨터데스크 2.0×10 + 올라운드×10")}{won_card("데스커 구성 C",CFG_C,"컴퓨터데스크×7 + 모션데스크 플러스×3 + 올라운드×10")}{won_card("새로 사는 합계 (A + 대표 의자)",M10,"구매표·계산기 기준 · 대표 의자 시디즈 T50 포함")}{won_card("대안 · 추천 1 (일룸 엘바+알렉스)",REC1,"프리미엄 후보 · 10석")}{won_card("10석 · 책상+의자 전부 프리미엄",MP10,"현재 구매표 기준")}{won_card("10석 · 책상+의자 전부 가성비",MV10,"현재 구매표 기준")}{won_card("12석 · 책상+의자 추천 조합",M12,"참고")}{won_card("15석 · 책상+의자 추천 조합",M15,"참고")}</div>
+ <div class="stot">{won_card("데스커 구성 A ⭐ · 책상+의자 10석",CFG_A,"멀티데스크×5 + 아이블×10")}{won_card("데스커 구성 B",CFG_B,"컴퓨터데스크 2.0×10 + 아이블×10")}{won_card("데스커 구성 C",CFG_C,"컴퓨터데스크×7 + 모션데스크 플러스×3 + 아이블×10")}{won_card("새로 사는 합계 (A + 대표 의자)",M10,"구매표·계산기 기준 · 대표 의자 시디즈 T50 포함")}{won_card("대안 · 추천 1 (일룸 엘바+알렉스)",REC1,"프리미엄 후보 · 10석")}{won_card("10석 · 책상+의자 전부 프리미엄",MP10,"현재 구매표 기준")}{won_card("10석 · 책상+의자 전부 가성비",MV10,"현재 구매표 기준")}{won_card("12석 · 책상+의자 추천 조합",M12,"참고")}{won_card("15석 · 책상+의자 추천 조합",M15,"참고")}</div>
  {main_table}
  <h3 class="sub3">당근·중고가구점 구매 예정 (새제품 참고가 · 메인 합계 제외)</h3>
  <p class="small" style="margin-bottom:10px">아래 가격은 새제품 기준 <b>참고가</b>예요. 당근·중고로 구하면 대부분 더 싸고, 실제 금액은 그때그때 달라요. 멀티탭·도어사인·명패·네트워크 장비·CCTV처럼 중고가 안 맞는 항목은 <b>새제품 권장</b>으로 따로 표시했어요(이것도 메인 합계에는 넣지 않았어요). 이미 집에 있는 물건은 아래 ‘이미 있는 것’ 목록이에요.</p>
@@ -438,9 +438,9 @@ old_html=f'''<!doctype html>
  <div class="eyebrow">비용</div>
  <h2>합계와 계산기</h2>
  <div class="stot">
-  {won_card("데스커 구성 A ⭐ · 10석",CFG_A,"멀티데스크×5 + 올라운드×10")}{won_card("새로 사는 합계 · 10석 (A + 대표 의자)",M10,"구매표·계산기 기준")}
+  {won_card("데스커 구성 A ⭐ · 10석",CFG_A,"멀티데스크×5 + 아이블×10")}{won_card("새로 사는 합계 · 10석 (A + 대표 의자)",M10,"구매표·계산기 기준")}
   {won_card("대안 · 추천 1 · 10석",REC1,"일룸 엘바 2인용×5 + 알렉스×10")}
-  {won_card("데스커 구성 B · 10석",CFG_B,"컴퓨터데스크 2.0×10 + 올라운드 HF×10")}{won_card("데스커 구성 C · 10석",CFG_C,"컴퓨터데스크×7 + 모션데스크 플러스×3 + 올라운드×10")}
+  {won_card("데스커 구성 B · 10석",CFG_B,"컴퓨터데스크 2.0×10 + 아이블×10")}{won_card("데스커 구성 C · 10석",CFG_C,"컴퓨터데스크×7 + 모션데스크 플러스×3 + 아이블×10")}
   {won_card("당근·중고 예정 (새제품 참고가)",DEF10,"메인 합계 제외 · 중고면 더 낮아요")}
   {won_card("책상+의자 전부 프리미엄 / 10석",MP10,"")}
   {won_card("책상+의자 전부 가성비 / 10석",MV10,"")}

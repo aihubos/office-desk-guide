@@ -39,20 +39,46 @@ def rcard(tag,title,line,total,imgs):
     return f'<article class="rc"><div class="rimgs">{ims}</div><span class="rtag">{tag}</span><h3>{title}</h3><p>{line}</p><p class="ps">{won_(total)}원</p></article>'
 rec_cards=rcard("⭐ 추천 1","일룸 엘바 + 알렉스","책상 ×5 · 의자 ×10",REC1,["iloom-HSUD018.jpg","iloom-HVCH3900H.jpg"])
 def cfgcard(tag,title,l1,l2,fit,fcls,total,imgs,rec=False):
-    ims="".join(f'<div class="pimg"><img src="assets/desks/{x}" alt="" loading="lazy"></div>' for x in imgs)
+    ims="".join(f'<div class="pimg"><img src="assets/{x if "/" in x else "desks/"+x}" alt="" loading="lazy"></div>' for x in imgs)
     b='<span class="rec-b">추천</span>' if rec else ''
     return (f'<article class="cfg{" rec" if rec else ""}">{b}<div class="rimgs">{ims}</div><span class="rtag">{tag}</span><h3>{title}</h3>'
       f'<p>{l1}</p><p>{l2}</p><p class="fit {fcls}">{fit}</p><p class="ps">{won_(total)}원</p></article>')
-cfg_cards=(cfgcard("A · 협업형","멀티데스크 ×5","올라운드 의자 ×10","2인씩 나란히 앉아요","도면 재조정 필요","warn",CFG_A,["desker-688.webp","desker-305.webp"],True)
- +cfgcard("B · 개인형","컴퓨터데스크 2.0 ×10","올라운드 의자 ×10","한 사람에 책상 하나","10대는 자리 부족","no",CFG_B,["desker-616.webp","desker-305.webp"])
- +cfgcard("C · 모션 믹스","컴퓨터데스크 ×7 + 모션데스크 ×3","올라운드 의자 ×10","3명은 서서도 일해요","10대는 자리 부족","no",CFG_C,["desker-239.webp","desker-305.webp"]))
+# ---- 의자 후보 (서울대 의자) : 이미지는 assets/chairs/
+CHAIR_CANDS=[
+ dict(img="ible.webp",rec=True,tag="⭐ 선택 · 서울대 의자",n="시디즈 아이블 IBLE",u="https://kr.sidiz.com/products/ible",unit=189000,
+  price="189,000원 (정가 199,000원 표시 · 높이조절형 199,000원)",src="시디즈 공식몰 2026-11-02",rate="★ 4.8 · 리뷰 3,231개 (오늘의집, 2026-11-02)",
+  opt="헤드레스트 없음 · 팔걸이 있음(조절 기능은 공식 설명에 없음)",pro="서울대 의자(T501FE)의 현재 모델 · 가장 저렴 · 5년 품질보증 · 뒤쪽이 글라이드라 밀리지 않아요",con="틸팅(등받이 젖힘) 없음 · 높이 고정형이 기본 · 공식 추천 키 150~175cm"),
+ dict(img="ch2811.webp",rec=False,tag="연세대 의자",n="퍼시스 CH2811 (아이티스2)",u="https://fursysmall.com/shop/shopbrand.html?prize1=CH2811&search=",unit=217000,
+  price="217,000원 (퍼시스몰 표시, 정가 248,600원)",src="퍼시스몰 2026-11-02 · 같은 날 다른 검색 결과엔 188,320원, 롯데홈쇼핑은 234,220원이라 판매처마다 달라요",rate="별점 5.0 (롯데홈쇼핑, 1건뿐이라 참고만)",
+  opt="헤드레스트 없음 · 팔걸이 있음",pro="앞바퀴만 있어 밀리지 않아요 · 대학 도서관에서 쓰는 의자로 알려져 있어요(블로그 후기)",con="높이 조절 안 됨 · 후기 수가 적어 비교가 어려워요 · 아이블보다 비싸요"),
+ dict(img="t20.webp",rec=False,tag="한 단계 위",n="시디즈 T20 2세대",u="https://kr.sidiz.com/products/t20",unit=239000,
+  price="239,000원 (정가 269,000원 표시)",src="시디즈 공식몰 2026-11-02",rate="★ 4.9 · 리뷰 약 1,463개 (오늘의집, 검색 결과 요약 기준이라 직접 확인 전)",
+  opt="헤드레스트는 별도 27,000원(공식몰) · 팔걸이 높이 조절 없음(1세대 후기 기준)",pro="틸팅 있음 · 등판 각도 4단 고정 · 메쉬 등판",con="아이블보다 10개에 50만원 비싸요 · 2세대 팔걸이 사양은 직접 확인하지 못했어요"),
+ dict(img="t50hf.webp",rec=False,tag="헤드레스트형",n="시디즈 T50 HF",u="https://kr.sidiz.com/products/t50hf",unit=309000,
+  price="309,000원 (정가 329,000원 표시)",src="시디즈 공식몰 2026-11-02",rate="★ 4.88 · 리뷰 1,656개 (네이버 가격비교, 2026-11-01)",
+  opt="헤드레스트 높이·각도 조절 있음 · 팔걸이 고정형",pro="틸팅 강도·범위 조절 · 5년 품질보증 · 후기가 가장 많은 T50 계열",con="10개에 약 309만원이라 예산이 커져요"),
+]
+def chair_item(c):
+    t=f'<span class="ctag{" on" if c["rec"] else ""}">{c["tag"]}</span>'
+    return (f'<article class="chi{" rec" if c["rec"] else ""}"><div class="chimg"><img src="assets/chairs/{c["img"]}" alt="{E(c["n"])}" loading="lazy"></div>'
+      f'<div class="chtx">{t}<h4><a href="{c["u"]}" target="_blank" rel="noopener">{E(c["n"])} ›</a></h4>'
+      f'<p class="chp"><b>{E(c["price"])}</b> · 10개 {won_(c["unit"]*10)}원</p>'
+      f'<p>{E(c["rate"])}</p><p>{E(c["opt"])}</p><p class="pr"><b>좋은 점</b> {E(c["pro"])}</p><p class="co"><b>아쉬운 점</b> {E(c["con"])}</p>'
+      f'<p class="src">출처 · {E(c["src"])}</p></div></article>')
+chair_block=('<p class="note-s" style="margin-top:0">‘서울대 의자’는 공식 이름이 아니라 별칭이에요. 후기들은 시디즈 T501FE(지금 이름은 아이블)를 가리켜요. 퍼시스 CH2811은 ‘연세대 의자’로 불려요. 대학 납품 여부는 공식 확인을 못 했어요.</p>'
+ '<div class="chlist">'+"".join(chair_item(c) for c in CHAIR_CANDS)+'</div>'
+ f'<p class="note-s">고른 이유: 서울대 의자 그 자체이고, 후보 중 가장 싸며(10개 {won_(CHAIR_L*10)}원), 후기도 3,000개 넘게 4.8점이에요. 이전 선택이던 데스커 올라운드 HF(252,000원)보다 10개에 {won_(2520000-CHAIR_L*10)}원 줄어요. 대표 의자는 헤드레스트와 틸팅이 있는 시디즈 T50 2세대 419,000원 그대로예요(후기 ★4.88 · 715개, 네이버 가격비교 2026-11-01). 가격은 쿠폰·배송비를 뺀 표시값이고 후기 수는 쇼핑몰마다 달라요.</p>')
+cfg_cards=(cfgcard("A · 협업형","멀티데스크 ×5","시디즈 아이블 의자 ×10","2인씩 나란히 앉아요","도면 재조정 필요","warn",CFG_A,["desker-688.webp","chairs/ible.webp"],True)
+ +cfgcard("B · 개인형","컴퓨터데스크 2.0 ×10","시디즈 아이블 의자 ×10","한 사람에 책상 하나","10대는 자리 부족","no",CFG_B,["desker-616.webp","chairs/ible.webp"])
+ +cfgcard("C · 모션 믹스","컴퓨터데스크 ×7 + 모션데스크 ×3","시디즈 아이블 의자 ×10","3명은 서서도 일해요","10대는 자리 부족","no",CFG_C,["desker-239.webp","chairs/ible.webp"]))
 cfg_detail=f"""<table class="tbl"><thead><tr><th>구성</th><th>책상</th><th>의자</th><th>합계</th><th>자리</th></tr></thead><tbody>
-<tr><td><b>A ⭐</b></td><td>멀티데스크 1800×800 × 5 = {won_(294000*5)}원</td><td>올라운드 HF × 10 = {won_(252000*10)}원</td><td><b>{won_(CFG_A)}원</b></td><td>ㄷ자 양팔 8석은 가능. 책상 깊이가 800이라 통로가 0.9m보다 좁아져요. 안쪽 폭을 1.0m로 줄이면 0.9m가 돼요. 5번째 책상(1.8m)은 안쪽 1.2m에 안 들어가서 자리를 따로 잡아야 해요.</td></tr>
-<tr><td><b>B</b></td><td>컴퓨터데스크 2.0 1400×700 × 10 = {won_(207000*10)}원</td><td>올라운드 HF × 10 = {won_(252000*10)}원</td><td><b>{won_(CFG_B)}원</b></td><td>책상+의자가 차지하는 면적 약 20㎡. 학습존은 약 14.6㎡라 10대는 안 들어가요. ㄷ자 팔에는 2대씩, 4~5석 정도예요.</td></tr>
-<tr><td><b>C</b></td><td>컴퓨터데스크 × 7 = {won_(207000*7)}원 + 모션데스크 플러스 1400×700 × 3 = {won_(670000*3)}원</td><td>올라운드 HF × 10 = {won_(252000*10)}원</td><td><b>{won_(CFG_C)}원</b></td><td>B와 같은 크기라 자리 문제도 같아요.</td></tr>
+<tr><td><b>A ⭐</b></td><td>멀티데스크 1800×800 × 5 = {won_(294000*5)}원</td><td>시디즈 아이블 × 10 = {won_(CHAIR_L*10)}원</td><td><b>{won_(CFG_A)}원</b></td><td>ㄷ자 양팔 8석은 가능. 책상 깊이가 800이라 통로가 0.9m보다 좁아져요. 안쪽 폭을 1.0m로 줄이면 0.9m가 돼요. 5번째 책상(1.8m)은 안쪽 1.2m에 안 들어가서 자리를 따로 잡아야 해요.</td></tr>
+<tr><td><b>B</b></td><td>컴퓨터데스크 2.0 1400×700 × 10 = {won_(207000*10)}원</td><td>시디즈 아이블 × 10 = {won_(CHAIR_L*10)}원</td><td><b>{won_(CFG_B)}원</b></td><td>책상+의자가 차지하는 면적 약 20㎡. 학습존은 약 14.6㎡라 10대는 안 들어가요. ㄷ자 팔에는 2대씩, 4~5석 정도예요.</td></tr>
+<tr><td><b>C</b></td><td>컴퓨터데스크 × 7 = {won_(207000*7)}원 + 모션데스크 플러스 1400×700 × 3 = {won_(670000*3)}원</td><td>시디즈 아이블 × 10 = {won_(CHAIR_L*10)}원</td><td><b>{won_(CFG_C)}원</b></td><td>B와 같은 크기라 자리 문제도 같아요.</td></tr>
 </tbody></table>
 <p class="note-s">면적은 책상 + 의자 뒤 0.75m 기준 계산이에요. 1200×600 컴퓨터데스크(150,000원) 10대로 줄여도 약 16㎡라 안 들어가요.</p>
-<p class="note-s">가격은 데스커 공식몰 2026-11-02 표시값이에요. 올라운드는 대리점가 239,000원(10개 {won_(2390000)}원)도 있어요. 책상 선택 링크: <a href="https://www.desker.co.kr/product/detail/688" target="_blank" rel="noopener">멀티데스크 ›</a> · <a href="https://www.desker.co.kr/product/detail/616" target="_blank" rel="noopener">컴퓨터데스크 2.0 ›</a> · <a href="https://www.desker.co.kr/product/detail/239" target="_blank" rel="noopener">모션데스크 플러스 ›</a> · <a href="https://www.desker.co.kr/product/detail/305" target="_blank" rel="noopener">올라운드 HF ›</a></p>
+<p class="note-s">가격은 데스커 공식몰 2026-11-02 표시값이에요. 의자는 시디즈 공식몰 2026-11-02 표시값(아이블 189,000원)이에요. 이전 선택이던 데스커 올라운드 HF(252,000원)보다 10개에 {won_(2520000-CHAIR_L*10)}원 싸요. 책상 선택 링크: <a href="https://www.desker.co.kr/product/detail/688" target="_blank" rel="noopener">멀티데스크 ›</a> · <a href="https://www.desker.co.kr/product/detail/616" target="_blank" rel="noopener">컴퓨터데스크 2.0 ›</a> · <a href="https://www.desker.co.kr/product/detail/239" target="_blank" rel="noopener">모션데스크 플러스 ›</a> · </p>
+<p class="note-s">의자 선택 링크: <a href="https://kr.sidiz.com/products/ible" target="_blank" rel="noopener">시디즈 아이블 ›</a></p>
 <p class="note-s">멀티탭&클램프 세트(50,000원)는 합계에 넣지 않았어요.</p>"""
 
 TODO=[("11/5~11/7","용달 예약",True),("11/5까지","도어사인 주문",True),("입주 전","인터넷 개통 신청",False),("입주 전","정수기 설치 신청 · 급수 위치 확인",False),
@@ -89,7 +115,7 @@ html_out=f'''<!doctype html>
  <p class="eb">AI Builders Lab · 현대실리콘앨리 동탄 1529호</p>
  <h1>새로 살 것</h1>
  <p class="big">{won_(CFG_A)}<small>원</small></p>
- <p class="sub">데스커 책상 5대와 의자 10개. 대표 의자는 별도예요.</p>
+ <p class="sub">데스커 책상 5대와 시디즈 아이블 의자 10개. 대표 의자는 별도예요.</p>
  <p class="meta">전용 44.2㎡ (약 13.4평) · 10석 · 입주 11/10(화)</p>
  <p class="acts"><a href="#layout">도면 보기 ›</a><a href="3d/">3D로 보기 ›</a></p>
 </div></header>
@@ -112,7 +138,8 @@ html_out=f'''<!doctype html>
  <p class="note-s">추천은 A예요. 가장 싸고, 학습존에 들어갈 수 있는 구성이에요. 대표 의자 시디즈 T50({won_(419000)}원)은 별도예요.</p>
  {det("구성 비교 · 자리 계산",cfg_detail)}
  {det("구매표 · 새로 사는 합계 (A + 대표 의자) · 12·15석",buy_a)}
- {det("다른 브랜드 후보",'<div class="rgrid">'+rec_cards+'</div>'+inner("premium")+inner("chairs"))}
+ {det("의자 후보 · 서울대 의자",chair_block)}
+ {det("다른 브랜드 후보",'<div class="rgrid">'+rec_cards+'</div>'+inner("premium"))}
  {det("책상·전자칠판 후보 · 시청거리",inner("ref"))}
  {det("체크리스트 · 새로 살 것",inner("checklist").split('<h3 class="sub3">집에서 가져올 물건')[0])}
 </div></section>
