@@ -34,8 +34,8 @@ const M=(c,o={})=>{const k=c+JSON.stringify(o); return _m[k]||(_m[k]=new THREE.M
 const WOOD=M('#E3C79A',{r:.6}), WOOD_D=M('#B98F5B',{r:.65}), BLACK=M('#1d1f23',{r:.5,m:.3}), WHITE=M('#F5F5F2'), GRAY=M('#C9CED6'), DGRAY=M('#6b7480');
 const wallM=M('#F3EFE8',{r:.95});
 
-const groups={common:new THREE.Group(),g12:new THREE.Group(),g15:new THREE.Group()};
-scene.add(groups.common,groups.g12,groups.g15);
+const groups={common:new THREE.Group(),g10:new THREE.Group(),g12:new THREE.Group(),g15:new THREE.Group()};
+scene.add(groups.common,groups.g10,groups.g12,groups.g15);
 const swingG=new THREE.Group(); groups.common.add(swingG);
 const labels=[];
 function box(g,x,y,w,d,y0,h,mat,cast=true){ // plan rect(mm) + 높이(m)
@@ -191,6 +191,14 @@ function shelf(g,x,y,w,d,col=WOOD_D,h=2.0,withBooks=true){ // 책장: 앞면이 
   if(withBooks){const cols=['#c0563b','#3b6fc0','#e0b84a','#4a8f6b','#eee','#7a5aa8']; let k=0;
     for(const yy of [.03,.43,.83,1.23]) for(let z=y+40;z<y+w-60;z+=70+((k*37)%40)){ const hh=.2+((k*53)%15)/100; box(g,x+60,z,d-110,36+(k%3)*8,yy,hh,M(cols[k%6],{r:.8}),false); k++; }}
 }
+// ===== 10석 (기본) =====
+const T10=groups.g10;
+utable(T10);
+for(let i=0;i<4;i++){ chair(T10,440,2460+960*i,1,0); chair(T10,3360,2460+960*i,-1,0); }
+chair(T10,1500,1840,0,1); chair(T10,2300,1840,0,1);
+label(T10,'ㄷ자 연결 책상 (상석 쪽이 입구)',1900,.95,2400,'k');
+label(T10,'의자 · 교육 10석 (바깥에서 안쪽을 봄)',440,1.05,4000,'k');
+label(T10,'U 안쪽 발표·토론 공간 (폭 1.2m)',1900,.3,4300,'s');
 // ===== 12석 =====
 const A=groups.g12;
 utable(A);
@@ -282,7 +290,7 @@ addEventListener('resize',()=>{resize(); if(!anim&&!userMoved) go(curView,true);
 let userMoved=false; controls.addEventListener('start',()=>{userMoved=true;anim=null;});
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{userMoved=false;go(b.dataset.view);});
 function setSeats(n){
-  groups.g12.visible=n==12; groups.g15.visible=n==15; labels.forEach(o=>{o.visible=o.userData.g.visible!==false;});
+  groups.g10.visible=n==10; groups.g12.visible=n==12; groups.g15.visible=n==15; labels.forEach(o=>{o.visible=o.userData.g.visible!==false;});
   document.querySelectorAll('[data-seats]').forEach(b=>b.classList.toggle('on',b.dataset.seats==n));
   document.getElementById('sub').textContent='ㄷ자(U형) · '+n+'석';
   const q=new URLSearchParams(location.search); q.set('seats',n); history.replaceState(null,'','?'+q);
@@ -293,7 +301,7 @@ const td=document.getElementById('tgDetail'); td.onclick=()=>{document.body.clas
 const ts=document.getElementById('tgSwing'); ts.onclick=()=>{swingG.visible=!swingG.visible; ts.classList.toggle('on');};
 
 const qp=new URLSearchParams(location.search);
-resize(); setSeats(qp.get('seats')=='15'?15:12);
+resize(); setSeats(qp.get('seats')=='15'?15:qp.get('seats')=='12'?12:10);
 if(qp.get('labels')=='0'){document.body.classList.add('nolabel'); tl.classList.remove('on');}
 if(qp.get('detail')=='1'){document.body.classList.add('detail'); td.classList.add('on');}
 go(views[qp.get('view')]?qp.get('view'):'iso',true);

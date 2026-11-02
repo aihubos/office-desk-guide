@@ -58,7 +58,7 @@ def sofa(ax,x,y,w,d,back="down",label="소파 3인"):
 def bean(ax,x,y):
     ax.add_patch(Circle((x,y),270,fc="#8FB3E8",ec="white",zorder=5)); T(ax,x,y,"빈백",fs=5.6)
 def build(mode):
-    seats=12 if mode==12 else 15
+    seats={10:10,12:12,15:15}[mode]
     from shapely.geometry import Polygon as SP
     import sys; sys.path.insert(0,"/workspace")
     from geom import UP as UPG
@@ -128,7 +128,9 @@ def build(mode):
     T(ax,1000,5200,"바닥 콘센트\n(대략)",fs=4.0,c="#B86E00",z=9)
     # ---------- learners: ㄷ자를 뒤집음 — 막힌 쪽(1200x600 상석)이 입구 쪽, 열린 쪽이 뒤(전자칠판)
     UP=[(700,2100),(3100,2100),(3100,5700),(2500,5700),(2500,2700),(1300,2700),(1300,5700),(700,5700)]
-    if mode==12:
+    if mode==10:
+        ch=[(440,2460+960*i,1,0) for i in range(4)]+[(3360,2460+960*i,-1,0) for i in range(4)]+[(1500,1840,0,1),(2300,1840,0,1)]
+    elif mode==12:
         ch=[(440,2460+720*i,1,0) for i in range(5)]+[(3360,2460+720*i,-1,0) for i in range(5)]+[(1500,1840,0,1),(2300,1840,0,1)]
     else:
         ch=[(440,2460+600*i,1,0) for i in range(6)]+[(3360,2460+600*i,-1,0) for i in range(6)]+[(1100,1840,0,1),(1900,1840,0,1),(2700,1840,0,1)]
@@ -216,6 +218,10 @@ def build(mode):
         leg_turn_min=round(min(leg)),leg_turn_max=round(max(leg)),head_turn=round(max(head)),
         view_head_max=round(max(vhead)),view_leg_max=round(max(vleg)),view_leg_min=round(min(vleg)),
         u_gap=round(ugap))
+import sys
 stats={}
-build(12); build(15)
+modes=[int(a) for a in sys.argv[1:]] or [12,15]
+for m in modes: build(m)
+old=json.load(open("/workspace/office-desk-guide/work/layout3_stats.json"))
+old.update({str(k):v for k,v in stats.items()}); stats=old
 json.dump(stats,open("/workspace/office-desk-guide/work/layout3_stats.json","w")); print(stats)

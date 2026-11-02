@@ -3,7 +3,10 @@ from legacy import *          # D, won, E, tables, tvs, stand_cards, card, grp, 
 import catalog
 I=catalog.I
 st=json.load(open("layout3_stats.json"))
-def q(t,m): return t["q"][0 if m==12 else 1]
+def q(t,m):
+    x=t["q"]
+    if len(x)==3: return x[{10:0,12:1,15:2}[m]]
+    return x[1 if m==15 else 0]   # 2-tuple (12,15): 10석은 12석과 같은 수량
 def sub(t,m): return t["p"]*q(t,m)
 CH=("chair_l","chair_c")
 def rec_items(m,chairs=True,later=False):
@@ -17,8 +20,10 @@ def rec_items(m,chairs=True,later=False):
     return r
 def tot_rec(m,chairs=True,later=False): return sum(sub(t,m) for i,t in rec_items(m,chairs,later))
 def tot_tier(k,m): return sum(sub(i[k],m) for i in I)
+R10=tot_rec(10); R10n=tot_rec(10,False); L10=tot_rec(10,True,True)
 R12=tot_rec(12); R12n=tot_rec(12,False); L12=tot_rec(12,True,True)
 R15=tot_rec(15); R15n=tot_rec(15,False); L15=tot_rec(15,True,True)
+P10,V10=tot_tier("P",10),tot_tier("V",10)
 P12,V12,P15,V15=tot_tier("P",12),tot_tier("V",12),tot_tier("P",15),tot_tier("V",15)
 def won_(n): return f"{n:,}"
 def link(t):
@@ -26,7 +31,7 @@ def link(t):
     return f'<span style="font-weight:600">{E(t["n"])}</span>'
 def thumb(t):
     return f'<img class="th" src="assets/img/{t["img"]}" alt="{E(t["n"])} 사진" loading="lazy">' if t["img"] else '<span class="th" style="display:flex;align-items:center;justify-content:center;font-size:10px;color:#8B95A1;text-align:center">사진<br>없음</span>'
-def tier_rows(items,m=12,flag_rec=True):
+def tier_rows(items,m=10,flag_rec=True):
     out=""; last=None
     for i in items:
         if i["grp"]!=last:
@@ -45,14 +50,14 @@ def tier_rows(items,m=12,flag_rec=True):
         if i["note"] and i["note"]!="own": out+=f'<tr><td colspan="7" class="wtxt" style="background:#FFFAF0">{E(i["note"])}</td></tr>'
     return out
 HEAD='<thead><tr><th>항목</th><th>등급</th><th>제품명 + 링크</th><th class="num">가격(단가)</th><th class="num">수량</th><th class="num">소계</th><th>한줄 이유</th></tr></thead>'
-main_table=f'<div class="tbl reveal"><table class="big">{HEAD}<tbody>{tier_rows(I,12)}</tbody>'+ \
- f'<tfoot><tr class="grpr"><td colspan="5">12석 · 전부 프리미엄 합계 (보유 0원 포함)</td><td class="num">{won_(P12)}원</td><td></td></tr>'+ \
- f'<tr class="grpr"><td colspan="5">12석 · 전부 가성비 합계</td><td class="num">{won_(V12)}원</td><td></td></tr></tfoot></table></div>'
-studio_rows=tier_rows([i for i in I if i["grp"]=="스튜디오 코너"],12)
+main_table=f'<div class="tbl reveal"><table class="big">{HEAD}<tbody>{tier_rows(I,10)}</tbody>'+ \
+ f'<tfoot><tr class="grpr"><td colspan="5">10석 · 전부 프리미엄 합계 (보유 0원 포함)</td><td class="num">{won_(P10)}원</td><td></td></tr>'+ \
+ f'<tr class="grpr"><td colspan="5">10석 · 전부 가성비 합계</td><td class="num">{won_(V10)}원</td><td></td></tr></tfoot></table></div>'
+studio_rows=tier_rows([i for i in I if i["grp"]=="스튜디오 코너"],10)
 studio_table=f'<div class="tbl reveal"><table class="big">{HEAD}<tbody>{studio_rows}</tbody></table></div>'
-net_table=f'<div class="tbl reveal"><table class="big">{HEAD}<tbody>{tier_rows([i for i in I if i["grp"]=="네트워크·전원"],12)}</tbody></table></div>'
-print_table=f'<div class="tbl reveal"><table class="big">{HEAD}<tbody>{tier_rows([i for i in I if i["id"] in ("mfp","printer","p3d")],12,False)}</tbody></table></div>'
-proj_table=f'<div class="tbl reveal"><table class="big">{HEAD}<tbody>{tier_rows([i for i in I if i["grp"]=="선택 장비"],12,False)}</tbody></table></div>'
+net_table=f'<div class="tbl reveal"><table class="big">{HEAD}<tbody>{tier_rows([i for i in I if i["grp"]=="네트워크·전원"],10)}</tbody></table></div>'
+print_table=f'<div class="tbl reveal"><table class="big">{HEAD}<tbody>{tier_rows([i for i in I if i["id"] in ("mfp","printer","p3d")],10,False)}</tbody></table></div>'
+proj_table=f'<div class="tbl reveal"><table class="big">{HEAD}<tbody>{tier_rows([i for i in I if i["grp"]=="선택 장비"],10,False)}</tbody></table></div>'
 
 # ---- checklist (recommended set)
 PRI=["입주 전 필수","1개월 내","나중에"]
@@ -67,10 +72,10 @@ def checklist(m):
             k=i["rec"]; lab="프리미엄" if k=="P" else "가성비"
             out+=f'<tr><td><span class="tg {"p" if k=="P" else "v"}">{p}</span></td><td>{E(i["name"])}</td><td><div class="pc">{thumb(t)}<div>{link(t)}<span class="wtxt" style="color:#6B7684">{lab} · {E(t["src"])}</span></div></div></td><td class="num">{q(t,m)}</td><td class="num">{won_(t["p"])}원</td><td class="num"><b>{won_(sub(t,m))}원</b></td><td>{"☐" }</td></tr>'
     return out,grand
+cl10,cg10=checklist(10)
 cl12,cg12=checklist(12)
-assert cg12==R12+L12-0 or True
 own_rows="".join(f'<li><b>{E(i["name"])}</b> — 구매 목록 0원 (보유)</li>' for i in I if i["note"]=="own")+ '<li><b>iPhone</b> — 카메라 대용으로 이미 보유(0원)</li><li><b>Mac Studio</b> — 배치도 참고용(대표석 장비). 합계에 넣지 않음. 애플 코리아 구성 선택 화면에 ₩4,290,000부터 / ₩5,310,000부터 표시(2026.11.01 KST 확인).</li>'
-checklist_table=f'<div class="tbl reveal"><table class="big"><thead><tr><th>우선순위</th><th>항목</th><th>제품 + 링크</th><th class="num">수량</th><th class="num">단가</th><th class="num">소계</th><th>구매</th></tr></thead><tbody>{cl12}</tbody><tfoot><tr class="grpr"><td colspan="5">총 합계 (12석 · 추천 조합 · 의자 포함 · 나중에 포함)</td><td class="num">{won_(cg12)}원</td><td></td></tr></tfoot></table></div>'
+checklist_table=f'<div class="tbl reveal"><table class="big"><thead><tr><th>우선순위</th><th>항목</th><th>제품 + 링크</th><th class="num">수량</th><th class="num">단가</th><th class="num">소계</th><th>구매</th></tr></thead><tbody>{cl10}</tbody><tfoot><tr class="grpr"><td colspan="5">총 합계 (10석 · 추천 조합 · 의자 포함 · 나중에 포함)</td><td class="num">{won_(cg10)}원</td><td></td></tr></tfoot></table></div>'
 
 OWN="".join(f'<li class="ok"><b>✓</b><span>{x}</span></li>' for x in [
  "<b>모션데스크</b> — 집에 있는 것을 가져옴(보유, 0원). 용달로 운반",
@@ -81,7 +86,7 @@ OWN="".join(f'<li class="ok"><b>✓</b><span>{x}</span></li>' for x in [
  "<b>Mac Studio</b> — 배치도 참고용이라 합계에 넣지 않았어요. 애플 코리아 구성 선택 화면 표시: ₩4,290,000부터 / ₩5,310,000부터(2026.11.01 KST)"])
 # ---- chairs
 CHAIRS=[
- dict(n="시디즈 IBLE (아이블, 일명 서울대 의자)",p="189,000원",img="p3-ch-ible.jpg",u="https://kr.sidiz.com/products/ible",spec="S라인 메시 등판 · 틸팅 기능 없음(공식 설명) · 189,000원은 글라이드 프레임 기준, 높이조절형/바퀴 옵션은 199,000원(공식몰 표시)",who="가성비 · 학습자용",why="12개 약 227만원 (바퀴형이면 +12만원)",w="보증기간이 판매처마다 다르게 표시(SSG ‘무상 1년’) — 구매 전 확인"),
+ dict(n="시디즈 IBLE (아이블, 일명 서울대 의자)",p="189,000원",img="p3-ch-ible.jpg",u="https://kr.sidiz.com/products/ible",spec="S라인 메시 등판 · 틸팅 기능 없음(공식 설명) · 189,000원은 글라이드 프레임 기준, 높이조절형/바퀴 옵션은 199,000원(공식몰 표시)",who="가성비 · 학습자용",why="10개 약 189만원 (바퀴형이면 +10만원)",w="보증기간이 판매처마다 다르게 표시(SSG ‘무상 1년’) — 구매 전 확인"),
  dict(n="시디즈 T20 2세대",p="239,000원",img="p3-ch-t20.jpg",u="https://kr.sidiz.com/products/t20",spec="등판 기울기 4단 고정(105°~125°) · 정품 등록 시 5년 품질보증(공식 설명)",who="프리미엄 · 학습자용",why="3~4시간 이상 수업이면 이쪽",w=""),
  dict(n="듀오백 Q1 Airo",p="230,000원",img="",u="https://prod.danawa.com/info/?pcode=17299001",spec="다나와 최저가만 확인(상세 사양 미확인)",who="대안",why="브랜드 대안",w="사양 미확인"),
  dict(n="일룸 올리버",p="294,000원",img="p3-ch-oliver.jpg",u="https://www.iloom.com/product/detail.do?productCd=HCH290WS",spec="일룸 공식몰 표시가만 확인",who="대안",why="일룸 톤으로 통일하고 싶을 때",w="상세 사양 미확인"),
@@ -95,10 +100,10 @@ def chair_card(c):
 chair_cards="".join(chair_card(c) for c in CHAIRS)
 
 data=dict(items=[dict(id=i["id"],grp=i["grp"],name=i["name"],pri=i["pri"],rec=i["rec"],own=i["note"]=="own",chair=i["id"] in CH,
-  P=dict(p=i["P"]["p"],q=i["P"]["q"],n=i["P"]["n"]),V=dict(p=i["V"]["p"],q=i["V"]["q"],n=i["V"]["n"])) for i in I])
+  P=dict(p=i["P"]["p"],q={str(m):q(i["P"],m) for m in (10,12,15)},n=i["P"]["n"]),V=dict(p=i["V"]["p"],q={str(m):q(i["V"],m) for m in (10,12,15)},n=i["V"]["n"])) for i in I])
 
 def won_card(l,n,sm=""): return f'<div class="card reveal"><div class="l">{l}</div><div class="n">{won_(n)}원</div><div class="l">{sm}</div></div>'
-S12,S15=st["12"],st["15"]
+S10,S12,S15=st["10"],st["12"],st["15"]
 
 html_out=f'''<!doctype html>
 <html lang="ko">
@@ -120,11 +125,11 @@ html_out=f'''<!doctype html>
 <header class="hero"><div class="wrap">
  <span class="pill">AI Builders Lab · 현대실리콘앨리 동탄 1529호 · 전용 44.2㎡ (약 13.4평) · {D} 기준</span>
  <h1>44.2㎡ 안에 교육장·대표실까지,<br><span class="blue">ㄷ자 배치와 구매 체크리스트</span></h1>
- <p class="sub">12석 ㄷ자(U형) 토론 배치를 메인으로, 모든 품목을 프리미엄/가성비 2안으로 정리했어요. 입주 준비 할 일(용달 예약 포함)도 맨 위에 넣었어요.</p>
+ <p class="sub">10석 ㄷ자(U형) 토론 배치를 기본으로(12·15석도 같은 책상 5개로 가능), 모든 품목을 프리미엄/가성비 2안으로 정리했어요. 입주 준비 할 일(용달 예약 포함)도 맨 위에 넣었어요.</p>
  <div class="stats">
-  <div class="stat"><b>12석</b><span>ㄷ자 토론 배치(추천)<br>15석도 같은 책상 5개로 가능</span></div>
-  <div class="stat"><b>{won_(R12)}원</b><span>추천 조합 합계(12석)<br>의자 포함·나중에 항목 제외</span></div>
-  <div class="stat"><b>{won_(R12n)}원</b><span>같은 조합, 의자 제외</span></div>
+  <div class="stat"><b>10석</b><span>ㄷ자 토론 배치(기본)<br>12·15석도 같은 책상 5개로 가능</span></div>
+  <div class="stat"><b>{won_(R10)}원</b><span>추천 조합 합계(10석)<br>의자 포함·나중에 항목 제외</span></div>
+  <div class="stat"><b>{won_(R10n)}원</b><span>같은 조합, 의자 제외</span></div>
   <div class="stat"><b>11/5~7</b><span>용달 예약 권장<br>(입주 11/10 화)</span></div>
  </div>
  <a class="cta" href="#todo">입주 준비 할 일 보기</a>
@@ -137,11 +142,11 @@ html_out=f'''<!doctype html>
 <section class="sec" id="summary"><div class="wrap">
  <div class="eyebrow">한눈에</div>
  <h2>이 공간에 넣을 것들</h2>
- <p class="lead">전용 44.205㎡(약 13.4평) 지식산업센터 사무실에 교육 책상 12석(<b>ㄷ자 상석이 입구 쪽</b>), 입구 쪽 탕비, 그리고 ㄷ자 열린 쪽 끝에 <b>75형 전자칠판을 바로 붙이고</b>, 그 바로 뒤에 <b>낮은 책장 가벽</b>, 가벽 뒤에 <b>소파 라운지</b>와 <b>대표실</b>(대표석·서진이 책상)을 둬요. 대표 모션데스크는 <b>방 가운데 창 쪽에서 출입문을 정면으로 마주 보게</b>, 서진이 책상은 <b>창 쪽 왼쪽 모서리</b>예요. 복합기, NAS·공유기, CCTV 2대도 넣어요. <b>3D 프린터는 창 쪽 오른쪽 문 밖 외부 펜트리의 왼쪽 끝(문 반대편)</b>에 둬요. 로봇청소기와 34형 울트라와이드 모니터는 기존 사무실 것을 가져와요. YouTube 촬영 코너와 포커스석은 이번 배치에서 <b>고정 자리가 없어져 선택·이동식</b>이에요.</p>
+ <p class="lead">전용 44.205㎡(약 13.4평) 지식산업센터 사무실에 교육 책상 10석(<b>ㄷ자 상석이 입구 쪽</b>, 12·15석 변형도 같은 책상), 입구 쪽 탕비, 그리고 ㄷ자 열린 쪽 끝에 <b>75형 전자칠판을 바로 붙이고</b>, 그 바로 뒤에 <b>낮은 책장 가벽</b>, 가벽 뒤에 <b>소파 라운지</b>와 <b>대표실</b>(대표석·서진이 책상)을 둬요. 대표 모션데스크는 <b>방 가운데 창 쪽에서 출입문을 정면으로 마주 보게</b>, 서진이 책상은 <b>창 쪽 왼쪽 모서리</b>예요. 복합기, NAS·공유기, CCTV 2대도 넣어요. <b>3D 프린터는 창 쪽 오른쪽 문 밖 외부 펜트리의 왼쪽 끝(문 반대편)</b>에 둬요. 로봇청소기와 34형 울트라와이드 모니터는 기존 사무실 것을 가져와요. YouTube 촬영 코너와 포커스석은 이번 배치에서 <b>고정 자리가 없어져 선택·이동식</b>이에요.</p>
  <div class="callout warn reveal"><b>가정한 것</b> · 보내주신 방 사진 3장으로 <b>폭 약 4.5m × 길이 약 9.8m = 44.1㎡의 길쭉한 직사각형</b>을 추정했어요(전용 44.205㎡ 기준, 실측 아님). 한쪽 짧은 벽은 <b>바닥~천장 전면 유리창</b>, 반대쪽 짧은 벽에 <b>출입문</b>(단변 정중앙, 폭 약 0.9m·안쪽 여닫이 가정)이 있어요. 알려주신 대로 <b>창문 쪽 오른쪽(도면 오른쪽 끝)에 열리는 문</b>이 있고 그 밖이 <b>외부 펜트리</b>라고 보고, 문 폭 0.9m·안쪽 여닫이·펜트리 폭 4.5m(사무실 폭과 같음, 확인받음)×깊이 1.3m는 <b>제가 가정한 값</b>이에요. ‘왼쪽·오른쪽’은 도면 이미지 기준이에요(실제 방향이 반대라면 알려주세요). 바닥 콘센트는 방 중간쯤 한쪽 벽 가까이 1개를 대략 표시했어요. 천장형 에어컨은 중앙. <b>실측치가 오면 배치도를 다시 그릴게요.</b></div>
  <div class="callout reveal" style="margin-top:12px"><b>스타일 가정</b> · 애플 사용자(Mac Studio·MacBook), 깔끔한 미니멀·모던, 유튜브 촬영(유하님과 함께), 화이트/오크/그레이 톤, USB-C·맥 호환 장비를 우선했어요.</div>
  <div class="grid g3p reveal" style="margin-top:20px">
-  <div class="card"><h3>배치</h3><p>ㄷ자 12석이 추천. 문을 열면 ㄷ자 상석이 바로 보이고, 전자칠판은 ㄷ자 열린 쪽 끝에 붙여 상석 쪽을 정면으로 봐요. 칠판 바로 뒤가 낮은 책장 가벽(빌리 ×3, 왼쪽 벽에 붙임)이고 가벽 뒤에 왼쪽 벽에 붙인 소파 라운지와 창 쪽 대표실(대표석은 출입문 정면)이 있어요. 앞↔뒤 이동은 오른쪽 통로로 바로 이어져요. 15석은 통로가 더 빠듯해요.</p></div>
+  <div class="card"><h3>배치</h3><p>ㄷ자 10석이 기본(12석은 같은 책상에 의자만 늘린 변형). 문을 열면 ㄷ자 상석이 바로 보이고, 전자칠판은 ㄷ자 열린 쪽 끝에 붙여 상석 쪽을 정면으로 봐요. 칠판 바로 뒤가 낮은 책장 가벽(빌리 ×3, 왼쪽 벽에 붙임)이고 가벽 뒤에 왼쪽 벽에 붙인 소파 라운지와 창 쪽 대표실(대표석은 출입문 정면)이 있어요. 앞↔뒤 이동은 오른쪽 통로로 바로 이어져요. 15석은 통로가 더 빠듯해요.</p></div>
   <div class="card"><h3>보유 → 구매 아님</h3><p>모션데스크, NAS, iPhone, 로봇청소기, 34형 모니터는 있는 것을 가져와요(0원). 모션데스크·NAS는 용달로 옮겨요(가벽 책장은 새로 사요).</p></div>
   <div class="card"><h3>가격</h3><p>모두 {D}(KST) 판매 페이지 표시값. 쿠폰·옵션·배송비에 따라 달라요.</p></div>
  </div>
@@ -165,20 +170,20 @@ html_out=f'''<!doctype html>
 
 <section class="sec" id="layout"><div class="wrap">
  <div class="eyebrow">배치도 · 메인</div>
- <h2>ㄷ자(U형) 토론 12석<br>44.2㎡ 배치도</h2>
+ <h2>ㄷ자(U형) 토론 10석<br>44.2㎡ 배치도</h2>
  <p class="lead">책상 5개를 이어 붙여 <b>끊김 없는 ㄷ자</b>로 만들었어요(양쪽 다리 1800×600 두 개씩 + 1200×600 상석). 막힌 쪽(상석)이 <b>입구 쪽</b>이고 열린 쪽이 뒤쪽이에요. 문 <b>왼쪽에 탕비</b>가 있어요. 방 뒤쪽은 이번에 이렇게 바뀌었어요: <b>① 75형 전자칠판을 ㄷ자 열린 쪽 끝에 붙여(책상 끝과 약 0.95m) 상석 쪽을 정면으로 보게 했어요 ② 칠판 바로 뒤(약 0.15m)에 낮은 책장(IKEA 빌리 80×28×106cm ×3)을 <b>왼쪽 벽에 붙여</b> 가벽을 세워 교육존과 뒤쪽을 나눴어요(오른쪽 약 2.1m는 트임) ③ <b>소파(2인 소형)를 왼쪽 벽에 붙여</b> 가벽 뒤에 놓았어요 ④ 대표 책상을 창 쪽 오른쪽 가운데(x 1.9~3.4m)에 두고 <b>대표가 출입문을 정면으로 보게</b> 앉혔어요(모니터 뒷면이 입구 쪽이라 입구에서 화면이 안 보여요) ⑤ 서진이 책상을 창 쪽 왼쪽 모서리에 놓았어요 ⑥ 펜트리 문은 창 쪽 <b>오른쪽</b> 끝이에요.</b> 왼쪽·오른쪽은 모두 <b>도면 이미지 기준</b>(입구가 위, 창이 아래)이에요.</p>
- <div class="lay1 reveal"><figure><a href="assets/img/layout-12.png" target="_blank" rel="noopener"><img src="assets/img/layout-12.png" alt="ㄷ자 12석 배치도 (상석이 입구 쪽, ㄷ자 끝에 전자칠판, 책장 가벽 뒤 소파·대표실)" loading="lazy"></a></figure></div>
+ <div class="lay1 reveal"><figure><a href="assets/img/layout-10.png" target="_blank" rel="noopener"><img src="assets/img/layout-10.png" alt="ㄷ자 10석 배치도 (상석이 입구 쪽, ㄷ자 끝에 전자칠판, 책장 가벽 뒤 소파·대표실)" loading="lazy"></a></figure></div>
  <div class="legend reveal"><span><i style="background:#3182F6;border-radius:50%"></i>학습자 의자</span><span><i style="background:#EBD3AB;border:2px solid #9A7B4F"></i>교육 책상</span><span><i style="background:#FFD9DE;border:2px solid #F04452"></i>가벽 뒤 라운지·대표실</span><span><i style="background:#D4F5DC;border:2px solid #2E9E58"></i>서진이 책상</span><span><i style="background:#FF9F1C"></i>멀티탭(주황 점선=케이블)</span><span><i style="background:#3182F6;opacity:.5"></i>파란 점선=유선 LAN</span><span><i style="background:#7B61FF"></i>빔프로젝터·스크린(선택)</span><span><i style="background:#FF6B6B;opacity:.6"></i>CCTV 시야</span><span><i style="background:#fff;border:2px dashed #7B61FF"></i>점선 = 선택·후보</span></div>
  <ul class="checks reveal" style="margin-top:20px">
-  <li class="ok"><b>+</b><span><b>책상 5개</b>: 1800×600 4개(양쪽 다리 2개씩, 구매 예정 모델) + <b>1200×600 1개(바닥, 추가 구매)</b>. 12석은 다리마다 5석(간격 720mm) + 바닥 2석, 15석은 다리마다 6석 + 바닥 3석(간격 600mm)이에요. 12석·15석 모두 책상은 같은 5개예요.</span></li>
+  <li class="ok"><b>+</b><span><b>책상 5개</b>: 1800×600 4개(양쪽 다리 2개씩, 구매 예정 모델) + <b>1200×600 1개(바닥, 추가 구매)</b>. <b>10석(기본)은 다리마다 4석(간격 960mm) + 상석 2석</b>, 12석은 다리마다 5석(간격 720mm) + 바닥 2석, 15석은 다리마다 6석 + 바닥 3석(간격 600mm)이에요. 10·12·15석 모두 책상은 같은 5개예요(10석이면 책상을 줄일 수도 있지만 도면은 그대로 뒀어요).</span></li>
  <li class="ok"><b>+</b><span><b>전자칠판 75형</b>(제노스미디어 CO750LT4K, 당근 중고 150만원, 패널 1707×1034mm, 스탠드 포함 높이 1840mm, 53.8kg — 판매자 제시 값): <b>ㄷ자 열린 쪽 끝 바로 앞, 중심 x 1.9m·화면 앞면 y 6.65m</b>에 놓고 화면이 입구 쪽(ㄷ자 상석 방향)을 <b>정면</b>으로 봐요. 스탠드 바닥(1467×520mm, <b>도면 가정값</b>·고정형이라 바퀴 없음으로 봄)까지 점유 영역은 x 1.17~2.63m(패널 x 1.05~2.75m), y 6.65~7.17m예요. <b>칠판 뒤 약 0.15m 틈</b>(y 7.17~7.32m)이 있고 그 뒤가 책장 가벽이라 전원·AV 선을 넣을 수는 있지만 사람이 드나들 폭은 아니에요. 칠판 왼쪽 통로는 벽까지 약 1.05m, 오른쪽은 벽까지 약 1.75m인 빈 공간(보관·이동식 촬영 후보)이에요. 전동 스크린·빔프로젝터·이동식 화이트보드는 자리가 없어 도면에서 뺐어요(구매표에는 선택 항목으로 남김).</span></li>
- <li class="ok"><b>+</b><span><b>ㄷ자 열린 쪽 끝(책상 끝)↔칠판 약 {S12["u_gap"]/1000:.2f}m</b>는 발표자가 서는 자리이면서 <b>뒤쪽으로 가는 통로</b>이기도 해요. 가장 먼 학습자(상석, 머리 위치)까지 약 {S12["eye_max"]/1000:.1f}m({S12["eye_max"]/1034:.1f}×), 가장 가까운 자리는 {S12["eye_min"]/1000:.1f}m({S12["eye_min"]/1034:.1f}×)예요(15석: {S15["eye_min"]/1000:.1f}~{S15["eye_max"]/1000:.1f}m). 칠판이 U 정면이라 상석·머리 쪽 자리는 거의 정면(최대 약 {S12["view_head_max"]}°, 15석 {S15["view_head_max"]}°)이고, U 다리 쪽 앞자리는 화면을 최대 약 {S12["view_leg_max"]}°(15석 {S15["view_leg_max"]}°) 비스듬히 봐요. <b>칠판에 가장 가까운 다리 쪽 의자는 화면 높이의 2배도 안 되는 거리</b>라 첫 줄 자리는 고개를 많이 돌리고 올려다봐야 해요. 바퀴 달린 스탠드면 수업 때 돌리기 쉬운데 실물은 미확인이에요.</span></li>
- <li class="wn"><b>!</b><span>의자는 U 안쪽을 향하니 칠판을 보려면 몸을 돌려야 해요. 다리 쪽 자리의 회전각은 약 {S12["leg_turn_min"]}~{S12["leg_turn_max"]}°(12석, 15석 {S15["leg_turn_min"]}~{S15["leg_turn_max"]}°), 상석 쪽은 약 {S12["head_turn"]}°예요. 칠판이 ㄷ자 열린 쪽 정면에 있어 <b>직전 판(소파 쪽으로 비스듬히)보다 정면 시청이 좋아졌어요</b> — 대신 소파는 가벽 뒤라 칠판을 볼 수 없어요(라운지는 칠판용이 아니에요).</span></li>
- <li class="wn"><b>!</b><span>통로 점검(수치, 도면 가정 기준): ① <b>입구 통로</b> 문 열린 폭 0.9m는 그대로 비어 있어요. ② <b>오른쪽 통로</b> 약 0.93m(U 책상·의자 ~ 오른쪽 벽). ③ <b>U 끝↔칠판 약 0.95m</b>. ④ <b>칠판 왼쪽 통로</b> 벽까지 약 1.05m, 칠판 오른쪽은 약 1.75m 빈 공간. ⑤ <b>가벽 트임</b> 약 2.1m(가벽은 왼쪽 벽에서 x 2.4m까지). ⑥ <b>가벽↔대표 책상 통로</b> 정확히 약 0.9m(y 7.6~8.5m, 여유 0이라 0.9m 사람이 간신히 지나요). ⑦ <b>대표 책상↔오른쪽 벽</b> 약 1.1m라 오른쪽 벽을 따라 <b>창 쪽 오른쪽 펜트리 문</b> 앞(0.9m 부채꼴)까지 0.9m 이상으로 갈 수 있어요(대표 책상과 문 반경은 약 0.27m 떨어짐). ⑧ <b>소파 앞</b>(소파 앞면~티테이블)은 가벽 통로를 지나 약 0.85m 폭 사람까지 가고, 티테이블과 소파는 약 0.3m예요. <b>앞↔뒤 이동</b>은 오른쪽 통로(0.93m)→가벽 트임→대표 책상 오른쪽(1.1m)→펜트리 문 앞으로 이어져요(격자 탐색으로 폭 0.9m 사람이 문 앞까지 갈 수 있음을 확인). 12석 기준이고 15석은 의자를 빼 앉으면 오른쪽 통로가 더 줄어요. <b>빠듯한 곳</b>: ⓐ 대표 책상 뒤~유리창이 약 0.6m라 대표 의자 등받이와 유리가 약 0.2m, 의자는 옆(양쪽)으로 드나들어요, ⓑ 서진이 의자 윗부분과 소파 끝이 거의 닿아요(약 5mm), ⓒ 서진이 책상↔도크 약 0.15m, 도크↔가습기 약 0.07m, ⓓ 대표 책상이 벽에 붙지 않아 전원은 바닥 콘센트·멀티탭 연결이 필요해요(콘센트 위치 미확인).</span></li>
- <li class="ok"><b>+</b><span><b>입구 쪽 상석·회의</b>: 문을 열면 ㄷ자 상석 2석(12석 기준)이 바로 보여요. 탕비가 바로 옆이라 커피·물을 가지고 바로 앉고, 냉장고·정수기·커피머신은 문 왼쪽 앞 벽에 한 줄로 붙였어요. 줄 서는 공간(약 1.45×0.8m)은 문 여닫이 반경 밖이에요. 문에서 전자칠판 화면이 정면으로 보이고, 가벽 뒤 대표실은 칠판·가벽에 일부 가려져요(오른쪽 트임으로는 보여요).</span></li>
+ <li class="ok"><b>+</b><span><b>ㄷ자 열린 쪽 끝(책상 끝)↔칠판 약 {S12["u_gap"]/1000:.2f}m</b>는 발표자가 서는 자리이면서 <b>뒤쪽으로 가는 통로</b>이기도 해요. 가장 먼 학습자(상석, 머리 위치)까지 약 {S12["eye_max"]/1000:.1f}m({S12["eye_max"]/1034:.1f}×), 가장 가까운 자리는 {S12["eye_min"]/1000:.1f}m({S12["eye_min"]/1034:.1f}×)예요(10·12석 같음, 15석: {S15["eye_min"]/1000:.1f}~{S15["eye_max"]/1000:.1f}m). 칠판이 U 정면이라 상석·머리 쪽 자리는 거의 정면(최대 약 {S12["view_head_max"]}°, 10·12석 같음, 15석 {S15["view_head_max"]}°)이고, U 다리 쪽 앞자리는 화면을 최대 약 {S12["view_leg_max"]}°(10·12석 같음, 15석 {S15["view_leg_max"]}°) 비스듬히 봐요. <b>칠판에 가장 가까운 다리 쪽 의자는 화면 높이의 2배도 안 되는 거리</b>라 첫 줄 자리는 고개를 많이 돌리고 올려다봐야 해요. 바퀴 달린 스탠드면 수업 때 돌리기 쉬운데 실물은 미확인이에요.</span></li>
+ <li class="wn"><b>!</b><span>의자는 U 안쪽을 향하니 칠판을 보려면 몸을 돌려야 해요. 다리 쪽 자리의 회전각은 약 {S12["leg_turn_min"]}~{S12["leg_turn_max"]}°(10·12석, 15석 {S15["leg_turn_min"]}~{S15["leg_turn_max"]}°), 상석 쪽은 약 {S12["head_turn"]}°예요. 칠판이 ㄷ자 열린 쪽 정면에 있어 <b>직전 판(소파 쪽으로 비스듬히)보다 정면 시청이 좋아졌어요</b> — 대신 소파는 가벽 뒤라 칠판을 볼 수 없어요(라운지는 칠판용이 아니에요).</span></li>
+ <li class="wn"><b>!</b><span>통로 점검(수치, 도면 가정 기준): ① <b>입구 통로</b> 문 열린 폭 0.9m는 그대로 비어 있어요. ② <b>오른쪽 통로</b> 약 0.93m(U 책상·의자 ~ 오른쪽 벽). ③ <b>U 끝↔칠판 약 0.95m</b>. ④ <b>칠판 왼쪽 통로</b> 벽까지 약 1.05m, 칠판 오른쪽은 약 1.75m 빈 공간. ⑤ <b>가벽 트임</b> 약 2.1m(가벽은 왼쪽 벽에서 x 2.4m까지). ⑥ <b>가벽↔대표 책상 통로</b> 정확히 약 0.9m(y 7.6~8.5m, 여유 0이라 0.9m 사람이 간신히 지나요). ⑦ <b>대표 책상↔오른쪽 벽</b> 약 1.1m라 오른쪽 벽을 따라 <b>창 쪽 오른쪽 펜트리 문</b> 앞(0.9m 부채꼴)까지 0.9m 이상으로 갈 수 있어요(대표 책상과 문 반경은 약 0.27m 떨어짐). ⑧ <b>소파 앞</b>(소파 앞면~티테이블)은 가벽 통로를 지나 약 0.85m 폭 사람까지 가고, 티테이블과 소파는 약 0.3m예요. <b>앞↔뒤 이동</b>은 오른쪽 통로(0.93m)→가벽 트임→대표 책상 오른쪽(1.1m)→펜트리 문 앞으로 이어져요(격자 탐색으로 폭 0.9m 사람이 문 앞까지 갈 수 있음을 확인). 10·12석 기준이고(10석은 의자 간격이 넓어 앉은 자리 여유가 더 커요) 15석은 의자를 빼 앉으면 오른쪽 통로가 더 줄어요. <b>빠듯한 곳</b>: ⓐ 대표 책상 뒤~유리창이 약 0.6m라 대표 의자 등받이와 유리가 약 0.2m, 의자는 옆(양쪽)으로 드나들어요, ⓑ 서진이 의자 윗부분과 소파 끝이 거의 닿아요(약 5mm), ⓒ 서진이 책상↔도크 약 0.15m, 도크↔가습기 약 0.07m, ⓓ 대표 책상이 벽에 붙지 않아 전원은 바닥 콘센트·멀티탭 연결이 필요해요(콘센트 위치 미확인).</span></li>
+ <li class="ok"><b>+</b><span><b>입구 쪽 상석·회의</b>: 문을 열면 ㄷ자 상석 2석(10·12석 기준)이 바로 보여요. 탕비가 바로 옆이라 커피·물을 가지고 바로 앉고, 냉장고·정수기·커피머신은 문 왼쪽 앞 벽에 한 줄로 붙였어요. 줄 서는 공간(약 1.45×0.8m)은 문 여닫이 반경 밖이에요. 문에서 전자칠판 화면이 정면으로 보이고, 가벽 뒤 대표실은 칠판·가벽에 일부 가려져요(오른쪽 트임으로는 보여요).</span></li>
  <li><b>·</b><span>빔프로젝터·전동 스크린은 칠판이 U 끝에 있고 바로 뒤가 가벽이라 맞는 투사 방향·스크린 자리가 없어서 <b>도면에서 뺐어요</b>(구매표 ‘선택 장비’에는 남겨 둠). 전자칠판 하나로 가는 구성이에요.</span></li>
   <li><b>·</b><span>별도 프린터는 복합기가 대신해서 뺐고, 복합기+NAS·공유기 선반은 왼쪽 벽(탕비와 분리)에 두었어요. <b>3D 프린터는 창 쪽 오른쪽 문 밖 외부 펜트리(창 벽 전체 폭)의 맨 왼쪽 끝</b>(도면 오렌지 상자, 문 반대편)에 둬요. 문을 오른쪽으로 옮기면서 예전 ‘우측 끝’ 자리는 문 앞을 막아 왼쪽 끝으로 바꿨어요. 외부라 환기·냄새 걱정이 줄지만 실내 전원 연결·겨울 온도·도난은 확인이 필요해요. 모션데스크는 보유품이고 Mac Studio·키보드·마우스를 올려둔 모습이에요. 바닥 콘센트 연결선은 오렌지 점선이에요.</span></li>
- <li><b>·</b><span><b>소파</b>: <b>왼쪽 벽에 등받이를 붙인 2인용 소형</b>(약 850(깊이)×1200, 치수 추정이라 시중 2인용 1.4m보다 작음, 12석·15석 같음, x 0~0.85m, y 7.61~8.81m)이고 방 안쪽(동쪽)을 향해요. 소파 앞에 작은 원형 티테이블(선택, 소파와 약 0.3m)이 있어요. 펜트리 문이 오른쪽으로 가서 소파 끝과 문 반경은 이제 약 2.8m 떨어져 있어요. 대신 소파 끝~서진이 의자가 거의 닿아요(약 5mm). 소파에서는 가벽 때문에 칠판이 보이지 않아요.</span></li>
+ <li><b>·</b><span><b>소파</b>: <b>왼쪽 벽에 등받이를 붙인 2인용 소형</b>(약 850(깊이)×1200, 치수 추정이라 시중 2인용 1.4m보다 작음, 10·12·15석 같음, x 0~0.85m, y 7.61~8.81m)이고 방 안쪽(동쪽)을 향해요. 소파 앞에 작은 원형 티테이블(선택, 소파와 약 0.3m)이 있어요. 펜트리 문이 오른쪽으로 가서 소파 끝과 문 반경은 이제 약 2.8m 떨어져 있어요. 대신 소파 끝~서진이 의자가 거의 닿아요(약 5mm). 소파에서는 가벽 때문에 칠판이 보이지 않아요.</span></li>
   <li class="ok"><b>+</b><span><b>공기청정기</b>(LG 퓨리케어 360° AS186HWWL, 315×511mm): 앞 벽 오른쪽 모서리 근처(중심 x 4.19m, y 1.2m)로 옮겼어요. 문 통로와 오른쪽 통로(0.93m)를 막지 않고, 사방 흡입이라 주변 0.3m를 비웠어요. 청정 62㎡라 44㎡ 전체를 덮어요. 가습기와는 약 8m 떨어져 있어요.</span></li>
  <li class="ok"><b>+</b><span><b>가습기</b>(하이드로에센셜 HY505RWLAH, 270×750mm): 창 쪽 도크 옆(중심 x 1.9m, y 9.52m)으로 옮겼어요(대표 책상 왼쪽 앞이 가벽 통로라 비우려고). 소파와는 약 1.9m 떨어져 라운지 전체엔 멀고 도크와 약 0.07m예요. 가습 권장 면적이 약 35㎡라 라운지 한정이에요(콘센트 위치 미확인).</span></li>
  <li class="wn"><b>!</b><span><b>세라믹 식탁 4인(구매표 추가, 도면에는 못 그렸어요)</b>: 크기는 일룸 블릭 1200폭(1196×746mm) 또는 마루이 오클린 1400폭(1400×797mm) 기준이에요. 입구 쪽 탕비·미팅 자리로 보고 놓을 곳을 찾았지만, 통로 0.9m를 지키면서 4인 의자까지 둘 자리가 없었어요. 가장 가까운 후보인 앞 벽 오른쪽 모서리(x 3.0~4.4m, y 0.4~1.2m)는 공기청정기·슬리퍼 랙을 옮겨야 하고, 의자를 빼면 입구에서 오른쪽 통로로 가는 길이 약 0.5m로 막혀요(의자 없이 서서 쓰는 카운터용이면 가능). 탕비 대기 공간(약 1.45×0.8m)은 크기는 맞지만 냉장고·정수기 앞을 막아요. 그래서 <b>구매표에만 넣었고</b>(합계 포함) 후보 자리는 외부 펜트리 가운데(폭 4.5m·깊이 1.3m 가정, 실외라 세라믹 야외 사용 가능 여부는 미확인)예요. 의자 4개는 구매표에 없어요(미정).</span></li>
@@ -186,7 +191,7 @@ html_out=f'''<!doctype html>
   <li class="ok"><b>+</b><span><b>정수기</b>(WD520AWB 데스크형 직수, 168×398×400mm): 문 왼쪽 탕비 카운터 위, 냉장고 바로 옆. 직수형이라 <b>급수 연결이 필요</b>하고 소비전력이 2,820W라 단독 콘센트가 필요해요(위치 미확인, 아래 점검 참고).</span></li>
  </ul>
  <div class="callout reveal" style="margin-top:14px"><b>이번 배치의 이유와 대가</b> · 요청대로 ① 전자칠판을 ㄷ자 끝에 붙이고, ② 칠판 바로 뒤에 낮은 책장 가벽을 <b>왼쪽 벽에 붙여</b> 세우고(조금 밀어 오른쪽을 트임으로), ③ <b>소파를 왼쪽 벽에 붙여</b> 가벽 뒤에, ④ 펜트리 문은 오른쪽, ⑤ 대표 책상은 출입문 정면으로, ⑥ 서진이 책상은 창 쪽 왼쪽 모서리에 배치했어요. <b>대가</b>: ⓐ 칠판에 가장 가까운 다리 쪽 의자는 약 {S12["eye_min"]/1000:.1f}m(화면 높이의 {S12["eye_min"]/1034:.1f}배)로 너무 가까워요(화면 최대 약 {S12["view_leg_max"]}° 비스듬), ⓑ 칠판 뒤는 약 0.15m 틈이라 배선 접근이 어렵고 로봇이 못 지나가요, ⓒ 소파에서는 칠판이 안 보여요(라운지는 휴식용), ⓓ <b>소파가 1.2m 소형</b>이에요(문이 오른쪽으로 가서 문 반경은 멀어졌어요), ⓔ <b>촬영 코너와 포커스석은 고정 자리가 없어</b> 선택·이동식이고, ⓕ 서진이 의자와 소파 끝이 거의 닿고 대표 의자 등받이~유리가 약 0.2m예요, ⓖ <b>대표는 출입문을 정면으로 보지만 실제 시선은 전자칠판(높이 약 1.83m)과 U 책상에 가려져요</b>. 모니터 뒷면이 입구 쪽이라 <b>입구에서 화면은 보이지 않아요</b>(이전의 ‘78° 비스듬히 보임’은 이번 배치로 바뀌었어요), ⓗ 칠판 오른쪽 약 1.75m 공간은 쓸모가 적어 보관·이동식 촬영 후보예요. 칠판 스탠드 크기·펜트리 문·콘센트는 가정값이에요.</div>
- <p style="margin-top:12px"><a href="3d/" style="font-weight:700">🧊 3D 모델로 보기 (돌려보고 확대 · 12/15석 전환) →</a></p>
+ <p style="margin-top:12px"><a href="3d/" style="font-weight:700">🧊 3D 모델로 보기 (돌려보고 확대 · 10/12/15석 전환) →</a></p>
  <p class="small" style="margin-top:10px">스탠드얼론 이미지: <a href="assets/img/layout-12.png" target="_blank" rel="noopener">layout-12.png ↗</a></p>
 
 <h3 class="sub3" style="margin-top:40px">탕비 공간 점검 (입구 왼쪽 앞 벽)</h3>
@@ -207,7 +212,7 @@ html_out=f'''<!doctype html>
  </ul>
 
  <h3 class="sub3" id="zone" style="margin-top:40px">뒤쪽 라운지 · 가벽 · 대표실 · CCTV · 스타일러</h3>
- <p class="lead">12석과 15석은 뒤쪽 구역 배치가 같아요(소파도 2인용으로 통일). 도면은 입구가 위, 창이 아래예요. 방 왼쪽·오른쪽은 도면 이미지 기준이에요.</p>
+ <p class="lead">10·12·15석은 뒤쪽 구역 배치가 같아요(소파도 2인용으로 통일). 도면은 입구가 위, 창이 아래예요. 방 왼쪽·오른쪽은 도면 이미지 기준이에요.</p>
  <ul class="checks reveal" style="margin-top:12px">
  <li class="ok"><b>+</b><span><b>책장 가벽</b>: IKEA 빌리 80×28×106cm 3개를 <b>칠판 바로 뒤</b> y 7.32~7.60m에 <b>왼쪽 벽에 붙여</b>(x 0~2.4m, 약 2.4m) 나란히 세워요(칠판 스탠드와 약 0.15m). 높이 약 1.06m라 앉은 사람 시선은 가리지 않고 <b>공간 구분용</b>이에요(소리 차단 없음). 오른쪽(x 2.4~4.5m) 약 2.1m는 <b>트임</b>으로 비워 오른쪽 통로에서 라운지·펜트리 문으로 가요. 4개로 늘리면(x 0~3.2m) 트임이 1.3m로 줄지만 대표 책상 모서리와의 간격이 약 0.6m가 돼 좁아져서 3개로 했어요. 이케아 안내상 <b>전복 위험이 있어 벽·바닥 고정이 필요</b>한데, 한쪽 끝은 왼쪽 벽에 붙지만 서로 연결·고정 방법은 현장에서 확인해야 해요(미확인). 책이 비치는 쪽은 소파·대표실 쪽(열린 면)이고 뒷판이 칠판 쪽이에요.</span></li>
  <li class="ok"><b>+</b><span><b>대표석</b>(창 쪽 오른쪽 가운데, 책상 x 1.9~3.4m, y 8.5~9.2m, 1500×700 가정): <b>Jeremy는 북쪽(출입문)을 보고 앉아요</b>(의자 x 2.65m·y 9.4m, 출입문 정면 = 단변 중앙 x 2.25m). 34형 모니터는 책상 안쪽 줄(y 8.57m)에서 <b>화면이 남쪽(대표 쪽)</b>을 향하고 <b>뒷면이 입구 쪽</b>이라 입구에서는 화면이 안 보여요. 다만 정면 시선은 중간의 전자칠판·U 책상에 가려져 문 자체는 잘 안 보여요. 창이 대표 등 뒤(남쪽)라 화면 역광은 적지만 등받이와 유리가 약 0.2m라 블라인드·단열 확인이 필요하고, 책상이 벽에 붙지 않아 전원은 바닥 콘센트·멀티탭이 필요해요(미확인). ‘출입문’은 사무실 정문으로 읽었고, 창 쪽 문을 정면으로 보고 싶으면 의자 방향만 바꾸면 돼요.</span></li>
@@ -221,16 +226,19 @@ html_out=f'''<!doctype html>
  </ul>
  <div class="callout warn reveal" style="margin-top:14px"><b>스타일러 (고민 중 · 확정 아님)</b> · 후보 위치는 <b>왼쪽 벽, 탕비 냉장고 바로 아래</b>(도면 보라색 점선, x 0.05~0.65m, y 1.05~1.65m)예요. 입구·코트 자리와 가깝지만 <b>전용 콘센트(1,500W급)</b>가 필요하고, 문을 열면 약 1.19m가 필요해서 탕비 대기 공간과 겹쳐요(열 때 줄이 막힘). <b>실제 크기는 추정했던 445×600×1850이 아니라 600(폭)×1965(높이)×620(깊이)mm</b>이에요. 확인한 모델: <b>SC5MBR42</b>(올 뉴 5벌, 83kg) 정상가 1,540,000원·회원가 1,150,000원·쿠폰가 1,120,000원 — <a href="https://www.lge.co.kr/lg-styler/sc5mbr42" target="_blank" rel="noopener">LG전자 페이지 ↗</a> / <b>SC5MBR61S</b>(2026 NEW 5벌+바지 1벌, 85kg, 1,500W, 문 경첩 방향 변경 가능) — 페이지 표시가 판매가 2,191,000원·할인결제가 2,070,000원으로 헷갈려 정확한 가격은 재확인이 필요해요 — <a href="https://www.lge.co.kr/lg-styler/sc5mbr61s" target="_blank" rel="noopener">LG전자 페이지 ↗</a>. 3벌 모델은 확인하지 못했어요. LG 안내에 <b>가정용 설치만 가능(상업용 설치 불가)</b>이라고 적혀 있어 사무실에 설치 가능한지 먼저 문의가 필요해요. 구매표에는 넣지 않았어요.</div>
 
+<h3 class="sub3" style="margin-top:40px">12석 변형 (참고)</h3>
+ <div class="lay1 reveal"><figure><a href="assets/img/layout-12.png" target="_blank" rel="noopener"><img src="assets/img/layout-12.png" alt="ㄷ자 12석 배치도" loading="lazy"></a></figure></div>
+<div class="callout reveal" style="margin-top:16px"><b>참고</b> · 12석은 10석과 같은 책상 5개에 다리마다 의자 1개씩만 더 놓은 변형이에요(좌석 간격 720mm). 구매표는 의자·슬리퍼만 12개로 늘어요. 아래 계산기에서 10/12/15석을 바꿔 볼 수 있어요.</div>
 <h3 class="sub3" style="margin-top:40px">15석 변형 (참고)</h3>
  <div class="lay1 reveal"><figure><a href="assets/img/layout-15.png" target="_blank" rel="noopener"><img src="assets/img/layout-15.png" alt="ㄷ자 15석 배치도" loading="lazy"></a></figure></div>
-<div class="callout warn reveal" style="margin-top:16px"><b>솔직하게</b> · 15석도 <b>같은 책상 5개</b>(1800×600 4 + 1200×600 1)로 가능해요. 다리마다 6석, 바닥 3석이라 좌석 간격이 600mm로 빠듯하고(팔걸이 없는 의자 권장), 소파는 12석과 같은 2인용이에요. 탕비·전자칠판·책장 가벽·소파·대표실·CCTV는 12석과 같아요. 상석은 3석이 되고(간격 800mm) 오른쪽 통로는 12석과 같은 약 0.93m이며 가장 먼 자리는 전자칠판에서 {S15["eye_max"]/1000:.1f}m({S15["eye_max"]/1034:.1f}×)예요. 그래도 여유는 <b>12석</b>이 커서 12석을 추천해요.</div>
+<div class="callout warn reveal" style="margin-top:16px"><b>솔직하게</b> · 15석도 <b>같은 책상 5개</b>(1800×600 4 + 1200×600 1)로 가능해요. 다리마다 6석, 바닥 3석이라 좌석 간격이 600mm로 빠듯하고(팔걸이 없는 의자 권장), 소파는 12석과 같은 2인용이에요. 탕비·전자칠판·책장 가벽·소파·대표실·CCTV는 12석과 같아요. 상석은 3석이 되고(간격 800mm) 오른쪽 통로는 12석과 같은 약 0.93m이며 가장 먼 자리는 전자칠판에서 {S15["eye_max"]/1000:.1f}m({S15["eye_max"]/1034:.1f}×)예요. 그래도 여유는 <b>10석(기본)</b>이 가장 커요.</div>
 </div></section>
 
 <section class="sec alt" id="buy"><div class="wrap">
  <div class="eyebrow">프리미엄 vs 가성비</div>
- <h2>모든 품목 2안 구매표 (12석 기준)</h2>
- <p class="lead">가격은 {D}(KST) 판매 페이지 표시값(단가)이에요. ⭐ 표시가 추천 조합이고, 보유 품목은 0원이에요. 책상은 12·15석 모두 같은 5개이고, 15석이면 의자가 늘고 소파가 2인용으로 줄어요. 전자칠판 등 당근 구매·미정(가격 미확인) 품목은 합계에서 미정은 제외돼요.</p>
- <div class="stot">{won_card("12석 · 전부 프리미엄",P12,"보유 0원 포함")}{won_card("12석 · 전부 가성비",V12,"보유 0원 포함")}{won_card("15석 · 전부 프리미엄",P15,"수량 조정 반영")}{won_card("15석 · 전부 가성비",V15,"수량 조정 반영")}</div>
+ <h2>모든 품목 2안 구매표 (10석 기준)</h2>
+ <p class="lead">가격은 {D}(KST) 판매 페이지 표시값(단가)이에요. ⭐ 표시가 추천 조합이고, 보유 품목은 0원이에요. 책상은 10·12·15석 모두 같은 5개이고, 10석 기준 의자(학습자) 10개·슬리퍼 10켤레예요(대표석 의자 1개는 별도, 대표·서진이는 10석에 포함하지 않음). 12·15석이면 의자·슬리퍼가 늘어요. 전자칠판 등 당근 구매·미정(가격 미확인) 품목은 합계에서 미정은 제외돼요.</p>
+ <div class="stot">{won_card("10석 · 전부 프리미엄",P10,"보유 0원 포함 · 기본")}{won_card("10석 · 전부 가성비",V10,"보유 0원 포함 · 기본")}{won_card("12석 · 전부 프리미엄",P12,"보유 0원 포함")}{won_card("12석 · 전부 가성비",V12,"보유 0원 포함")}{won_card("15석 · 전부 프리미엄",P15,"수량 조정 반영")}{won_card("15석 · 전부 가성비",V15,"수량 조정 반영")}</div>
  {main_table}
  <p class="small">전부 프리미엄·전부 가성비 합계에는 프로젝터·스크린·화이트보드·3D 프린터·별도 프린터·카메라·흡음재·포커스석·티테이블 등 ‘나중에/선택’ 품목이 모두 들어 있어요. Mac Studio는 참고용이라 제외했어요.</p>
 </div></section>
@@ -241,7 +249,7 @@ html_out=f'''<!doctype html>
  <p class="lead">‘서울대 의자’는 공식 모델명이 아니라 별칭이에요. 블로그·후기들은 <b>시디즈 아이블(IBLE, TNB501FE)</b>을 가리키고, 이전 세대는 T501FE로 소개돼요(대학 납품 사실은 공식 확인을 못 했어요). 퍼시스 CH2811은 ‘연세대 의자’로 불려요.</p>
  <div class="grid g3p reveal">{chair_cards}</div>
  <div class="grid g2 reveal" style="margin-top:20px">
-  <div class="card hl"><span class="tag blue">학습자 12석 추천</span><h3>시디즈 IBLE (서울대 의자)</h3><p>189,000원 × 12 = {won_(189000*12)}원. S라인 메시 등판과 글라이드(밀림 적음)라 집중하기 좋아요(바퀴형은 199,000원). 다만 <b>틸팅이 없어</b> 4시간 이상 수업이면 T20 2세대(239,000원, 12개 {won_(239000*12)}원)를 권해요.</p></div>
+  <div class="card hl"><span class="tag blue">학습자 10석 추천</span><h3>시디즈 IBLE (서울대 의자)</h3><p>189,000원 × 10 = {won_(189000*10)}원. S라인 메시 등판과 글라이드(밀림 적음)라 집중하기 좋아요(바퀴형은 199,000원). 다만 <b>틸팅이 없어</b> 4시간 이상 수업이면 T20 2세대(239,000원, 10개 {won_(239000*10)}원)를 권해요.</p></div>
   <div class="card hl"><span class="tag blue">대표석 추천</span><h3>시디즈 T50 2세대 · 419,000원</h3><p>하루 종일 앉는 자리라 상위 모델을 권해요. 예산을 줄이려면 T20(239,000원)이에요.</p></div>
  </div>
 </div></section>
@@ -264,11 +272,11 @@ html_out=f'''<!doctype html>
 
 <section class="sec" id="network"><div class="wrap">
  <div class="eyebrow">네트워크 · 전원 · NAS</div>
- <h2>12~15대 노트북이<br>안정적으로 쓰려면</h2>
+ <h2>10~15대 노트북이<br>안정적으로 쓰려면</h2>
  {net_table}
  <ul class="checks reveal" style="margin-top:18px">
  <li class="ok"><b>+</b><span><b>공유기·NAS 위치</b>: 왼쪽 벽 복합기 위 선반(앞 왼쪽, 탕비와 분리)에 <b>ASUS RT-BE92U</b>. NAS는 집에서 가져오는 보유품(0원)이고 유선 LAN으로 공유기에 연결, 통풍 공간과 콘센트를 확보하세요. 배치도 파란 점선이 왼쪽 벽을 따라 가벽을 따라(y 7.46m) 내려가 창 쪽 서진이 책상(왼쪽)과 대표석(오른쪽 갈래)까지 가는 유선 경로예요(벽·천장 경로 가정).</span></li>
-  <li class="ok"><b>+</b><span><b>멀티탭</b>: 12석 기준 9개 — 책상 5개에 1개씩, 대표석 1, 서진이 1, 라운지(소파·칠판) 1, NAS/탕비 1(CCTV·로봇 도크·정수기 등은 별도 콘센트). 바닥 케이블은 케이블 커버로 덮으세요. 15석도 9개예요.</span></li>
+  <li class="ok"><b>+</b><span><b>멀티탭</b>: 10·12석 기준 9개 — 책상 5개에 1개씩, 대표석 1, 서진이 1, 라운지(소파·칠판) 1, NAS/탕비 1(CCTV·로봇 도크·정수기 등은 별도 콘센트). 바닥 케이블은 케이블 커버로 덮으세요. 15석도 9개예요.</span></li>
   <li class="wn"><b>!</b><span>노트북 충전기 최대 용량으로 단순 합산하면 13대 약 1.3kW 수준이지만, 커피머신·복합기·3D 프린터(외부 펜트리, 전원 인입 방법 미확인)와 동시에 쓸 때의 차단기 용량은 건물에서 확인해야 해요(미확인).</span></li>
   <li class="wn"><b>!</b><span><b>공유기 ASUS RT-BE92U는 LAN 포트가 2.5G × 3개뿐</b>이에요. NAS + 복합기 + 대표석 유선 장비만 해도 꽉 차므로 더 필요하면 <b>소형 스위칭 허브</b>(가격 TBD, 구매표에 미정으로 추가)를 쓰세요. 전자칠판(CO750LT4K)은 LAN이 없는 모델이라 Wi-Fi 전용이에요(Jeremy 확인값). UPS도 선택(가격 미조사). 단일 공유기라 뒤쪽 대표실·라운지(약 8~9m)까지 신호가 충분한지는 미검증이고, 메시 지원 표기가 있어 부족하면 추가 노드를 고려하세요. 20명 이상 동시 접속 성능도 실측 못 했어요.</span></li>
  </ul>
@@ -285,7 +293,7 @@ html_out=f'''<!doctype html>
  <tr><td><b>LG U+ 오피스넷</b><br><a href="https://www.lguplus.com/biz/all/telecom/internet-cctv/officenet/B000000005" target="_blank" rel="noopener">U+ 공식 오피스넷</a></td><td>44,000원</td><td>49,500원</td><td>55,000원</td><td>77,000원 / 110,000원</td><td>고정IP 표기(유동IP와 함께 필수): 500M 49,500 · 1G 60,500 · 2.5G 60,500 · 5G 77,000 · 10G 115,500원. 페이지의 ‘고정’ 요금이 추가분인지 합계인지 불명확해 상담 확인. 설치비 <b>미정</b>.</td></tr>
  </tbody></table></div>
  <ul class="checks reveal" style="margin-top:18px">
-  <li class="ok"><b>+</b><span><b>추천: KT 오피스넷 프리미엄(2.5G), 월 55,000원 + 설치 출동비 36,000원(1회)</b>. 3개 통신사의 2.5G가 같은 월 55,000원 선이라, 최대속도를 2.5G로 표기하고, 3년 약정 시 모뎀 임대료가 없으며, 설치 출동비가 공개된 KT로 골랐어요(SK 프리미엄은 이용 속도 1G로 표기). 12~15명 노트북과 유튜브 업로드에는 1G(49,500원)로도 충분할 가능성이 크지만 월 5,500원 차이라 2.5G를 권해요. 공유기 ASUS RT-BE92U는 2.5G/10G 포트가 있어 그대로 받아요(10G 회선은 월 110,000원이라 지금은 과해요).</span></li>
+  <li class="ok"><b>+</b><span><b>추천: KT 오피스넷 프리미엄(2.5G), 월 55,000원 + 설치 출동비 36,000원(1회)</b>. 3개 통신사의 2.5G가 같은 월 55,000원 선이라, 최대속도를 2.5G로 표기하고, 3년 약정 시 모뎀 임대료가 없으며, 설치 출동비가 공개된 KT로 골랐어요(SK 프리미엄은 이용 속도 1G로 표기). 10~15명 노트북과 유튜브 업로드에는 1G(49,500원)로도 충분할 가능성이 크지만 월 5,500원 차이라 2.5G를 권해요. 공유기 ASUS RT-BE92U는 2.5G/10G 포트가 있어 그대로 받아요(10G 회선은 월 110,000원이라 지금은 과해요).</span></li>
   <li class="wn"><b>!</b><span>오피스넷 같은 기업 회선은 대역폭을 나눠 쓰는 공유형일 수 있어요(상품 약관 확인 필요). 업로드 속도는 요금표에 별도 표기가 없어 <b>미정</b>이고, 유튜브 업로드가 많은 날의 실제 속도는 개통 후 측정해야 해요. 건물 인입 설비가 2.5G를 지원하는지는 주소별 확인이 필요하고, 안 되면 KT 에센스(1G)로 내려가요.</span></li>
   <li class="wn"><b>!</b><span><b>고정IP는 필요할 때만</b>: NAS·CCTV를 밖에서 직접 접속할 때만 필요해요(KT 2.5G 기준 월 60,500원 추가). 없이 쓰려면 공유기 DDNS 같은 대안이 있지만 이 사무실에서의 동작은 확인하지 못했어요. Wi-Fi는 ASUS 공유기를 쓰므로 통신사 Wi-Fi 임대는 넣지 않았어요. 3D 프린터는 트래픽이 작아 회선 선택에 영향이 없어요(인터넷 요금제는 모든 사용자 합계로 봄).</span></li>
   <li class="ok"><b>+</b><span><b>월 고정비 추가분</b>: 인터넷 월 55,000원(추천안) · 정수기 렌탈을 고르면 아래 월 요금이 더해져요. 이 값은 위쪽 구매 합계·계산기에 들어가지 않아요. 개통까지 걸리는 기간은 확인하지 못해 <b>미정</b>이에요(통신사에 문의).</span></li>
@@ -299,7 +307,7 @@ html_out=f'''<!doctype html>
  <tr><td><b>청호나이스 직수형 냉온정수기</b></td><td><b>미정</b>(직수형 요금 확인 못함. 참고로 업소용 탱크형은 19,900~25,900원 표기)</td><td><b>미정</b></td><td>직수형 모델·가격은 조사하지 못했어요.</td></tr>
  </tbody></table></div>
  <ul class="checks reveal" style="margin-top:18px">
-  <li class="ok"><b>+</b><span><b>추천(렌탈을 택한다면): 코웨이 아이콘 정수기3 방문관리 5년, 월 35,900원</b>. 폭 160mm라 도면의 168mm 자리(문 왼쪽 앞 벽 카운터)에 그대로 들어가고, 12~15명이 쓰므로 필터·살균을 방문관리로 맡기는 쪽이 편해요. 렌탈로 가면 구매표의 LG WD520AWB(1,328,000원)를 빼야 해서, 합계는 그만큼 줄어요(이번에는 합계에서 빼지 않았어요). 5년 안에 쓰는 총액만 보면 구매가 싸지만(일시불 1,310,000원 vs 렌탈 5년 2,154,000원) 필터·AS 비용이 구매 쪽에 따로 들어서 어느 쪽이 싼지는 확정하지 못했어요.</span></li>
+  <li class="ok"><b>+</b><span><b>추천(렌탈을 택한다면): 코웨이 아이콘 정수기3 방문관리 5년, 월 35,900원</b>. 폭 160mm라 도면의 168mm 자리(문 왼쪽 앞 벽 카운터)에 그대로 들어가고, 10~15명이 쓰므로 필터·살균을 방문관리로 맡기는 쪽이 편해요. 렌탈로 가면 구매표의 LG WD520AWB(1,328,000원)를 빼야 해서, 합계는 그만큼 줄어요(이번에는 합계에서 빼지 않았어요). 5년 안에 쓰는 총액만 보면 구매가 싸지만(일시불 1,310,000원 vs 렌탈 5년 2,154,000원) 필터·AS 비용이 구매 쪽에 따로 들어서 어느 쪽이 싼지는 확정하지 못했어요.</span></li>
   <li class="wn"><b>!</b><span><b>직수형이라 급수관(상수도) 연결이 필수</b>예요. LG 안내 기준으로 상수도만 가능(지하수·조리수 불가), 냉온정수기는 <b>단독 콘센트</b>(커피머신·냉장고와 멀티탭 공유 금지), 싱크대·카운터 타공(전원·급수 호스), 얼음·고온살균 모델은 배수 연결이 필요하고, 수압이 낮으면 펌프가 필요해요. 타공·펌프·차단기는 추가 설치비가 생길 수 있어요.</span></li>
   <li class="wn"><b>!</b><span><b>탕비 쪽 급수 확인 (입주 전 현장 체크)</b>: ① 문 왼쪽 앞 벽 카운터(x 0.62~1.5m) 근처에 상수도 급수 밸브가 있는지 ② 배수구가 있는지 ③ 단독 콘센트 위치 ④ 수압 ⑤ 관리사무소의 공사·타공 허가. 지금까지 이 위치의 급수·배수·콘센트는 현장에서 확인하지 못했어요. 급수가 멀면 호스 연장 또는 공사비가 더 들 수 있어요.</span></li>
   <li class="wn"><b>!</b><span><b>설치 기간</b>: LG 구독 페이지는 전문기사 설치로 내일(11/3)부터 12/3까지 날짜 지정이 가능하다고 표시해요(오후 3시 이전 구독 시 다음 날 배송). 코웨이·SK매직은 대리점 글 기준으로 보통 접수 후 2~5영업일이지만 공식 확인은 못 했어요. 입주일 11/10 전에 쓰려면 늦어도 11/5(목)까지 신청하고, 현장 급수 위치를 같이 확인해 달라고 요청하세요(날짜는 제 추정).</span></li>
@@ -323,7 +331,7 @@ html_out=f'''<!doctype html>
 <section class="sec" id="checklist"><div class="wrap">
  <div class="eyebrow">사야 할 것 체크리스트</div>
  <h2>추천 조합 · 우선순위별</h2>
- <p class="lead">12석 추천 조합 기준이에요. 의자 제외 {won_(R12n)}원, 의자 포함 {won_(R12)}원, ‘나중에’ 항목({won_(L12)}원)까지 포함하면 {won_(cg12)}원이에요.</p>
+ <p class="lead">10석 추천 조합 기준이에요(학습자 의자 10개·슬리퍼 10켤레, 슬리퍼는 가격 미정이라 합계 미포함). 의자 제외 {won_(R10n)}원, 의자 포함 {won_(R10)}원, ‘나중에’ 항목({won_(L10)}원)까지 포함하면 {won_(cg10)}원이에요. 12석이면 {won_(cg12)}원이에요.</p>
  {checklist_table}
  <h3 class="sub3">이미 있는 것 (구매 안 함)</h3>
  <ul class="checks reveal">{OWN}</ul>
@@ -333,15 +341,16 @@ html_out=f'''<!doctype html>
  <div class="eyebrow">비용</div>
  <h2>합계와 계산기</h2>
  <div class="stot">
+  {won_card("추천 조합 · 10석 (의자 포함)",R10,"입주 전 필수+1개월 내")}
+  {won_card("추천 조합 · 10석 (의자 제외)",R10n,"의자 11개 제외")}
+  {won_card("추천 + 나중에 항목 · 10석",cg10,"빈백·3D 프린터 등")}
+  {won_card("전부 프리미엄 / 10석",P10,"")}
+  {won_card("전부 가성비 / 10석",V10,"")}
   {won_card("추천 조합 · 12석 (의자 포함)",R12,"입주 전 필수+1개월 내")}
-  {won_card("추천 조합 · 12석 (의자 제외)",R12n,"의자 13개 제외")}
-  {won_card("추천 + 나중에 항목",cg12,"빈백·3D 프린터 등")}
-  {won_card("전부 프리미엄 / 12석",P12,"")}
-  {won_card("전부 가성비 / 12석",V12,"")}
   {won_card("추천 조합 · 15석 (의자 포함)",R15,"수량 변경 반영")}
  </div>
  <div class="calc reveal" id="calc">
-  <div><label for="cSeats">좌석</label><select id="cSeats" class="field"><option value="12" selected>12석 (ㄷ자 추천)</option><option value="15">15석 (빠듯)</option></select></div>
+  <div><label for="cSeats">좌석</label><select id="cSeats" class="field"><option value="10" selected>10석 (ㄷ자 기본)</option><option value="12">12석</option><option value="15">15석 (빠듯)</option></select></div>
   <div><label for="cTier">등급</label><select id="cTier" class="field"><option value="R" selected>추천 조합</option><option value="P">전부 프리미엄</option><option value="V">전부 가성비</option></select></div>
   <div class="full"><label><input type="checkbox" id="cCh" checked> 의자 포함</label> &nbsp; <label><input type="checkbox" id="cLater" checked> ‘나중에’ 항목 포함</label></div>
   <div class="full total" aria-live="polite"><div class="t">예상 합계 (설치·배송·용달 제외)</div><div class="n" id="cTotal">-</div><ul id="cList"></ul><div class="w" id="cWarn"></div></div>
@@ -357,7 +366,7 @@ html_out=f'''<!doctype html>
  <h3 class="sub3">③ 초저가 대안</h3><div class="grid g3p reveal">{tcards["budget"]}</div>
    <h3 class="sub3">시청거리 (AVIXA DISCAS 4:6:8) · 75형 전자칠판</h3>
 <div class="tbl reveal"><table><thead><tr><th>기준</th><th>75형(화면 높이 1034mm 기준)</th></tr></thead><tbody><tr><td>4×</td><td>4.1m</td></tr><tr><td>6×</td><td>6.2m</td></tr><tr><td>8×</td><td>8.3m</td></tr></tbody></table></div>
-<div class="callout reveal" style="margin-top:14px"><b>이 배치에서는</b> · 12석: 가까운 {S12["eye_min"]/1000:.1f}m ~ 먼 {S12["eye_max"]/1000:.1f}m, 15석 가장 가까운 {S15["eye_min"]/1000:.1f}m ~ 먼 {S15["eye_max"]/1000:.1f}m예요. 칠판이 ㄷ자 열린 쪽 정면이라 상석 쪽이 가장 먼 자리(4×~6× 사이)이고, 다리 쪽 앞자리는 4×(4.1m)보다 훨씬 가까워요(칠판 정면은 아니고 최대 약 {S12["view_leg_max"]}° 비스듬). 전자칠판은 구매 전 확인할 수 없어 크기·무게는 판매자 제시 값이에요. 대표 모션데스크 4종 비교는 보유품을 쓰기로 해서 뺐어요.</div>
+<div class="callout reveal" style="margin-top:14px"><b>이 배치에서는</b> · 10·12석(의자 양끝 위치가 같아 거리 같음): 가까운 {S12["eye_min"]/1000:.1f}m ~ 먼 {S12["eye_max"]/1000:.1f}m, 15석 가장 가까운 {S15["eye_min"]/1000:.1f}m ~ 먼 {S15["eye_max"]/1000:.1f}m예요. 칠판이 ㄷ자 열린 쪽 정면이라 상석 쪽이 가장 먼 자리(4×~6× 사이)이고, 다리 쪽 앞자리는 4×(4.1m)보다 훨씬 가까워요(칠판 정면은 아니고 최대 약 {S12["view_leg_max"]}° 비스듬). 전자칠판은 구매 전 확인할 수 없어 크기·무게는 판매자 제시 값이에요. 대표 모션데스크 4종 비교는 보유품을 쓰기로 해서 뺐어요.</div>
 </div></section>
 
 <section class="sec alt" id="sources"><div class="wrap">
@@ -365,7 +374,7 @@ html_out=f'''<!doctype html>
  <h2>확인하지 못한 것</h2>
  <ul class="checks reveal">
   <li class="wn"><b>!</b><span>방 치수·문·창·콘센트: 사진으로 추정한 값(약 4.5×9.8m). 문 위치(출입문 쪽 단변 중앙)·여닫이 방향·바닥 콘센트 위치는 정확하지 않아요. 배치도의 의자·책상 간격은 그 가정 기준이에요.</span></li>
-  <li class="wn"><b>!</b><span>소파 치수: 일룸 코모·이안가구 론디 모두 정확한 치수를 확인하지 못함 → 도면 크기는 추정(2인형 850×1400, 12·15석 같음). 구매표의 소파 가격은 2인용 기준이라 도면과 맞아요.</span></li>
+  <li class="wn"><b>!</b><span>소파 치수: 일룸 코모·이안가구 론디 모두 정확한 치수를 확인하지 못함 → 도면 크기는 추정(2인형 850×1400, 10·12·15석 같음). 구매표의 소파 가격은 2인용 기준이라 도면과 맞아요.</span></li>
  <li class="wn"><b>!</b><span><b>책장 가벽</b>: IKEA 빌리 80×28×106cm(705.220.44) 64,900원은 이케아 공식 페이지 표시값(2026-11-02)이에요. 3개를 쓰는 가벽의 실제 길이·벽 고정·서로 연결 고정 방법, 배송·조립 비용은 미확인이고 이케아는 전복 방지 고정을 요구해요. 쿠팡 판매가(74,400원)는 별도 판매자 가격이에요. 한샘 플롯 책장세트는 이번에 구매표에서 뺐어요.</span></li>
   <li class="wn"><b>!</b><span>화이트보드 두 제품 모두 캐스터 여부를 상세 확인하지 못함(이번 도면에서는 자리가 없어 뺐어요). 룸앤오피스 책상 크기·높이·캐스터 미확인. 가이아 1200×600 가격은 기본가(238,700원)를 1200 옵션으로 추정한 값이라 주문 시 확인이 필요해요.</span></li>
   <li class="wn"><b>!</b><span>Shure 마이크 맥 USB-C 호환은 사양 기준(직접 테스트 아님). MoveMic Two 가격은 컴퓨존 표시값이에요.</span></li>
@@ -387,4 +396,4 @@ html_out=f'''<!doctype html>
 <script src="assets/main.js"></script>
 </body></html>'''
 open("../index.html","w",encoding="utf8").write(html_out)
-print(R12,R12n,L12,cg12,P12,V12,R15,P15,V15)
+print("10:",R10,R10n,L10,cg10,P10,V10); print("12:",R12,R12n,L12,cg12,P12,V12); print("15:",R15,P15,V15)
