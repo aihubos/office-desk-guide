@@ -33,11 +33,27 @@ def mcard(i,qn):
     return (f'<article class="pc3"><div class="pimg"><img src="assets/img/{t["img"]}" alt="{E(t["n"])}" loading="lazy"></div>'
       f'<h3>{qn}</h3><p class="pn">{E(t["n"])}</p><p class="pp">{won_(t["p"])}원 × {q(t,10)}</p><p class="ps">{won_(s)}원</p>'
       +(f'<a class="lk" href="{t["u"]}" target="_blank" rel="noopener">판매 페이지 ›</a>' if t["u"] else '')+'</article>')
-main_cards="".join(mcard(i,qn) for i,qn in zip(MAINI,["교육 책상 1800×600","교육 책상 1200×600","학습자 의자","대표 의자"]))
+main_cards="".join(mcard(i,qn) for i,qn in zip(MAINI,["교육 책상 (멀티데스크)","학습자 의자","대표 의자"]))
 def rcard(tag,title,line,total,imgs):
     ims="".join(f'<div class="pimg"><img src="assets/desks/{x}" alt="" loading="lazy"></div>' for x in imgs)
     return f'<article class="rc"><div class="rimgs">{ims}</div><span class="rtag">{tag}</span><h3>{title}</h3><p>{line}</p><p class="ps">{won_(total)}원</p></article>'
-rec_cards=rcard("⭐ 추천 1","일룸 엘바 + 알렉스","책상 ×5 · 의자 ×10",REC1,["iloom-HSUD018.jpg","iloom-HVCH3900H.jpg"])+rcard("⭐ 추천 2","데스커 컴퓨터데스크 + 올라운드 HF","책상 ×10 · 의자 ×10",REC2,["desker-616.webp","desker-305.webp"])
+rec_cards=rcard("⭐ 추천 1","일룸 엘바 + 알렉스","책상 ×5 · 의자 ×10",REC1,["iloom-HSUD018.jpg","iloom-HVCH3900H.jpg"])
+def cfgcard(tag,title,l1,l2,fit,fcls,total,imgs,rec=False):
+    ims="".join(f'<div class="pimg"><img src="assets/desks/{x}" alt="" loading="lazy"></div>' for x in imgs)
+    b='<span class="rec-b">추천</span>' if rec else ''
+    return (f'<article class="cfg{" rec" if rec else ""}">{b}<div class="rimgs">{ims}</div><span class="rtag">{tag}</span><h3>{title}</h3>'
+      f'<p>{l1}</p><p>{l2}</p><p class="fit {fcls}">{fit}</p><p class="ps">{won_(total)}원</p></article>')
+cfg_cards=(cfgcard("A · 협업형","멀티데스크 ×5","올라운드 의자 ×10","2인씩 나란히 앉아요","도면 재조정 필요","warn",CFG_A,["desker-688.webp","desker-305.webp"],True)
+ +cfgcard("B · 개인형","컴퓨터데스크 2.0 ×10","올라운드 의자 ×10","한 사람에 책상 하나","10대는 자리 부족","no",CFG_B,["desker-616.webp","desker-305.webp"])
+ +cfgcard("C · 모션 믹스","컴퓨터데스크 ×7 + 모션데스크 ×3","올라운드 의자 ×10","3명은 서서도 일해요","10대는 자리 부족","no",CFG_C,["desker-239.webp","desker-305.webp"]))
+cfg_detail=f"""<table class="tbl"><thead><tr><th>구성</th><th>책상</th><th>의자</th><th>합계</th><th>자리</th></tr></thead><tbody>
+<tr><td><b>A ⭐</b></td><td>멀티데스크 1800×800 × 5 = {won_(294000*5)}원</td><td>올라운드 HF × 10 = {won_(252000*10)}원</td><td><b>{won_(CFG_A)}원</b></td><td>ㄷ자 양팔 8석은 가능. 책상 깊이가 800이라 통로가 0.9m보다 좁아져요. 안쪽 폭을 1.0m로 줄이면 0.9m가 돼요. 5번째 책상(1.8m)은 안쪽 1.2m에 안 들어가서 자리를 따로 잡아야 해요.</td></tr>
+<tr><td><b>B</b></td><td>컴퓨터데스크 2.0 1400×700 × 10 = {won_(207000*10)}원</td><td>올라운드 HF × 10 = {won_(252000*10)}원</td><td><b>{won_(CFG_B)}원</b></td><td>책상+의자가 차지하는 면적 약 20㎡. 학습존은 약 14.6㎡라 10대는 안 들어가요. ㄷ자 팔에는 2대씩, 4~5석 정도예요.</td></tr>
+<tr><td><b>C</b></td><td>컴퓨터데스크 × 7 = {won_(207000*7)}원 + 모션데스크 플러스 1400×700 × 3 = {won_(670000*3)}원</td><td>올라운드 HF × 10 = {won_(252000*10)}원</td><td><b>{won_(CFG_C)}원</b></td><td>B와 같은 크기라 자리 문제도 같아요.</td></tr>
+</tbody></table>
+<p class="note-s">면적은 책상 + 의자 뒤 0.75m 기준 계산이에요. 1200×600 컴퓨터데스크(150,000원) 10대로 줄여도 약 16㎡라 안 들어가요.</p>
+<p class="note-s">가격은 데스커 공식몰 2026-11-02 표시값이에요. 올라운드는 대리점가 239,000원(10개 {won_(2390000)}원)도 있어요. 책상 선택 링크: <a href="https://www.desker.co.kr/product/detail/688" target="_blank" rel="noopener">멀티데스크 ›</a> · <a href="https://www.desker.co.kr/product/detail/616" target="_blank" rel="noopener">컴퓨터데스크 2.0 ›</a> · <a href="https://www.desker.co.kr/product/detail/239" target="_blank" rel="noopener">모션데스크 플러스 ›</a> · <a href="https://www.desker.co.kr/product/detail/305" target="_blank" rel="noopener">올라운드 HF ›</a></p>
+<p class="note-s">멀티탭&클램프 세트(50,000원)는 합계에 넣지 않았어요.</p>"""
 
 TODO=[("11/5~11/7","용달 예약",True),("11/5까지","도어사인 주문",True),("입주 전","인터넷 개통 신청",False),("입주 전","정수기 설치 신청 · 급수 위치 확인",False),
  ("거래 전","전자칠판 당근 거래 확인",False),("입주 전","관리단 업종 확인",False),("입주 전","사업자 주소 이전",False),("이사 전","NAS 백업",False),("입주 전","실측",False)]
@@ -58,7 +74,7 @@ html_out=f'''<!doctype html>
 <title>AI Builders Lab · 동탄 사무실</title>
 <meta name="description" content="동탄 사무실 10석: 새로 살 것 {won_(M10)}원. 도면, 구매, 집에서 가져올 것, 월 고정비, 할 일.">
 <meta property="og:title" content="AI Builders Lab · 동탄 사무실">
-<meta property="og:description" content="새로 살 것 {won_(M10)}원 · 도면 · 할 일">
+<meta property="og:description" content="새로 살 것 {won_(CFG_A)}원 · 데스커 구성 · 도면 · 할 일">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231d1d1f'/%3E%3Cpath d='M7 12h18M10 12v10M22 12v10' stroke='%23fff' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
@@ -72,8 +88,8 @@ html_out=f'''<!doctype html>
 <header class="ahero"><div class="awrap">
  <p class="eb">AI Builders Lab · 현대실리콘앨리 동탄 1529호</p>
  <h1>새로 살 것</h1>
- <p class="big">{won_(M10)}<small>원</small></p>
- <p class="sub">책상과 의자 10석. 이게 전부예요.</p>
+ <p class="big">{won_(CFG_A)}<small>원</small></p>
+ <p class="sub">데스커 책상 5대와 의자 10개. 대표 의자는 별도예요.</p>
  <p class="meta">전용 44.2㎡ (약 13.4평) · 10석 · 입주 11/10(화)</p>
  <p class="acts"><a href="#layout">도면 보기 ›</a><a href="3d/">3D로 보기 ›</a></p>
 </div></header>
@@ -83,22 +99,20 @@ html_out=f'''<!doctype html>
  <h2>도면</h2>
  <p class="sub">ㄷ자 10석, 한 장으로.</p>
  <figure class="plan"><a href="assets/img/layout-10.png" target="_blank" rel="noopener"><img src="assets/img/layout-10.png" alt="ㄷ자 10석 배치도 (상석이 입구 쪽, ㄷ자 끝에 전자칠판, 책장 가벽 뒤 소파·대표실)" loading="lazy"></a></figure>
+ <p class="note-s">도면은 이전 책상(깊이 600) 기준이에요. 데스커 책상은 배치를 다시 잡아야 해요.</p>
  <p class="acts"><a href="3d/">3D로 보기 ›</a><a href="assets/img/layout-10.png" target="_blank" rel="noopener">큰 이미지 ›</a></p>
  {det("배치 · 거리 · 통로 · 12석 · 15석",lay_i)}
  {det("가정한 것 · 요약",inner("summary"))}
 </div></section>
 
 <section class="asec" id="buy"><div class="awrap">
- <h2>새로 살 것</h2>
- <p class="sub">책상과 의자만 새로 사요.</p>
- <div class="pgrid">{main_cards}</div>
- <p class="tot">10석 합계 <b>{won_(M10)}원</b></p>
- <h3 class="h3c">다른 후보</h3>
- <p class="sub s2">프리미엄 두 가지예요.</p>
- <div class="rgrid">{rec_cards}</div>
- {det("구매표 · 프리미엄 vs 가성비 · 12·15석",buy_a)}
- {det("프리미엄 책상·의자 후보 15종",inner("premium"))}
- {det("서울대 의자",inner("chairs"))}
+ <h2>데스커로 맞춘 구성</h2>
+ <p class="sub">책상과 의자, 세 가지 중 골라요.</p>
+ <div class="cgrid">{cfg_cards}</div>
+ <p class="note-s">추천은 A예요. 가장 싸고, 학습존에 들어갈 수 있는 구성이에요. 대표 의자 시디즈 T50({won_(419000)}원)은 별도예요.</p>
+ {det("구성 비교 · 자리 계산",cfg_detail)}
+ {det("구매표 · 새로 사는 합계 (A + 대표 의자) · 12·15석",buy_a)}
+ {det("다른 브랜드 후보",'<div class="rgrid">'+rec_cards+'</div>'+inner("premium")+inner("chairs"))}
  {det("책상·전자칠판 후보 · 시청거리",inner("ref"))}
  {det("체크리스트 · 새로 살 것",inner("checklist").split('<h3 class="sub3">집에서 가져올 물건')[0])}
 </div></section>
