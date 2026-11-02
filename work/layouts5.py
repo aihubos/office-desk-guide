@@ -164,7 +164,11 @@ def build(mode):
     Z(ax,0,PY1,W,H-PY1,"#FFE8EC","")
     T(ax,1000,7400,"가벽 뒤: 대표실 · 서진이",fs=4.8,ha="left",c="#B1202C",fontweight="bold")
     sofa(ax,3650,6570,850,1200,"right","소파 2인(소형)")
-    T(ax,3250,7250,"소파 (오른쪽 벽 · 펜트리 문 쪽)",fs=3.6,c="#5A3E1B",ha="center",bbox=dict(fc="white",ec="none",pad=.3,alpha=.9),z=9)
+    # 티테이블: 소파 앞(서쪽) 0.35m, 원형 지름 370 (플라팜 라운드 37x37). 가벽 y범위(6820~7100) 밖으로 내려 트임 1.25m 유지
+    TTX,TTY=3115,7350
+    ax.add_patch(Circle((TTX,TTY),185,fc="#FFFFFF",ec="#9A7B4F",lw=1.4,zorder=6)); T(ax,TTX,TTY,"티\n테이블",fs=3.6,c="#5A3E1B",z=9)
+    dim(ax,3300,7350,3650,7350,""); T(ax,3475,7450,"0.35m",fs=3.8,c=GRN,bbox=dict(fc="white",ec="none",pad=.3,alpha=.9),z=10)
+    T(ax,3180,6700,"소파 (오른쪽 벽 · 펜트리 문 쪽)",fs=3.6,c="#5A3E1B",ha="center",bbox=dict(fc="white",ec="none",pad=.3,alpha=.9),z=9)
     DY=8650                                   # 창 쪽 한 줄 책상 y 8650~9350 (의자는 창 쪽)
     # 모션데스크 #2(신규, 대표와 동일 1500x700) | 복합기(가운데, 두 자리 공용) | 대표 모션데스크(보유)
     R(ax,50,DY,1500,700,"#FFFFFF","#F04452",2,z=5); T(ax,800,DY+520,"모션데스크 #2 (신규)\n1500×700 (대표와 동일)",fs=3.9,c="#B1202C")
