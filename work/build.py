@@ -118,7 +118,7 @@ html_out=f'''<!doctype html>
 </head>
 <body>
 <header class="hero"><div class="wrap">
- <span class="pill">AI Builders Lab · 동탄 사무실 · {D} 기준</span>
+ <span class="pill">AI Builders Lab · 현대실리콘앨리 동탄 1529호 · 전용 44.2㎡ (약 13.4평) · {D} 기준</span>
  <h1>44.2㎡ 안에 교육장·대표실까지,<br><span class="blue">ㄷ자 배치와 구매 체크리스트</span></h1>
  <p class="sub">12석 ㄷ자(U형) 토론 배치를 메인으로, 모든 품목을 프리미엄/가성비 2안으로 정리했어요. 입주 준비 할 일(용달 예약 포함)도 맨 위에 넣었어요.</p>
  <div class="stats">
