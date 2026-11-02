@@ -21,10 +21,10 @@ var t;window.addEventListener('scroll',function(){clearTimeout(t);t=setTimeout(o
     var m=seats.value, tr=tier.value, groups={}, total=0;
     D.items.forEach(function(it){
       if(it.chair && !ch.checked) return;
-      var later=it.pri==='나중에';
+      if(!it.main && !lt.checked) return;
       var k;
-      if(tr==='R'){ if(!it.rec) return; if(later && !lt.checked) return; k=it.rec; }
-      else { k=tr; if(later && !lt.checked) return; }
+      if(tr==='R'){ if(!it.rec) return; k=it.rec; }
+      else { k=tr; }
       var t=it[k], s=t.p*t.q[m];
       total+=s; groups[it.grp]=(groups[it.grp]||0)+s;
     });

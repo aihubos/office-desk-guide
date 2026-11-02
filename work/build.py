@@ -25,6 +25,22 @@ R12=tot_rec(12); R12n=tot_rec(12,False); L12=tot_rec(12,True,True)
 R15=tot_rec(15); R15n=tot_rec(15,False); L15=tot_rec(15,True,True)
 P10,V10=tot_tier("P",10),tot_tier("V",10)
 P12,V12,P15,V15=tot_tier("P",12),tot_tier("V",12),tot_tier("P",15),tot_tier("V",15)
+# ---- 다이어트: 새로 사는 것 = 책상·의자만. 나머지는 당근·중고 예정(새제품 참고가, 합계 제외)
+MAIN=("table","table_s","chair_l","chair_c")
+MAINI=[i for i in I if i["id"] in MAIN]
+def mtot(m,k=None,chairs=True):
+    return sum(sub(i[k or i["rec"]],m) for i in MAINI if chairs or i["id"] not in CH)
+M10,M12,M15=mtot(10),mtot(12),mtot(15)
+MP10,MV10,MP12,MV12,MP15,MV15=mtot(10,"P"),mtot(10,"V"),mtot(12,"P"),mtot(12,"V"),mtot(15,"P"),mtot(15,"V")
+RENT=("water",)
+NEWREC={"strip":"전기 안전·화재 위험이라 새제품","doorsign":"출입문 로고 인쇄물이라 새로 제작","nameplate":"이름·로고 새로 제작","router":"이미 고른 모델(ASUS RT-BE92U) · 보안 업데이트 위해 새제품","switch":"네트워크 장비는 새제품이 안전","cctv_cam":"보안 장비는 새제품(펌웨어·보증)","cctv_rec":"저장장치(microSD/NVR)는 새제품"}
+DEFI=[i for i in I if i["id"] not in MAIN and i["note"]!="own"]
+def dtier(i): return i[i["rec"]] if i["rec"] else i["P"]
+DEF_USED=[i for i in DEFI if i["id"] not in NEWREC and i["id"] not in RENT]
+DEF_NEW=[i for i in DEFI if i["id"] in NEWREC]
+DEF_RENT=[i for i in DEFI if i["id"] in RENT]
+def dsum(L,m=10): return sum(sub(dtier(i),m) for i in L)
+DU10,DN10=dsum(DEF_USED),dsum(DEF_NEW); DEF10=DU10+DN10
 def won_(n): return f"{n:,}"
 def link(t):
     if t["u"]: return f'<a href="{t["u"]}" target="_blank" rel="noopener">{E(t["n"])} ↗</a>'
@@ -50,9 +66,20 @@ def tier_rows(items,m=10,flag_rec=True):
         if i["note"] and i["note"]!="own": out+=f'<tr><td colspan="7" class="wtxt" style="background:#FFFAF0">{E(i["note"])}</td></tr>'
     return out
 HEAD='<thead><tr><th>항목</th><th>등급</th><th>제품명 + 링크</th><th class="num">가격(단가)</th><th class="num">수량</th><th class="num">소계</th><th>한줄 이유</th></tr></thead>'
-main_table=f'<div class="tbl reveal"><table class="big">{HEAD}<tbody>{tier_rows(I,10)}</tbody>'+ \
- f'<tfoot><tr class="grpr"><td colspan="5">10석 · 전부 프리미엄 합계 (보유 0원 포함)</td><td class="num">{won_(P10)}원</td><td></td></tr>'+ \
- f'<tr class="grpr"><td colspan="5">10석 · 전부 가성비 합계</td><td class="num">{won_(V10)}원</td><td></td></tr></tfoot></table></div>'
+main_table=f'<div class="tbl reveal"><table class="big">{HEAD}<tbody>{tier_rows(MAINI,10)}</tbody>'+ \
+ f'<tfoot><tr class="grpr"><td colspan="5">10석 · 책상+의자 추천 조합(⭐) 합계 — 새로 사는 것</td><td class="num">{won_(M10)}원</td><td></td></tr>'+ \
+ f'<tr class="grpr"><td colspan="5">10석 · 책상+의자 전부 프리미엄 / 전부 가성비</td><td class="num">{won_(MP10)}원 / {won_(MV10)}원</td><td></td></tr></tfoot></table></div>'
+def def_row(i,note=""):
+    t=dtier(i)
+    price=f'{won_(t["p"])}원' if t["p"] else '미정'
+    w=f'<span class="wtxt">⚠ {E(t["w"])}</span>' if t["w"] else ""
+    nt=f'<span class="wtxt" style="color:#6B7684">{E(note)}</span>' if note else ""
+    return f'<tr><td>{E(i["grp"])}</td><td>{E(i["name"])}<span class="wtxt" style="color:#6B7684">{E(i["pri"])}</span></td><td><div class="pc">{thumb(t)}<div>{link(t)}</div></div></td><td class="num">{price}</td><td class="num">{q(t,10)}</td><td class="num"><b>{won_(sub(t,10))}원</b></td><td>{E(t["why"])}{w}{nt}</td></tr>'
+DHEAD='<thead><tr><th>구분</th><th>항목</th><th>새제품 참고 제품 + 링크</th><th class="num">새제품 참고가</th><th class="num">수량</th><th class="num">참고 소계</th><th>메모</th></tr></thead>'
+def def_sec(title,L,sm,notes=None):
+    rows="".join(def_row(i,(notes or {}).get(i["id"],"")) for i in L)
+    return f'<tr class="grpr"><td colspan="7">{title} · 새제품 참고 소계 {sm}</td></tr>{rows}'
+def_table=f'<div class="tbl reveal"><table class="big">{DHEAD}<tbody>'+def_sec("당근·중고가구점 구매 예정",DEF_USED,won_(DU10)+"원",{"proj":"미니 빔프로젝터를 집에서 가져오므로 구매 불필요할 수 있어요","bean":"빈백은 집에서 가져옴 — 추가로 살 때만","screen":"프로젝터를 쓸 때만 필요"})+def_sec("새제품 권장 (중고 비권장)",DEF_NEW,won_(DN10)+"원",NEWREC)+def_sec("렌탈 예정 — 월 고정비 섹션 참고 (합계 제외)",DEF_RENT,"제외",{"water":"정수기는 렌탈 계약이라 아래 월 고정비 섹션에서 다뤄요. 구매가는 참고용"})+f'</tbody><tfoot><tr class="grpr"><td colspan="5">당근·중고 구매 예정 + 새제품 권장 합계 (새제품 참고가, 메인 합계에 미포함)</td><td class="num">{won_(DEF10)}원</td><td></td></tr></tfoot></table></div>'
 studio_rows=tier_rows([i for i in I if i["grp"]=="스튜디오 코너"],10)
 studio_table=f'<div class="tbl reveal"><table class="big">{HEAD}<tbody>{studio_rows}</tbody></table></div>'
 net_table=f'<div class="tbl reveal"><table class="big">{HEAD}<tbody>{tier_rows([i for i in I if i["grp"]=="네트워크·전원"],10)}</tbody></table></div>'
@@ -64,7 +91,7 @@ PRI=["입주 전 필수","1개월 내","나중에"]
 def checklist(m):
     out=""; grand=0
     for p in PRI:
-        rows=[(i,i[i["rec"]]) for i in I if i["rec"] and i["pri"]==p and i["note"]!="own"]
+        rows=[(i,i[i["rec"]]) for i in I if i["id"] in MAIN and i["rec"] and i["pri"]==p]
         if not rows: continue
         s=sum(sub(t,m) for i,t in rows); grand+=s
         out+=f'<tr class="grpr"><td colspan="7">{p} · 소계 {won_(s)}원</td></tr>'
@@ -82,6 +109,11 @@ OWN="".join(f'<li class="ok"><b>✓</b><span>{x}</span></li>' for x in [
  "<b>NAS</b> — 집에서 가져옴(보유, 0원). 용달로 운반",
  "<b>iPhone</b> — 카메라 대용(보유, 0원)",
  "<b>로봇청소기</b> — 기존 사무실 것을 가져옴(기존 물품 가져감, 0원). 도크는 창 쪽 서진이 책상 옆(x 1.3~1.7m)",
+ "<b>서진이 책상</b> — 집에서 가져옴(0원). 창 쪽 왼쪽 모서리 자리(크기 1000×600은 가정)",
+ "<b>접이식 책상</b> — 집에서 가져옴(0원). 서진이 책상과는 따로 적었어요(같은 물건이면 알려주세요). 쓸 자리·크기 미정이라 도면에는 없어요",
+ "<b>빈백</b> — 집에서 가져옴(0원). 도면에는 자리가 없어요",
+ "<b>미니 빔프로젝터</b> — 집에서 가져옴(0원). 가져오면 따로 프로젝터를 살 필요가 없어요",
+ "<b>캠핑용품 (품목 확인 예정)</b> — 집에서 가져옴. 구체 품목은 아직 정하지 않았어요",
  "<b>34형 울트라와이드 모니터 + 이동식 스탠드</b> — 기존 물품 가져감(0원). 대표 책상 위(화면 앞면은 창 쪽·남쪽, 뒷면이 출입문 쪽)",
  "<b>Mac Studio</b> — 배치도 참고용이라 합계에 넣지 않았어요. 애플 코리아 구성 선택 화면 표시: ₩4,290,000부터 / ₩5,310,000부터(2026.11.01 KST)"])
 # ---- chairs
@@ -154,7 +186,7 @@ cand_sec=f"""<section class="sec" id="premium"><div class="wrap">
 
 """
 
-data=dict(items=[dict(id=i["id"],grp=i["grp"],name=i["name"],pri=i["pri"],rec=i["rec"],own=i["note"]=="own",chair=i["id"] in CH,
+data=dict(items=[dict(id=i["id"],grp=i["grp"],name=i["name"],pri=i["pri"],rec=i["rec"],own=i["note"]=="own",main=i["id"] in MAIN,chair=i["id"] in CH,
   P=dict(p=i["P"]["p"],q={str(m):q(i["P"],m) for m in (10,12,15)},n=i["P"]["n"]),V=dict(p=i["V"]["p"],q={str(m):q(i["V"],m) for m in (10,12,15)},n=i["V"]["n"])) for i in I])
 
 def won_card(l,n,sm=""): return f'<div class="card reveal"><div class="l">{l}</div><div class="n">{won_(n)}원</div><div class="l">{sm}</div></div>'
@@ -183,8 +215,8 @@ html_out=f'''<!doctype html>
  <p class="sub">10석 ㄷ자(U형) 토론 배치를 기본으로(12·15석도 같은 책상 5개로 가능), 모든 품목을 프리미엄/가성비 2안으로 정리했어요. 입주 준비 할 일(용달 예약 포함)도 맨 위에 넣었어요.</p>
  <div class="stats">
   <div class="stat"><b>10석</b><span>ㄷ자 토론 배치(기본)<br>12·15석도 같은 책상 5개로 가능</span></div>
-  <div class="stat"><b>{won_(R10)}원</b><span>추천 조합 합계(10석)<br>의자 포함·나중에 항목 제외</span></div>
-  <div class="stat"><b>{won_(R10n)}원</b><span>같은 조합, 의자 제외</span></div>
+  <div class="stat"><b>{won_(M10)}원</b><span>책상+의자 합계(10석, 추천 조합)<br>새로 사는 건 이것뿐</span></div>
+  <div class="stat"><b>{won_(DEF10)}원</b><span>나머지 당근·중고 예정(새제품 참고가)<br>메인 합계 제외</span></div>
   <div class="stat"><b>11/5~7</b><span>용달 예약 권장<br>(입주 11/10 화)</span></div>
  </div>
  <a class="cta" href="#todo">입주 준비 할 일 보기</a>
@@ -202,7 +234,7 @@ html_out=f'''<!doctype html>
  <div class="callout reveal" style="margin-top:12px"><b>스타일 가정</b> · 애플 사용자(Mac Studio·MacBook), 깔끔한 미니멀·모던, 유튜브 촬영(유하님과 함께), 화이트/오크/그레이 톤, USB-C·맥 호환 장비를 우선했어요.</div>
  <div class="grid g3p reveal" style="margin-top:20px">
   <div class="card"><h3>배치</h3><p>ㄷ자 10석이 기본(12석은 같은 책상에 의자만 늘린 변형). 문을 열면 ㄷ자 상석이 바로 보이고, 전자칠판은 ㄷ자 열린 쪽 끝에 붙여 상석 쪽을 정면으로 봐요. 칠판 바로 뒤가 낮은 책장 가벽(빌리 ×3, 왼쪽 벽에 붙임)이고 가벽 뒤에 왼쪽 벽에 붙인 소파 라운지와 창 쪽 대표실(대표석은 출입문 정면)이 있어요. 앞↔뒤 이동은 오른쪽 통로로 바로 이어져요. 15석은 통로가 더 빠듯해요.</p></div>
-  <div class="card"><h3>보유 → 구매 아님</h3><p>모션데스크, NAS, iPhone, 로봇청소기, 34형 모니터는 있는 것을 가져와요(0원). 모션데스크·NAS는 용달로 옮겨요(가벽 책장은 새로 사요).</p></div>
+  <div class="card"><h3>보유 → 구매 아님</h3><p>모션데스크, 서진이 책상, 접이식 책상, 빈백, 미니 빔프로젝터, 캠핑용품, NAS, iPhone, 로봇청소기, 34형 모니터는 있는 것을 가져와요(0원). 모션데스크·NAS는 용달로 옮겨요(가벽 책장은 새로 사요).</p></div>
   <div class="card"><h3>가격</h3><p>모두 {D}(KST) 판매 페이지 표시값. 쿠폰·옵션·배송비에 따라 달라요.</p></div>
  </div>
 </div></section>
@@ -211,7 +243,7 @@ html_out=f'''<!doctype html>
  <div class="eyebrow">입주 준비 할 일 (구매 아님)</div>
  <h2>입주 11/10(화) 전에<br>끝낼 일</h2>
  <div class="todo reveal">
-  <div class="it hot"><div class="bx"></div><div><b>용달 부르기 — 11/5(목)~11/7(토) 예약 권장 <span class="tg p">TODO</span></b><p>집→사무실로 옮길 짐: <b>NAS</b>, <b>모션데스크</b>(집에 있는 것), 그 밖의 짐. 입주일(2026-11-10, 화) 기준으로 3~5일 전에 예약하는 걸 권장해요. 구매 항목이 아니며 업체·요금은 조사하지 않았어요.</p></div></div>
+  <div class="it hot"><div class="bx"></div><div><b>용달 부르기 — 11/5(목)~11/7(토) 예약 권장 <span class="tg p">TODO</span></b><p>집→사무실로 옮길 짐: <b>NAS</b>, <b>모션데스크</b>(집에 있는 것), <b>서진이 책상·접이식 책상</b>, <b>빈백</b>, <b>미니 빔프로젝터</b>, <b>캠핑용품</b>(품목 확인 예정), 그 밖의 짐. 입주일(2026-11-10, 화) 기준으로 3~5일 전에 예약하는 걸 권장해요. 구매 항목이 아니며 업체·요금은 조사하지 않았어요.</p></div></div>
   <div class="it"><div class="bx"></div><div><b>관리단 업종 확인</b><p>지식산업센터는 입주 가능 업종·시설 사용 규정이 있을 수 있어요. 교육장 운영, 촬영 스튜디오, 3D 프린터(소음·냄새), 이삿짐 엘리베이터 사용 시간을 관리단/관리사무소에 확인하세요.</p></div></div>
   <div class="it"><div class="bx"></div><div><b>명패 만들기 <span class="tg p">TODO</span></b><p>출입문용 도어사인에 AI Builders Lab 로고를 넣어 주문하세요(추천: 마플 아크릴 도어사인 11,000원, 영업일 3~6일 출고). 로고 파일은 PNG·JPG 300dpi 이상이 필요해요. 11/10 입주 전에 받으려면 늦어도 11/5까지 주문하는 걸 권해요(제 추정). 대표 책상 명패는 선택이라 구매표에서 나중에로 두었어요. 문구(회사명·직함)와 크기는 <b>미정</b>이에요.</p></div></div>
   <div class="it"><div class="bx"></div><div><b>인터넷 개통 신청 <span class="tg p">TODO</span></b><p>추천은 <b>KT 오피스넷 프리미엄(2.5G) 월 55,000원</b>(3년·VAT 포함)이에요. 신청 전에 건물이 2.5G 인입을 지원하는지, 가능한 개통일을 통신사에 확인하세요. 자세한 비교는 <a href="#monthly">월 고정비</a> 섹션에 있어요. 공유기·NAS 위치(왼쪽 벽 복합기 위 선반)를 정해두면 첫날부터 쓸 수 있어요.</p></div></div>
@@ -271,7 +303,7 @@ html_out=f'''<!doctype html>
  <ul class="checks reveal" style="margin-top:12px">
  <li class="ok"><b>+</b><span><b>책장 가벽</b>: IKEA 빌리 80×28×106cm 3개를 <b>칠판 바로 뒤</b> y 7.32~7.60m에 <b>왼쪽 벽에 붙여</b>(x 0~2.4m, 약 2.4m) 나란히 세워요(칠판 스탠드와 약 0.15m). 높이 약 1.06m라 앉은 사람 시선은 가리지 않고 <b>공간 구분용</b>이에요(소리 차단 없음). 오른쪽(x 2.4~4.5m) 약 2.1m는 <b>트임</b>으로 비워 오른쪽 통로에서 라운지·펜트리 문으로 가요. 4개로 늘리면(x 0~3.2m) 트임이 1.3m로 줄지만 대표 책상 모서리와의 간격이 약 0.6m가 돼 좁아져서 3개로 했어요. 이케아 안내상 <b>전복 위험이 있어 벽·바닥 고정이 필요</b>한데, 한쪽 끝은 왼쪽 벽에 붙지만 서로 연결·고정 방법은 현장에서 확인해야 해요(미확인). 책이 비치는 쪽은 소파·대표실 쪽(열린 면)이고 뒷판이 칠판 쪽이에요.</span></li>
  <li class="ok"><b>+</b><span><b>대표석</b>(창 쪽 오른쪽 가운데, 책상 x 1.9~3.4m, y 8.5~9.2m, 1500×700 가정): <b>Jeremy는 북쪽(출입문)을 보고 앉아요</b>(의자 x 2.65m·y 9.4m, 출입문 정면 = 단변 중앙 x 2.25m). 34형 모니터는 책상 안쪽 줄(y 8.57m)에서 <b>화면이 남쪽(대표 쪽)</b>을 향하고 <b>뒷면이 입구 쪽</b>이라 입구에서는 화면이 안 보여요. 다만 정면 시선은 중간의 전자칠판·U 책상에 가려져 문 자체는 잘 안 보여요. 창이 대표 등 뒤(남쪽)라 화면 역광은 적지만 등받이와 유리가 약 0.2m라 블라인드·단열 확인이 필요하고, 책상이 벽에 붙지 않아 전원은 바닥 콘센트·멀티탭이 필요해요(미확인). ‘출입문’은 사무실 정문으로 읽었고, 창 쪽 문을 정면으로 보고 싶으면 의자 방향만 바꾸면 돼요.</span></li>
- <li class="ok"><b>+</b><span><b>서진이 책상</b>(창 쪽 왼쪽 모서리: x 0.15~1.15m, y 9.2~9.8m, 1000×600 가정, 당근에서 구하는 중고라 모델·가격 미정): 서진이 의자는 x 0.65m·y 9.0m로 <b>창 쪽을 보고 앉고</b> 소파 끝(y 8.81m)과 거의 닿아요(좁음). 구매표에서는 선택이 아니라 필수 품목이에요(당근이 안 되면 한샘 샘키즈 125,900원 / IKEA LINNMON 조합 67,650원 참고). 오른쪽의 로봇청소기 도크와는 약 0.15m, 대표 책상과는 약 0.75m예요.</span></li>
+ <li class="ok"><b>+</b><span><b>서진이 책상</b>(창 쪽 왼쪽 모서리: x 0.15~1.15m, y 9.2~9.8m, 1000×600 가정, 집에서 가져오는 책상이라 구매 항목 아님): 서진이 의자는 x 0.65m·y 9.0m로 <b>창 쪽을 보고 앉고</b> 소파 끝(y 8.81m)과 거의 닿아요(좁음). 구매표에서는 뺐어요(집에서 가져옴). 오른쪽의 로봇청소기 도크와는 약 0.15m, 대표 책상과는 약 0.75m예요.</span></li>
  <li class="wn"><b>!</b><span><b>촬영 코너·포커스석(고정 자리 없음)</b>: 이전 판의 YouTube 촬영 코너(약 2.3×2.4m)와 포커스석은 칠판·가벽·소파·대표실·통로 0.9m를 모두 지키면서 놓을 수 없어 <b>고정 자리를 없앴어요</b>. 촬영이 필요할 때만 칠판 오른쪽 빈 공간(약 1.75×0.7m)이나 뒤쪽 창 쪽 빈 곳에 삼각대·조명을 임시 설치하고, 포커스석은 대표실 빈 자리에서 필요할 때만 쓰는 선택이에요. 구매표의 촬영 장비·포커스 장비는 ‘나중에/선택’으로 내렸어요. 빈백·아지트 코너도 자리가 없어 도면에서 뺐어요.</span></li>
  <li class="ok"><b>+</b><span><b>로봇청소기 도크(기존)</b>: 서진이 책상 옆 창 쪽(x 1.3~1.7m, y 9.4~9.75m)으로 <b>옮겼어요</b>. 대표 책상과 약 0.4m, 펜트리 문 반경에서 약 1.8m 떨어져 있어요. 콘센트 위치는 추정이에요. 로봇이 앞쪽으로 나가려면 오른쪽 가벽 트임을 지나야 하고, 칠판 뒤 0.15m 틈은 못 지나가요.</span></li>
  <li class="ok"><b>+</b><span><b>34형 울트라와이드(기존, 이동식 스탠드)</b>: 대표 책상 위 안쪽 줄(x 2.25~3.05m)에 두고 <b>화면이 남쪽(대표 쪽), 뒷면이 출입문 쪽</b>이에요(도면 크기는 가정). 캐스터라 필요하면 U 책상 발표용으로 굴려갈 수 있어요.</span></li>
@@ -291,11 +323,14 @@ html_out=f'''<!doctype html>
 
 <section class="sec alt" id="buy"><div class="wrap">
  <div class="eyebrow">프리미엄 vs 가성비</div>
- <h2>모든 품목 2안 구매표 (10석 기준)</h2>
- <p class="lead">가격은 {D}(KST) 판매 페이지 표시값(단가)이에요. ⭐ 표시가 추천 조합이고, 보유 품목은 0원이에요. 책상은 10·12·15석 모두 같은 5개이고, 10석 기준 의자(학습자) 10개·슬리퍼 10켤레예요(대표석 의자 1개는 별도, 대표·서진이는 10석에 포함하지 않음). 12·15석이면 의자·슬리퍼가 늘어요. 전자칠판 등 당근 구매·미정(가격 미확인) 품목은 합계에서 미정은 제외돼요.</p>
- <div class="stot">{won_card("10석 · 전부 프리미엄",P10,"보유 0원 포함 · 기본")}{won_card("10석 · 전부 가성비",V10,"보유 0원 포함 · 기본")}{won_card("12석 · 전부 프리미엄",P12,"보유 0원 포함")}{won_card("12석 · 전부 가성비",V12,"보유 0원 포함")}{won_card("15석 · 전부 프리미엄",P15,"수량 조정 반영")}{won_card("15석 · 전부 가성비",V15,"수량 조정 반영")}</div>
+ <h2>구매표 — 새로 사는 건 책상·의자만 (10석 기준)</h2>
+ <p class="lead">예산 다이어트로 <b>새로 사는 건 교육 책상·학습자 의자 10개·대표석 의자</b>뿐이에요. 나머지는 최대한 당근·중고가구점에서 구할 거라 아래 별도 표로 옮겼고 <b>메인 합계에 넣지 않았어요</b>. 가격은 {D}(KST) 판매 페이지 표시값(단가)이고 ⭐가 추천 조합이에요. 책상 모델을 아직 고르지 않아서 아래 프리미엄 후보 추천 2가지의 합계를 대안으로 같이 보여줘요.</p>
+ <div class="stot">{won_card("10석 · 책상+의자 추천 조합 ⭐",M10,"새로 사는 합계 · 메인")}{won_card("대안 · 추천 1 (일룸 엘바+알렉스)",REC1,"프리미엄 후보 · 10석")}{won_card("대안 · 추천 2 (데스커 컴퓨터데스크+올라운드)",REC2,"프리미엄 후보 · 10석")}{won_card("10석 · 책상+의자 전부 프리미엄",MP10,"현재 구매표 기준")}{won_card("10석 · 책상+의자 전부 가성비",MV10,"현재 구매표 기준")}{won_card("12석 · 책상+의자 추천 조합",M12,"참고")}{won_card("15석 · 책상+의자 추천 조합",M15,"참고")}</div>
  {main_table}
- <p class="small">전부 프리미엄·전부 가성비 합계에는 프로젝터·스크린·화이트보드·3D 프린터·별도 프린터·카메라·흡음재·포커스석·티테이블 등 ‘나중에/선택’ 품목이 모두 들어 있어요. Mac Studio는 참고용이라 제외했어요.</p>
+ <h3 class="sub3">당근·중고가구점 구매 예정 (새제품 참고가 · 메인 합계 제외)</h3>
+ <p class="small" style="margin-bottom:10px">아래 가격은 새제품 기준 <b>참고가</b>예요. 당근·중고로 구하면 대부분 더 싸고, 실제 금액은 그때그때 달라요. 멀티탭·도어사인·명패·공유기·네트워크 장비·CCTV처럼 중고가 안 맞는 항목은 <b>새제품 권장</b>으로 따로 표시했어요(이것도 메인 합계에는 넣지 않았어요). 이미 집에 있는 물건은 아래 ‘이미 있는 것’ 목록이에요.</p>
+ {def_table}
+ <p class="small">참고가 합계에는 전자칠판·프로젝터·스크린·화이트보드·3D 프린터·별도 프린터·카메라·흡음재·포커스석·티테이블 등 ‘나중에/선택’ 품목도 들어 있어요. 슬리퍼는 가격 미정이라 0원으로 들어갔고, Mac Studio는 참고용이라 제외했어요.</p>
 </div></section>
 
 {cand_sec}
@@ -386,10 +421,10 @@ html_out=f'''<!doctype html>
 
 <section class="sec" id="checklist"><div class="wrap">
  <div class="eyebrow">사야 할 것 체크리스트</div>
- <h2>추천 조합 · 우선순위별</h2>
- <p class="lead">10석 추천 조합 기준이에요(학습자 의자 10개·슬리퍼 10켤레, 슬리퍼는 가격 미정이라 합계 미포함). 의자 제외 {won_(R10n)}원, 의자 포함 {won_(R10)}원, ‘나중에’ 항목({won_(L10)}원)까지 포함하면 {won_(cg10)}원이에요. 12석이면 {won_(cg12)}원이에요.</p>
+ <h2>새로 살 것 · 책상과 의자</h2>
+ <p class="lead">예산 다이어트로 <b>새로 사는 건 책상과 의자뿐</b>이에요(10석 추천 조합 {won_(M10)}원). 나머지 품목은 당근·중고가구점에서 구할 예정이라 구매표 섹션의 별도 표(새제품 참고가 {won_(DEF10)}원, 합계 제외)로 옮겼어요. 12석이면 책상+의자가 {won_(M12)}원이에요.</p>
  {checklist_table}
- <h3 class="sub3">이미 있는 것 (구매 안 함)</h3>
+ <h3 class="sub3">집에서 가져올 물건 · 이미 있는 것 (구매 안 함)</h3>
  <ul class="checks reveal">{OWN}</ul>
 </div></section>
 
@@ -397,18 +432,19 @@ html_out=f'''<!doctype html>
  <div class="eyebrow">비용</div>
  <h2>합계와 계산기</h2>
  <div class="stot">
-  {won_card("추천 조합 · 10석 (의자 포함)",R10,"입주 전 필수+1개월 내")}
-  {won_card("추천 조합 · 10석 (의자 제외)",R10n,"의자 11개 제외")}
-  {won_card("추천 + 나중에 항목 · 10석",cg10,"빈백·3D 프린터 등")}
-  {won_card("전부 프리미엄 / 10석",P10,"")}
-  {won_card("전부 가성비 / 10석",V10,"")}
-  {won_card("추천 조합 · 12석 (의자 포함)",R12,"입주 전 필수+1개월 내")}
-  {won_card("추천 조합 · 15석 (의자 포함)",R15,"수량 변경 반영")}
+  {won_card("책상+의자 추천 조합 · 10석 ⭐",M10,"새로 사는 합계(메인)")}
+  {won_card("대안 · 추천 1 · 10석",REC1,"일룸 엘바 2인용×5 + 알렉스×10")}
+  {won_card("대안 · 추천 2 · 10석",REC2,"데스커 컴퓨터데스크 2.0×10 + 올라운드 HF×10")}
+  {won_card("당근·중고 예정 (새제품 참고가)",DEF10,"메인 합계 제외 · 중고면 더 낮아요")}
+  {won_card("책상+의자 전부 프리미엄 / 10석",MP10,"")}
+  {won_card("책상+의자 전부 가성비 / 10석",MV10,"")}
+  {won_card("책상+의자 추천 · 12석",M12,"참고")}
+  {won_card("책상+의자 추천 · 15석",M15,"참고")}
  </div>
  <div class="calc reveal" id="calc">
   <div><label for="cSeats">좌석</label><select id="cSeats" class="field"><option value="10" selected>10석 (ㄷ자 기본)</option><option value="12">12석</option><option value="15">15석 (빠듯)</option></select></div>
   <div><label for="cTier">등급</label><select id="cTier" class="field"><option value="R" selected>추천 조합</option><option value="P">전부 프리미엄</option><option value="V">전부 가성비</option></select></div>
-  <div class="full"><label><input type="checkbox" id="cCh" checked> 의자 포함</label> &nbsp; <label><input type="checkbox" id="cLater" checked> ‘나중에’ 항목 포함</label></div>
+  <div class="full"><label><input type="checkbox" id="cCh" checked> 의자 포함</label> &nbsp; <label><input type="checkbox" id="cLater"> 당근·중고 예정 항목(새제품 참고가)도 포함</label></div>
   <div class="full total" aria-live="polite"><div class="t">예상 합계 (설치·배송·용달 제외)</div><div class="n" id="cTotal">-</div><ul id="cList"></ul><div class="w" id="cWarn"></div></div>
  </div>
 </div></section>
@@ -439,8 +475,8 @@ html_out=f'''<!doctype html>
   <li class="wn"><b>!</b><span>탕비 콘센트·급수·배수 위치와 새 탕비 자리의 실제 동선은 현장에서 확인하지 못했어요. 가습기는 LG 안내로 약 35㎡용이라 44㎡ 전체에는 부족할 수 있어요.</span></li>
   <li class="wn"><b>!</b><span>‘서울대 의자’ = 아이블(TNB501FE)은 블로그 후기 기준이고 대학 납품 사실은 공식 확인 못 했어요. 시디즈 보증기간은 판매처 표기가 달라요.</span></li>
   <li class="wn"><b>!</b><span><b>전자칠판</b>: 제노스미디어 CO750LT4K 75형 150만원은 사용자가 알려준 당근 중고 값이고 링크·실물 확인은 못 했어요. 스탠드 바닥 크기(도면 1467×520mm 가정)·AS는 미확인이에요. 칠판 뒤 약 0.2m 틈의 전원·AV 선 접근과 콘센트 위치도 미확인이고, 칠판 바로 뒤 책장 가벽(전복 방지 고정·한쪽 끝만 벽에 닿는 구조)의 실제 시공 방법도 미확인이에요.</span></li>
- <li class="wn"><b>!</b><span><b>배치·크기 가정</b>: 대표 책상 1500×700, 서진이 책상 1000×600(당근 중고 예정), 로봇 도크·34형 모니터·Mac Studio 크기, 칠판 스탠드 1467×520(바퀴 유무 포함)은 가정이에요. <b>창 쪽 오른쪽 출입문(폭 0.9m·안쪽 여닫이)과 외부 펜트리(폭 4.5m=사무실 폭은 확인, 깊이 1.3m는 가정)</b>이고 ‘왼쪽·오른쪽’은 <b>도면 이미지 기준</b>이에요(실제 방향이 반대라면 알려주세요). 소파 크기 850×1200(소형)도 가정이에요. 대표석은 출입문(정문)을 정면으로 보고 모니터 뒷면이 입구 쪽이지만, 칠판·U 책상에 시선이 가려지는 정도는 실측 전 추정이에요. 슬리퍼 랙(900×300)은 후보 위치예요. CCTV 시야각은 제품 사양 기준 대략값이고 콘센트·급수·배수·바닥 콘센트 위치와 방 치수는 미확인이에요.</span></li>
- <li class="wn"><b>!</b><span><b>CCTV·서진이 책상 가격</b>: Tapo C225 76,310원·C110 38,280원·VIGI NVR1104H-4P 84,990원·한샘 키즈 책상 125,900원은 다나와 표시값(2026-11-02)이에요(서진이 책상은 당근 중고 구매 예정이라 실제 가격 미정). 이케아 키즈 책상은 검색결과 표시값이라 정확한 상품 페이지 링크가 아니고, microSD·스튜디오 책상은 가격 미정이에요. 개인정보 안내표지 규격·가격은 조사하지 않았어요.</span></li>
+ <li class="wn"><b>!</b><span><b>배치·크기 가정</b>: 대표 책상 1500×700, 서진이 책상 1000×600(집에서 가져옴, 크기는 가정), 로봇 도크·34형 모니터·Mac Studio 크기, 칠판 스탠드 1467×520(바퀴 유무 포함)은 가정이에요. <b>창 쪽 오른쪽 출입문(폭 0.9m·안쪽 여닫이)과 외부 펜트리(폭 4.5m=사무실 폭은 확인, 깊이 1.3m는 가정)</b>이고 ‘왼쪽·오른쪽’은 <b>도면 이미지 기준</b>이에요(실제 방향이 반대라면 알려주세요). 소파 크기 850×1200(소형)도 가정이에요. 대표석은 출입문(정문)을 정면으로 보고 모니터 뒷면이 입구 쪽이지만, 칠판·U 책상에 시선이 가려지는 정도는 실측 전 추정이에요. 슬리퍼 랙(900×300)은 후보 위치예요. CCTV 시야각은 제품 사양 기준 대략값이고 콘센트·급수·배수·바닥 콘센트 위치와 방 치수는 미확인이에요.</span></li>
+ <li class="wn"><b>!</b><span><b>CCTV 가격</b>: Tapo C225 76,310원·C110 38,280원·VIGI NVR1104H-4P 84,990원은 다나와 표시값(2026-11-02)이에요. microSD·스튜디오 책상은 가격 미정이에요. 서진이 책상은 집에서 가져와서 구매표에서 뺐어요. 개인정보 안내표지 규격·가격은 조사하지 않았어요.</span></li>
   <li class="wn"><b>!</b><span><b>스타일러</b>: SC5MBR61S 가격은 LG 페이지 표시가 혼재(2,191,000/2,070,000원)해 확정하지 못했고, 3벌 모델과 사무실(상업용) 설치 가능 여부는 확인하지 못했어요. 확정 구매 항목이 아니에요.</span></li>
   <li class="wn"><b>!</b><span>용달 요금·업체는 조사하지 않았어요(요청에 따라).</span></li>
  </ul>
@@ -452,4 +488,4 @@ html_out=f'''<!doctype html>
 <script src="assets/main.js"></script>
 </body></html>'''
 open("../index.html","w",encoding="utf8").write(html_out)
-print("10:",R10,R10n,L10,cg10,P10,V10); print("12:",R12,R12n,L12,cg12,P12,V12); print("15:",R15,P15,V15)
+print("MAIN",M10,M12,M15,MP10,MV10,"DEF",DEF10,DU10,DN10);print("10:",R10,R10n,L10,cg10,P10,V10); print("12:",R12,R12n,L12,cg12,P12,V12); print("15:",R15,P15,V15)
