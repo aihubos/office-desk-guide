@@ -136,6 +136,16 @@ box(C,3500,0,900,300,0,.55,M('#F6EBD7',{r:.8})); label(C,'슬리퍼 랙(후보)'
  bx(0,-.16,1.1,.07,0,.1,BLACK); bx(-.5,-.31,.06,.42,0,.05,BLACK); bx(.5,-.31,.06,.42,0,.05,BLACK); // 발(크기 가정)
  C.add(gb);}
 label(C,'전자칠판 75" (ㄷ자 끝에 0.4m · 뒤는 책장 가벽)',1850,2.05,6200,'k');
+// ===== 34형 울트라와이드 + 이동식 스탠드(집에서 가져옴): 전자칠판 왼쪽 바로 옆(x 117~932), 같은 면(입구 쪽)을 봄 =====
+{const gm=new THREE.Group(); gm.position.set(.525,0,6.21); gm.rotation.y=Math.PI; // 로컬 +z = 화면 앞 → 월드 -z(입구 쪽)
+ const bx=(x,z,w,d,y0,h,mat)=>{const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat); b.position.set(x,y0+h/2,z); b.castShadow=true; b.receiveShadow=true; gm.add(b); return b;};
+ bx(0,-.025,.815,.05,1.05,.36,BLACK);                                    // 패널 815x360x50 (가정)
+ bx(0,.001,.78,.004,1.07,.32,M('#1c2733',{r:.2,m:.4}));                  // 화면면
+ bx(0,-.09,.06,.06,.1,.95,BLACK);                                        // 기둥
+ bx(0,-.18,.60,.34,.05,.05,BLACK);                                       // 바닥판 600x340
+ for(const sx of [-.27,.27]) for(const sz of [-.04,-.32]) bx(sx,sz,.05,.05,0,.05,DGRAY); // 바퀴
+ C.add(gm);}
+label(C,'34형 와이드 모니터 + 스탠드 (집에서 · 칠판 바로 옆)',525,1.65,6210,'k');
 {const pts=[new THREE.Vector3(1.85,1.0,6.15),new THREE.Vector3(1.85,1.0,5.8)]; const ln=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineDashedMaterial({color:'#7B61FF',dashSize:.12,gapSize:.08})); ln.computeLineDistances(); C.add(ln);
  label(C,'U 끝↔칠판 약 0.40m',2900,1.2,6000,'s');}
 
@@ -233,9 +243,8 @@ box(C,1550,8650,300,460,1.3,.03,WOOD_D); box(C,1560,8660,30,440,1.0,.3,BLACK); b
 box(C,1590,8730,220,320,1.33,.22,M('#7B61FF',{r:.5})); label(C,'NAS·공유기 (ASUS RT-BE92U)',1740,1.75,8880,'s');
 // 대표: 책상 입구 쪽(북), 의자 창 쪽(남). 34" 화면 남쪽 향함 → 입구에선 모니터 뒷면
 box(C,3130,8860,200,200,.74,.095,M('#c9ced6',{m:.7,r:.3}));                      // Mac Studio
-box(C,2280,8720,800,60,.95,.35,M('#2B2F36')); box(C,2282,8772,796,10,.96,.33,M('#1c2733',{r:.2,m:.4}),false); box(C,2630,8750,110,30,.74,.21,BLACK); // 34" 울트라와이드
 chair(C,2680,9550,0,-1,'#F04452',1);
-label(C,'대표석 (출입문 정면 · 화면 뒷면이 입구 쪽)',2680,1.3,9000,'k');
+label(C,'대표석 (출입문 정면)',2680,1.3,9000,'k');
 // 서진이 책상: 왼쪽 벽, 가벽 바로 뒤에 세로(600x1000), 의자는 벽 쪽(서)을 봄
 table(C,50,7650,600,1000,MD,.72);
 box(C,110,7900,25,300,.75,.30,M('#2B2F36'));
@@ -284,7 +293,8 @@ const tgt=new THREE.Vector3();
 const views={
   entrance:()=>({pos:[2.25,1.62,.55],tgt:[2.25,1.0,6.8],fov:68}),
   top:()=>{const a=renderer.domElement.clientWidth/renderer.domElement.clientHeight; const f=40*Math.PI/180; const vh=(L+3.8)/2/Math.tan(f/2)*1.12, hh=(W+1.2)/2/Math.tan(f/2)/a; const d=Math.max(vh,hh); return {pos:[2.25,d,4.9+.4],tgt:[2.25,0,4.9],fov:40};},
-  iso:()=>isoView(1), iso2:()=>isoView(-1)
+  iso:()=>isoView(1), iso2:()=>isoView(-1),
+  board:()=>({pos:[1.9,2.1,3.7],tgt:[1.4,.9,6.3],fov:55})   // 전자칠판·옆 모니터 근접(입구 쪽에서)
 };
 function isoView(sg){const a=renderer.domElement.clientWidth/renderer.domElement.clientHeight; const por=a<.8; const d=por?32:19; const dir=por?new THREE.Vector3(-.4,.8,.6*sg).normalize():new THREE.Vector3(-.62,.62,.62*sg).normalize(); const t=new THREE.Vector3(2.25,0,4.9); const p=t.clone().addScaledVector(dir,d); return {pos:p.toArray(),tgt:t.toArray(),fov:30};}
 let anim=null, curView='iso';

@@ -95,6 +95,16 @@ def build(mode):
     ax.annotate("",xy=BP(0,300),xytext=BP(0,40),arrowprops=dict(arrowstyle="-|>",color="#7B61FF",lw=1.3),zorder=8)
     from shapely.geometry import Polygon as SP2, box as SBOX
     BOARD=SP2([BP(-853,0),BP(853,0),BP(853,-110),BP(-853,-110)]).union(SP2([BP(-733,-110),BP(733,-110),BP(733,-520),BP(-733,-520)]))
+    # ---------- 34형 울트라와이드 + 이동식 스탠드(집에서): 전자칠판 왼쪽 바로 옆, 같은 면(입구 쪽)을 봄. 패널 815x40, 스탠드 바닥 600x340
+    MXC=525; MY=6210
+    R(ax,MXC-300,MY+10,600,340,"#EEF1F6","#8B95A1",.9,z=4,ls="--",alpha=.8)
+    for cx_ in (MXC-270,MXC+270):
+        for cy_ in (MY+40,MY+320): ax.add_patch(Circle((cx_,cy_),22,fc="#555",ec="none",zorder=5))
+    R(ax,MXC-30,MY+20,60,60,"#2B2F36","#111",.8,z=5)
+    R(ax,MXC-408,MY-10,815,50,"#2B2F36","#111",1,z=6)
+    ax.annotate("",xy=(MXC,MY-260),xytext=(MXC,MY-30),arrowprops=dict(arrowstyle="-|>",color="#7B61FF",lw=1.2),zorder=8)
+    T(ax,MXC,MY+210,"34형 와이드\n+ 스탠드\n(집에서)",fs=3.6,c="#333",z=9)
+    dim(ax,MXC+408,MY-60,997,MY-60,""); T(ax,MXC+450,MY-190,"칠판 옆\n0.06m",fs=3.4,c=GRN,bbox=dict(fc="white",ec="none",pad=.3,alpha=.9),z=10)
     # ---------- 탕비: 입구(문) 왼쪽 앞 벽에 한 줄
     R(ax,50,50,555,637,"#E5E8EB","#8B95A1",1.2,z=5); T(ax,330,370,"냉장고\nRT20FARL3S9",fs=4.2)
     R(ax,620,50,880,600,"#FFFFFF","#8B95A1",1.2,z=5); T(ax,1060,590,"카운터 + 선반",fs=4.4)
@@ -179,7 +189,6 @@ def build(mode):
     T(ax,1740,DY+620,"위 선반\nNAS+ASUS",fs=3.4,c="#5B3FD6")
     DX=1930
     R(ax,DX,DY,1500,700,"#FFFFFF","#F04452",2,z=5); T(ax,DX+430,DY+520,"대표 모션데스크(보유)\n1500×700",fs=3.9,c="#B1202C")
-    R(ax,DX+350,DY+70,800,60,"#2B2F36","#111",1,z=7); T(ax,DX+580,DY+230,"34\" 모니터\n(뒷면=입구 쪽)",fs=3.4,c="#333")
     R(ax,DX+1200,DY+210,200,200,"#C9CED6","#555",1,z=6); T(ax,DX+1300,DY+310,"Mac\nStudio",fs=3.4)
     chair2(ax,DX+750,DY+900,0,-1,col=RED,r=200); T(ax,DX+750,DY+900,"대표",fs=4.8,c="white")
     ax.annotate("",xy=(DX+750,DY+370),xytext=(DX+750,DY+700),arrowprops=dict(arrowstyle="-|>",color=RED,lw=1.2),zorder=8)
@@ -202,7 +211,6 @@ def build(mode):
     dim(ax,0,3000,235,3000,""); T(ax,250,3000,"0.24m",fs=4.4,c=GRN,ha="left",bbox=dict(fc="white",ec="none",pad=.4,alpha=.9),z=10)
     dim(ax,1500,2520,2200,2520,"안쪽 0.7m",dy=-110)
     dim(ax,2400,7000,3650,7000,"",c=GRN); T(ax,3030,6930,"트임 1.25m",fs=4.6,c=GRN,bbox=dict(fc="white",ec="none",pad=.5,alpha=.92))
-    dim(ax,0,6450,997,6450,"왼쪽 통로 1.0m",dy=-110)
     dim(ax,2703,6450,3650,6450,"약 0.95m",dy=-110)
     dim(ax,3430,8800,4500,8800,"통로 1.07m",dy=-110)
     dim(ax,2400,5800,2400,6200,"",c=GRN)
