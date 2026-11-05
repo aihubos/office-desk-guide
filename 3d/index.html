@@ -29,7 +29,19 @@
     <button id="tgDetail">상세 라벨</button>
     <button id="tgSwing" class="on">문 열림 반경</button>
   </div>
+  <div class="grp"><button id="edToggle">편집</button></div>
+  <div class="grp edonly">
+    <button id="edRot" disabled>회전</button>
+    <button id="edSnap" class="on">10cm 맞춤</button>
+    <button id="edSave">저장</button>
+    <button id="edReset">초기화</button>
+    <button id="edExport">내보내기</button>
+    <button id="edImport">불러오기</button>
+  </div>
+  <input type="file" id="edFile" accept="application/json,.json" hidden>
 </div>
+<div id="ednote" class="edonly">가구를 눌러 선택 → 끌어서 이동 · 회전(R) · 저장은 이 기기 브라우저에만 돼요 (다른 기기와 공유하려면 내보내기). ㄷ자 책상 세트는 10·12·15석마다 따로 저장돼요.</div>
+<div id="toast" hidden></div>
 <div id="note">가정: 방 4.5 × 9.8m (44.1㎡) · 천장 2.6m · 문 폭 0.9m 단변 정중앙 · 가구 크기 대략 · 실측 전 도면이에요. 드래그 회전 · 휠/핀치 확대 · 두 손가락(우클릭) 이동</div>
 <div id="err" hidden>3D(WebGL)를 불러오지 못했어요. 브라우저를 최신으로 바꾸거나 평면도(<a href="../assets/img/layout-10.png">layout-10.png</a>)를 봐 주세요.</div>
 <script type="module" src="app.js"></script>
