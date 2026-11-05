@@ -26,7 +26,7 @@ GRPS={}
 for i in DEF_USED: GRPS.setdefault(i["grp"],[]).append(i)
 used_html='<div class="tiles">'+"".join(tile(SHORT[i["id"]],px(sub(dtier(i),10)),CNOTE.get(i["id"],"")) for i in DEF_USED)+'</div>'
 new_html='<div class="tiles">'+"".join(tile(SHORT[i["id"]],px(sub(dtier(i),10)),NSHORT[i["id"]]) for i in DEF_NEW)+'</div>'
-own_chips=["모션데스크 (대표 · 1대)","NAS","공유기 (집에 있는 것)","커피머신","iPhone","로봇청소기","서진이 책상","접이식 책상","빈백","미니 빔프로젝터","캠핑용품 (품목 확인 예정)","이케아 전등","34형 모니터 (전자칠판 옆에 배치)"]
+own_chips=["모션데스크 (대표 · 1대)","NAS","공유기 (집에 있는 것)","커피머신","커피포트","iPhone","로봇청소기","서진이 책상","접이식 책상","빈백","미니 빔프로젝터","캠핑용품 (품목 확인 예정)","이케아 전등","34형 모니터 (전자칠판 옆에 배치)"]
 own_html='<div class="chips">'+"".join(f'<span class="chip">{E(x)}</span>' for x in own_chips)+'</div>'
 
 def mcard(i,qn):
