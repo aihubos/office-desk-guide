@@ -62,21 +62,21 @@ def build(mode):
     from shapely.geometry import Polygon as SP
     fig,ax=plt.subplots(figsize=(4.8,4.8*(H+2850)/(W+700)),dpi=260)
     R(ax,0,0,W,H,"#FBFCFD",z=0)
-    # ---------- window (bottom short wall) with 외부 펜트리 출입문 (오른쪽 끝) / door (top short wall)
-    R(ax,0,H-40,3500,80,"#9AD3FF","#2C7FB8",1,z=6); R(ax,4400,H-40,100,80,"#9AD3FF","#2C7FB8",1,z=6)
-    T(ax,2900,H+900,"창문 (바닥~천장 전면 유리)\n카메라는 창을 향하지 않음 · 블라인드 권장",fs=4.8,c="#2C7FB8",ha="center")
-    R(ax,3500,H-35,900,70,"#FFFFFF","#555",1.2,z=7)
-    ax.add_patch(Wedge((4400,H),900,180,270,fc="#FFF3BF",alpha=.6,ec="none",zorder=2))
-    ax.add_patch(Arc((4400,H),1800,1800,theta1=180,theta2=270,color="#888",lw=1,ls="--",zorder=7))
-    ax.plot([4400,4400],[H,H-900],color="#555",lw=1.2,zorder=7)
-    T(ax,4030,H-430,"펜트리 문\n(오른쪽 · 0.9m\n가정)",fs=4.4,c="#555")
-    # 외부 펜트리 (벽 밖, 실외) + 3D 프린터 우측 끝
+    # ---------- window (bottom short wall) with 외부 펜트리 출입문 (왼쪽 끝) / door (top short wall)
+    R(ax,0,H-40,100,80,"#9AD3FF","#2C7FB8",1,z=6); R(ax,1000,H-40,3500,80,"#9AD3FF","#2C7FB8",1,z=6)
+    T(ax,2800,H+900,"창문 (바닥~천장 전면 유리)\n카메라는 창을 향하지 않음 · 블라인드 권장",fs=4.8,c="#2C7FB8",ha="center")
+    R(ax,100,H-35,900,70,"#FFFFFF","#555",1.2,z=7)
+    ax.add_patch(Wedge((100,H),900,270,360,fc="#FFF3BF",alpha=.6,ec="none",zorder=2))
+    ax.add_patch(Arc((100,H),1800,1800,theta1=270,theta2=360,color="#888",lw=1,ls="--",zorder=7))
+    ax.plot([100,100],[H,H-900],color="#555",lw=1.2,zorder=7)
+    T(ax,550,H-430,"펜트리 문\n(왼쪽 · 0.9m\n가정)",fs=4.4,c="#555")
+    # 외부 펜트리 (벽 밖, 실외) + 3D 프린터 오른쪽 끝 (문 반대편)
     EX1,EY1=W,H+1300
     R(ax,0,H+40,EX1,EY1-H-40,"#EEF1F4","#555",1.3,z=2,ls="--")
     T(ax,40,H+190,"외부 펜트리(실외 · 가정: 폭 4.5m=사무실 폭 · 깊이 1.3m 가정)",fs=4.8,c="#555",ha="left")
-    R(ax,120,H+330,560,540,"#FFE0B8","#E67E22",1.6,z=5); T(ax,400,H+600,"3D프린터",fs=4.8,c="#8A4B00",fontweight="bold")
-    T(ax,1500,H+470,"← 펜트리 왼쪽 끝\n(문 반대편 · 환기 걱정 없음)",fs=4.4,c="#8A4B00",ha="center")
-    ax.plot([4100],[H-30],alpha=0)
+    R(ax,3820,H+330,560,540,"#FFE0B8","#E67E22",1.6,z=5); T(ax,4100,H+600,"3D프린터",fs=4.8,c="#8A4B00",fontweight="bold")
+    T(ax,3000,H+470,"펜트리 오른쪽 끝 →\n(문 반대편 · 환기 걱정 없음)",fs=4.4,c="#8A4B00",ha="center")
+    ax.plot([400],[H-30],alpha=0)
     # ---------- front door
     DX0,DX1=1800,2700
     R(ax,DX0,-35,DX1-DX0,70,"#FFFFFF","#555",1.2,z=7)
@@ -178,8 +178,8 @@ def build(mode):
     TTX,TTY=3115,7350
     ax.add_patch(Circle((TTX,TTY),185,fc="#FFFFFF",ec="#9A7B4F",lw=1.4,zorder=6)); T(ax,TTX,TTY,"티\n테이블",fs=3.6,c="#5A3E1B",z=9)
     dim(ax,3300,7350,3650,7350,""); T(ax,3475,7450,"0.35m",fs=3.8,c=GRN,bbox=dict(fc="white",ec="none",pad=.3,alpha=.9),z=10)
-    T(ax,3180,6700,"소파 (오른쪽 벽 · 펜트리 문 쪽)",fs=3.6,c="#5A3E1B",ha="center",bbox=dict(fc="white",ec="none",pad=.3,alpha=.9),z=9)
-    DY=8650                                   # 창 쪽 한 줄 책상 y 8650~9350 (의자는 창 쪽)
+    T(ax,3180,6700,"소파 (오른쪽 벽)",fs=3.6,c="#5A3E1B",ha="center",bbox=dict(fc="white",ec="none",pad=.3,alpha=.9),z=9)
+    DY=7650                                   # 입구 쪽 한 줄 (창쪽 왼쪽 문 앞을 비움). 의자는 창 쪽
     # 모션데스크 #2(신규, 대표와 동일 1500x700) | 복합기(가운데, 두 자리 공용) | 대표 모션데스크(보유)
     R(ax,50,DY,1500,700,"#FFFFFF","#F04452",2,z=5); T(ax,800,DY+520,"모션데스크 #2 (신규)\n1500×700 (대표와 동일)",fs=3.9,c="#B1202C")
     R(ax,50+250,DY+70,800,60,"#2B2F36","#111",1,z=7)
@@ -194,18 +194,18 @@ def build(mode):
     ax.annotate("",xy=(DX+750,DY+370),xytext=(DX+750,DY+700),arrowprops=dict(arrowstyle="-|>",color=RED,lw=1.2),zorder=8)
     ax.annotate("",xy=(DX+1000,DY+270),xytext=(DX+1000,DY+150),arrowprops=dict(arrowstyle="-|>",color="#7B61FF",lw=1.1),zorder=8)
     ax.plot([DX+750,2250],[DY-10,120],color=RED,lw=.9,ls=":",alpha=.55,zorder=3)
-    T(ax,3000,7860,"대표 시선: 출입문 정면\n(전자칠판이 중간에서 가려요)",fs=3.9,c="#B1202C",ha="center",bbox=dict(fc="#FFE8EC",ec="none",pad=.3,alpha=.9))
-    # 서진이 책상: 왼쪽 벽, 가벽 바로 뒤(세로로 세움 600x1000), 의자는 동쪽에서 서쪽(벽)을 봄
-    R(ax,50,7650,600,1000,"#FFFFFF","#2F9E44",1.8,z=5); T(ax,350,8150,"서진이 책상\n1000×600",fs=4.0,c="#1F7A33",rotation=90)
-    R(ax,110,7900,60,300,"#2B2F36","#111",1,z=7)
-    chair2(ax,900,8150,-1,0,col="#4DB6BD",r=190); T(ax,900,8150,"서진",fs=4.2,c="white")
-    # 로봇청소기 도크 + 가습기 (창 쪽, 두 의자 사이)
-    R(ax,1250,9420,400,350,"#EDEFF2","#555",1.2,z=5); T(ax,1450,9595,"로봇청소기\n도크(기존)",fs=3.8)
+    T(ax,3850,8000,"대표 시선: 출입문 정면\n(전자칠판이 중간에서 가려요)",fs=3.9,c="#B1202C",ha="center",bbox=dict(fc="#FFE8EC",ec="none",pad=.3,alpha=.9))
+    # 서진이 책상: 창문 벽에 붙임 (가로 1000x600, x 2180~3180, y 9200~9800), 의자는 창 쪽을 봄
+    R(ax,2180,9200,1000,600,"#FFFFFF","#2F9E44",1.8,z=5); T(ax,2680,9500,"서진이 책상 1000×600 (창가)",fs=4.0,c="#1F7A33")
+    R(ax,2530,9700,300,25,"#2B2F36","#111",1,z=7)
+    chair2(ax,2680,9000,0,1,col="#4DB6BD",r=190); T(ax,2680,9000,"서진",fs=4.2,c="white")
+    # 로봇청소기 도크: 서진이 오른쪽(옛 문 자리). 가습기는 창 쪽
+    R(ax,3300,9420,400,350,"#EDEFF2","#555",1.2,z=5); T(ax,3500,9595,"로봇청소기\n도크(기존)",fs=3.8)
     ax.add_patch(Circle((1950,9580),135,fc="#D6ECFA",ec="#2C7FB8",lw=1.4,zorder=7)); ax.add_patch(Circle((1950,9580),60,fc="none",ec="#2C7FB8",lw=.8,zorder=8))
     T(ax,1950,9420,"가습기",fs=3.8,c="#1F5E8F",fontweight="bold",bbox=dict(fc="#FFE8EC",ec="none",pad=.4,alpha=.9))
     # LAN: 복합기 위 NAS/공유기 -> 양옆 책상 (짧게) / 서진이는 바닥 따라
     ax.plot([1550,1400],[DY+300,DY+300],color=BLUE,lw=1.1,ls="--",zorder=7); ax.plot([1930,2080],[DY+300,DY+300],color=BLUE,lw=1.1,ls="--",zorder=7)
-    ax.plot([1740,1740,660],[DY,DY-120,DY-120],color=BLUE,lw=1.1,ls="--",zorder=7)
+    ax.plot([1740,1740,2680],[DY+700,9100,9100],color=BLUE,lw=1.1,ls="--",zorder=7)
     # aisles
     dim(ax,3465,3300,4500,3300,"통로 1.03m",dy=-110)
     dim(ax,0,3000,235,3000,""); T(ax,250,3000,"0.24m",fs=4.4,c=GRN,ha="left",bbox=dict(fc="white",ec="none",pad=.4,alpha=.9),z=10)
@@ -213,6 +213,7 @@ def build(mode):
     dim(ax,2400,7000,3650,7000,"",c=GRN); T(ax,3030,6930,"트임 1.25m",fs=4.6,c=GRN,bbox=dict(fc="white",ec="none",pad=.5,alpha=.92))
     dim(ax,2703,6450,3650,6450,"약 0.95m",dy=-110)
     dim(ax,3430,8800,4500,8800,"통로 1.07m",dy=-110)
+    dim(ax,1000,9500,2180,9500,"문 앞 1.18m",dy=-110)
     dim(ax,2400,5800,2400,6200,"",c=GRN)
     T(ax,3250,6000,f"U 끝↔칠판 약 {ugap/1000:.2f}m",fs=4.6,c=GRN,bbox=dict(fc="white",ec="none",pad=.6,alpha=.92))
     # ---------- scale, title
